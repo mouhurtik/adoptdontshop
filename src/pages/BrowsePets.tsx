@@ -96,53 +96,42 @@ const BrowsePets = () => {
   return (
     <div className="min-h-screen bg-playful-cream pb-20">
       {/* Hero Header */}
-      <div className="bg-playful-teal pt-32 pb-24 rounded-b-[3rem] relative overflow-hidden mb-12">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <div className="absolute top-10 left-10 text-9xl">🐾</div>
-          <div className="absolute bottom-10 right-10 text-9xl">🦴</div>
-        </div>
-
+      <div className="pt-28 pb-12 relative overflow-hidden mb-8">
         <div className="container mx-auto px-6 text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block px-4 py-1 bg-white/20 text-white rounded-full font-bold text-sm tracking-wide mb-4 backdrop-blur-sm">
+            <span className="inline-block px-4 py-1 bg-white border border-playful-teal/20 text-playful-teal rounded-full font-bold text-sm tracking-wide mb-6 shadow-sm">
               Adopt, Don't Shop
             </span>
-            <h1 className="text-5xl md:text-7xl font-heading font-black text-white mb-6 leading-tight">
-              Find Your <br />
-              <span className="text-playful-yellow relative inline-block">
-                Perfect Match
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-white opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="none" />
-                </svg>
-              </span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-black text-playful-text mb-6 leading-tight flex flex-col md:block items-center justify-center gap-2">
+              Find Your <span className="inline-block px-4 lg:px-6 bg-playful-yellow text-playful-text rounded-2xl mx-2 shadow-sm">Perfect Match</span>
             </h1>
-            <p className="text-xl text-white/90 font-medium max-w-2xl mx-auto">
-              Browse through our list of adorable pets waiting for a loving home like yours.
+            <p className="text-lg text-gray-600 font-medium max-w-2xl mx-auto mb-8">
+              Browse through our list of adorable pets waiting for a loving home.
             </p>
           </motion.div>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 -mt-20 relative z-20">
+      <div className="container mx-auto px-6 -mt-16 relative z-20">
         {/* Search Bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white rounded-[2rem] p-4 shadow-xl mb-12 max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center"
+          className="bg-white rounded-[2.5rem] p-3 shadow-xl mb-10 max-w-4xl mx-auto flex flex-col md:flex-row gap-3 items-center border border-gray-100"
         >
           <div className="flex-grow relative w-full">
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <div className="absolute left-6 top-1/2 transform -translate-y-1/2 text-playful-coral">
               <Search className="h-6 w-6" />
             </div>
             <input
               type="text"
               placeholder="Search by name, breed, or location..."
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-transparent focus:bg-white focus:border-playful-coral rounded-xl font-medium text-gray-700 placeholder-gray-400 focus:outline-none transition-all duration-200"
+              className="w-full pl-14 pr-4 py-4 bg-gray-50/50 border-2 border-transparent focus:bg-white focus:border-playful-coral rounded-[2rem] font-bold text-gray-700 placeholder-gray-400 focus:outline-none transition-all duration-200"
               value={filters.searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
             />

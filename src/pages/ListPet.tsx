@@ -22,9 +22,15 @@ const ListPet = () => {
               <div className="bg-playful-yellow p-4 rounded-full text-white shadow-lg transform -rotate-6">
                 <PawPrint className="h-8 w-8" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-heading font-black text-playful-text">List a Pet for Adoption</h1>
+              <h1 className="text-3xl md:text-6xl font-heading font-black text-playful-text leading-tight">
+                List a Pet for
+                <span className="relative inline-block ml-3 transform -rotate-2">
+                  <span className="absolute inset-0 bg-playful-coral rounded-2xl transform rotate-2"></span>
+                  <span className="relative text-white px-4 py-1">Adoption</span>
+                </span>
+              </h1>
             </div>
-            <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">
+            <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-2xl mx-auto font-heading">
               Help a pet find their forever home by listing them on our platform 🏡
             </p>
           </motion.div>
