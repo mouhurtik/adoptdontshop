@@ -23,15 +23,15 @@ const PetGrid = ({
   totalPages,
   onPageChange,
   sortBy,
-  onSortChange
+  onSortChange,
 }: PetGridProps) => {
   const fadeInStagger = {
     hidden: { opacity: 0, y: 20 },
     visible: (custom: number) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: custom * 0.1, duration: 0.5 }
-    })
+      transition: { delay: custom * 0.1, duration: 0.5 },
+    }),
   };
 
   if (isLoading) {
@@ -91,9 +91,9 @@ const PetGrid = ({
               id={pet.id}
               name={pet.pet_name}
               breed={pet.breed}
-              age={typeof pet.age === 'number' ? pet.age : parseInt(pet.age as string) || 0}
+              age={pet.age || '0 years'}
               location={pet.location}
-              image={pet.image_url || "/placeholder.svg"}
+              image={pet.image_url || '/placeholder.svg'}
               type={pet.animal_type || 'dog'}
             />
           </motion.div>
@@ -101,17 +101,10 @@ const PetGrid = ({
       </div>
 
       {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
       )}
     </div>
   );
 };
 
 export default PetGrid;
-
-
-

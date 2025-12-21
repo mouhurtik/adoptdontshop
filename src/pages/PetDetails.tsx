@@ -126,7 +126,7 @@ const PetDetails = () => {
           </div>
 
           {/* Right column with contact info */}
-          <ContactInfoCard petName={pet.name} petId={id} />
+          <ContactInfoCard petName={pet.name} petId={id} petLocation={pet.location} />
         </div>
       </div>
 
@@ -148,7 +148,9 @@ const PetDetails = () => {
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-[2rem] p-8 max-w-md w-full text-center shadow-2xl">
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-3xl font-heading font-bold text-playful-text mb-2">Application Sent!</h2>
+            <h2 className="text-3xl font-heading font-bold text-playful-text mb-2">
+              Application Sent!
+            </h2>
             <p className="text-gray-600 mb-6">
               Thank you for your interest in adopting {pet.name}. We'll be in touch soon!
             </p>
@@ -169,6 +171,3 @@ const PetDetails = () => {
 };
 
 export default PetDetails;
-
-
-

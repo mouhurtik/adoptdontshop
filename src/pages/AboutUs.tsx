@@ -33,14 +33,12 @@ const AboutUs = () => {
         </motion.div>
 
         <div className="max-w-6xl mx-auto space-y-24">
-          {/* Mission & Story Section */}
+          {/* Mission Section */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
           >
-            {/* Mission Section */}
             <div className="bg-white rounded-[2.5rem] p-6 md:p-12 shadow-soft border-2 border-playful-mint/30">
               <div className="flex items-center gap-4 mb-8">
                 <div className="bg-playful-mint/20 p-4 rounded-full text-green-600">
@@ -50,31 +48,16 @@ const AboutUs = () => {
               </div>
               <div className="text-xl text-gray-600 font-medium leading-relaxed space-y-4">
                 <p>
-                  At Adopt Don't Shop, we believe every pet deserves a loving home. Our mission is to connect abandoned, surrendered, and rescued animals with compassionate individuals and families who will provide them with the care and love they deserve.
+                  At Adopt Don't Shop, we believe every pet deserves a loving home. Our mission is
+                  to connect abandoned, surrendered, and rescued animals with compassionate
+                  individuals and families who will provide them with the care and love they
+                  deserve.
                 </p>
                 <p>
-                  We strive to reduce the number of animals in shelters by promoting adoption over purchasing from breeders or pet stores. By choosing to adopt, you're not only saving a life but also making room for another animal in need at a shelter or rescue organization.
-                </p>
-              </div>
-            </div>
-
-            {/* Story Section */}
-            <div className="bg-white rounded-[2.5rem] p-6 md:p-12 shadow-soft border-2 border-playful-coral/30">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="bg-playful-coral/20 p-4 rounded-full text-playful-coral">
-                  <PawPrint className="h-8 w-8" />
-                </div>
-                <h2 className="text-4xl font-heading font-black text-playful-text">Our Story</h2>
-              </div>
-              <div className="text-xl text-gray-600 font-medium leading-relaxed space-y-4">
-                <p>
-                  "I, Mouhurtik Ray, founded Adopt Don't Shop in 2025 with a simple yet powerful vision: to help stray animals find loving homes. As someone who regularly feeds and cares for local stray animals—and having personally adopted a rescue kitten—I witnessed firsthand the challenges these animals face in finding the care they deserve.
-                </p>
-                <p>
-                  Driven by my experiences, I created Adopt Don't Shop to be a platform where every stray and rescue animal can connect with caring individuals looking to give them a second chance. This website is more than just a listing service; it's a community built on the belief that every animal deserves love, care, and a forever home.
-                </p>
-                <p>
-                  Join me in making a difference, one adoption at a time."
+                  We strive to reduce the number of animals in shelters by promoting adoption over
+                  purchasing from breeders or pet stores. By choosing to adopt, you're not only
+                  saving a life but also making room for another animal in need at a shelter or
+                  rescue organization.
                 </p>
               </div>
             </div>
@@ -108,18 +91,29 @@ const AboutUs = () => {
               </div>
 
               <div className="lg:col-span-2">
-                <h3 className="text-3xl font-heading font-black text-playful-text mb-2">Mouhurtik Ray</h3>
+                <h3 className="text-3xl font-heading font-black text-playful-text mb-2">
+                  Mouhurtik Ray
+                </h3>
                 <p className="text-xl text-playful-teal font-bold mb-6 bg-playful-teal/10 px-4 py-2 rounded-full inline-block">
                   Founder & CEO
                 </p>
 
                 <div className="text-xl text-gray-600 font-medium leading-relaxed space-y-4">
                   <p>
-                    "I, Mouhurtik Ray, have been an animal lover since childhood. As a current student, my passion for animal welfare has always been a guiding force in my life. Inspired by my own experiences feeding stray animals and adopting a rescue kitten, I created Adopt Don't Shop to bridge the gap between adoptable pets and caring families.
+                    "I, Mouhurtik Ray, founded Adopt Don't Shop in 2025 with a simple yet powerful
+                    vision: to help stray animals find loving homes. As someone who regularly feeds
+                    and cares for local stray animals—and having personally adopted a rescue
+                    kitten—I witnessed firsthand the challenges these animals face in finding the
+                    care they deserve.
                   </p>
                   <p>
-                    This platform is a testament to my belief that every animal deserves a chance to find a loving home. Join me in making a difference, one adoption at a time."
+                    Driven by my experiences, I created Adopt Don't Shop to be a platform where
+                    every stray and rescue animal can connect with caring individuals looking to
+                    give them a second chance. This website is more than just a listing service;
+                    it's a community built on the belief that every animal deserves love, care, and
+                    a forever home.
                   </p>
+                  <p>Join me in making a difference, one adoption at a time."</p>
                 </div>
               </div>
             </div>
@@ -220,6 +214,3 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
-
-
-
