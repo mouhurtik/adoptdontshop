@@ -7,7 +7,7 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 interface Pet {
-    id: any;
+    id: string | number;
     pet_name: string;
     image_url: string;
     breed: string;

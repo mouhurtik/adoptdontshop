@@ -4,7 +4,6 @@ import PetListingForm from "@/components/pet-listing/PetListingForm";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const ListPet = () => {
-  const [formOpen, setFormOpen] = useState(true);
 
   return (
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">

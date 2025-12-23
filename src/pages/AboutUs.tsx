@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, Linkedin, Twitter, PawPrint, Users, Target, Award } from 'lucide-react';
+import { Mail, Linkedin, Twitter, PawPrint, Users, Target, Award } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 

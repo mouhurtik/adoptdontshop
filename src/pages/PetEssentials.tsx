@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Heart, ShoppingBag, Shield, Check, ExternalLink, Dog, Cat, Fish } from "lucide-react";
+import { ShoppingBag, Shield, Check, ExternalLink, Dog, Cat, Fish } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
