@@ -27,9 +27,12 @@ describe('Navbar', () => {
       </RouterWrapper>
     );
 
-    // Check for common navigation links
-    expect(screen.getByText(/browse/i)).toBeInTheDocument();
-    expect(screen.getByText(/about/i)).toBeInTheDocument();
+    // Check for common navigation links (they appear in both desktop and mobile menus)
+    const browseLinks = screen.getAllByText(/browse/i);
+    expect(browseLinks.length).toBeGreaterThan(0);
+
+    const aboutLinks = screen.getAllByText(/about/i);
+    expect(aboutLinks.length).toBeGreaterThan(0);
   });
 
   it('renders list pet button', () => {
@@ -39,7 +42,8 @@ describe('Navbar', () => {
       </RouterWrapper>
     );
 
-    const listPetButton = screen.getByText(/list.*pet/i);
-    expect(listPetButton).toBeInTheDocument();
+    // List Pet button appears in both desktop and mobile menus
+    const listPetButtons = screen.getAllByText(/list.*pet/i);
+    expect(listPetButtons.length).toBeGreaterThan(0);
   });
 });
