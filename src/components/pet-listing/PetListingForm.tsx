@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase, generateUUID } from "@/integrations/supabase/client";
-import { Upload, X, PawPrint, User, Phone, MapPin, FileText, Heart, ShieldCheck } from "lucide-react";
+import { Upload, X, PawPrint, User, Phone, MapPin, Heart, ShieldCheck } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import SuccessDialog from "./form-sections/SuccessDialog";
 

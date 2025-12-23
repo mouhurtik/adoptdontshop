@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 
 interface PlayfulSearchSectionProps {

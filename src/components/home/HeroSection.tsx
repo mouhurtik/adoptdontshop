@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Heart, Search } from 'lucide-react';
 import ParallaxSection from '@/components/ui/ParallaxSection';

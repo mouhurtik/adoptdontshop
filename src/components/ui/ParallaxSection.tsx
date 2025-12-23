@@ -15,7 +15,7 @@ const ParallaxSection = ({
     bgImage,
     bgClassName = "bg-gray-900",
     overlayOpacity = 0.5,
-    speed = 0.5,
+    speed: _speed = 0.5,
     className = ""
 }: ParallaxSectionProps) => {
     const ref = useRef(null);
@@ -26,7 +26,7 @@ const ParallaxSection = ({
 
     // Translate Y based on scroll.
     // Negative y moves content UP slower than scroll (or down relative to viewport) creating depth.
-    const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+    const _y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
     // For background element, we often want it to move slower than foreground.
     const bgY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);

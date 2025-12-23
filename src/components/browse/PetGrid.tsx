@@ -9,7 +9,6 @@ interface PetGridProps {
   pets: Pet[];
   isLoading: boolean;
   currentPage: number;
-  petsPerPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   sortBy: string;
@@ -20,7 +19,6 @@ const PetGrid = ({
   pets,
   isLoading,
   currentPage,
-  petsPerPage,
   totalPages,
   onPageChange,
   sortBy,

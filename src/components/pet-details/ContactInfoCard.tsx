@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Clock, User } from 'lucide-react';
+import { Phone, MapPin, Clock, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ContactInfoCardProps {
-  petName?: string;
   petId?: string;
   petLocation?: string;
 }
@@ -16,7 +15,7 @@ type CaregiverInfo = {
   location: string;
 };
 
-const ContactInfoCard = ({ petName, petId, petLocation }: ContactInfoCardProps) => {
+const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
   const [caregiverInfo, setCaregiverInfo] = useState<CaregiverInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

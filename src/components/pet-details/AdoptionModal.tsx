@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X, Heart } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { Pet } from '@/hooks/usePets';
 
 interface AdoptionModalProps {

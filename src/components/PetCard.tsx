@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Info } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Link } from 'react-router-dom';
 

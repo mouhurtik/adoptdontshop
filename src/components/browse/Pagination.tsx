@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import PrimaryButton from '@/components/ui/PrimaryButton';
 
 interface PaginationProps {
     currentPage: number;
@@ -29,8 +28,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
                     key={number}
                     onClick={() => onPageChange(number)}
                     className={`w-10 h-10 rounded-full font-bold transition-all duration-300 ${currentPage === number
-                            ? 'bg-playful-coral text-white shadow-md scale-110'
-                            : 'bg-white text-gray-600 hover:bg-playful-cream'
+                        ? 'bg-playful-coral text-white shadow-md scale-110'
+                        : 'bg-white text-gray-600 hover:bg-playful-cream'
                         }`}
                 >
                     {number}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Heart, PawPrint } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, PawPrint } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 const PlayfulNavbar = () => {
