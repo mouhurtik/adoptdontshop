@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Heart, ShoppingBag, Shield, Check, ExternalLink, Dog, Cat, Fish } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 // Mock Data
 const PRODUCTS = [
@@ -96,9 +96,9 @@ const PetEssentials = () => {
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden bg-playful-cream/30">
                 <div className="container mx-auto px-4 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                    <ScrollReveal
+                        mode="fade-up"
+                        width="100%"
                         className="text-center max-w-3xl mx-auto"
                     >
                         <Badge variant="secondary" className="mb-4 bg-playful-yellow text-playful-text hover:bg-playful-yellow/80">
@@ -115,7 +115,7 @@ const PetEssentials = () => {
                             Discover our curated selection of top-rated food, toys, and accessories.
                             Every purchase supports our shelter partners.
                         </p>
-                    </motion.div>
+                    </ScrollReveal>
                 </div>
             </section>
 
@@ -139,52 +139,53 @@ const PetEssentials = () => {
 
                         {["dog", "cat", "other"].map((type) => (
                             <TabsContent key={type} value={type} className="mt-0">
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                                <ScrollReveal
+                                    mode="fade-in"
+                                    duration={0.3}
+                                    width="100%"
                                 >
-                                    {filteredProducts.map((product) => (
-                                        <Card key={product.id} className="group hover:shadow-soft transition-all duration-300 border-gray-100 overflow-hidden bg-white h-full flex flex-col">
-                                            <div className="relative h-64 overflow-hidden">
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                />
-                                                {product.badge && (
-                                                    <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-playful-text text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                        {product.badge}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                        {filteredProducts.map((product) => (
+                                            <Card key={product.id} className="group hover:shadow-soft transition-all duration-300 border-gray-100 overflow-hidden bg-white h-full flex flex-col">
+                                                <div className="relative h-64 overflow-hidden">
+                                                    <img
+                                                        src={product.image}
+                                                        alt={product.name}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                    {product.badge && (
+                                                        <span className="absolute top-4 left-4 bg-white/90 backdrop-blur text-playful-text text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                            {product.badge}
+                                                        </span>
+                                                    )}
+                                                    <span className="absolute top-4 right-4 bg-playful-coral/90 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                        {product.category}
                                                     </span>
-                                                )}
-                                                <span className="absolute top-4 right-4 bg-playful-coral/90 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                    {product.category}
-                                                </span>
-                                            </div>
-                                            <CardHeader>
-                                                <CardTitle className="text-xl font-bold text-playful-text group-hover:text-playful-coral transition-colors">
-                                                    {product.name}
-                                                </CardTitle>
-                                                <CardDescription className="text-gray-500 text-sm">
-                                                    {product.description}
-                                                </CardDescription>
-                                            </CardHeader>
-                                            <CardContent className="mt-auto">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-2xl font-black text-playful-text">{product.price}</span>
                                                 </div>
-                                            </CardContent>
-                                            <CardFooter>
-                                                <PrimaryButton className="w-full justify-center group/btn">
-                                                    <ShoppingBag className="w-4 h-4 mr-2" />
-                                                    View Details
-                                                    <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-                                                </PrimaryButton>
-                                            </CardFooter>
-                                        </Card>
-                                    ))}
-                                </motion.div>
+                                                <CardHeader>
+                                                    <CardTitle className="text-xl font-bold text-playful-text group-hover:text-playful-coral transition-colors">
+                                                        {product.name}
+                                                    </CardTitle>
+                                                    <CardDescription className="text-gray-500 text-sm">
+                                                        {product.description}
+                                                    </CardDescription>
+                                                </CardHeader>
+                                                <CardContent className="mt-auto">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-2xl font-black text-playful-text">{product.price}</span>
+                                                    </div>
+                                                </CardContent>
+                                                <CardFooter>
+                                                    <PrimaryButton className="w-full justify-center group/btn">
+                                                        <ShoppingBag className="w-4 h-4 mr-2" />
+                                                        View Details
+                                                        <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                                                    </PrimaryButton>
+                                                </CardFooter>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                </ScrollReveal>
                             </TabsContent>
                         ))}
                     </Tabs>
@@ -199,43 +200,44 @@ const PetEssentials = () => {
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-playful-coral font-bold text-sm mb-6 border border-playful-coral/20 shadow-sm">
-                                <Shield className="w-4 h-4" />
-                                Peace of Mind Protected
-                            </div>
-                            <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-playful-text">
-                                Protect Your Pet With <span className="text-playful-coral">Top-Rated</span> Insurance
-                            </h2>
-                            <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                                Unexpected vet bills shouldn't happen. Secure your pet's health with comprehensive coverage for accidents, illnesses, and routine care.
-                            </p>
+                            <ScrollReveal mode="slide-right">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-playful-coral font-bold text-sm mb-6 border border-playful-coral/20 shadow-sm">
+                                    <Shield className="w-4 h-4" />
+                                    Peace of Mind Protected
+                                </div>
+                                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-playful-text">
+                                    Protect Your Pet With <span className="text-playful-coral">Top-Rated</span> Insurance
+                                </h2>
+                                <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                                    Unexpected vet bills shouldn't happen. Secure your pet's health with comprehensive coverage for accidents, illnesses, and routine care.
+                                </p>
 
-                            <ul className="space-y-4 mb-8">
-                                {[
-                                    "Up to 90% reimbursement on vet bills",
-                                    "Coverage for accidents & illnesses",
-                                    "24/7 Vet helpline included",
-                                    "Fast claim processing"
-                                ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-3 text-gray-700 font-medium">
-                                        <div className="w-6 h-6 rounded-full bg-playful-coral/10 flex items-center justify-center shrink-0">
-                                            <Check className="w-3 h-3 text-playful-coral" />
-                                        </div>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
+                                <ul className="space-y-4 mb-8">
+                                    {[
+                                        "Up to 90% reimbursement on vet bills",
+                                        "Coverage for accidents & illnesses",
+                                        "24/7 Vet helpline included",
+                                        "Fast claim processing"
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-gray-700 font-medium">
+                                            <div className="w-6 h-6 rounded-full bg-playful-coral/10 flex items-center justify-center shrink-0">
+                                                <Check className="w-3 h-3 text-playful-coral" />
+                                            </div>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
 
-                            <PrimaryButton variant="secondary" size="lg" className="bg-playful-text text-white hover:bg-playful-text/90 shadow-xl">
-                                Get a Free Quote
-                            </PrimaryButton>
+                                <PrimaryButton variant="secondary" size="lg" className="bg-playful-text text-white hover:bg-playful-text/90 shadow-xl">
+                                    Get a Free Quote
+                                </PrimaryButton>
+                            </ScrollReveal>
                         </div>
 
                         <div className="relative">
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                whileInView={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.5 }}
+                            <ScrollReveal
+                                mode="pop"
+                                duration={0.5}
                                 className="relative z-10"
                             >
                                 <Card className="bg-white border-gray-100 shadow-2xl p-2 overflow-hidden rotate-2 hover:rotate-0 transition-all duration-500">
@@ -252,7 +254,7 @@ const PetEssentials = () => {
                                         <p className="text-gray-500 text-sm">Great for puppies and young pets.</p>
                                     </div>
                                 </Card>
-                            </motion.div>
+                            </ScrollReveal>
 
                             {/* Decorative Elements */}
                             <div className="absolute -top-6 -right-6 w-24 h-24 bg-playful-coral/20 rounded-full opacity-50 blur-xl" />

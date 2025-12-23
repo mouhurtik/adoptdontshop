@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const PrivacyPolicy = () => {
   useEffect(() => {
@@ -12,11 +12,11 @@ const PrivacyPolicy = () => {
   return (
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
       <div className="container mx-auto px-4 max-w-4xl">
-        <motion.div
+        <ScrollReveal
+          mode="fade-up"
+          duration={0.5}
+          width="100%"
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
           <div className="bg-playful-teal p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full text-white shadow-lg transform rotate-3">
             <ShieldCheck className="h-10 w-10" />
@@ -27,13 +27,14 @@ const PrivacyPolicy = () => {
           <p className="text-xl text-gray-600 font-medium">
             We care about your privacy as much as we care about pets 🔒
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        <motion.div
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.1}
+          duration={0.5}
+          width="100%"
           className="bg-white rounded-[2.5rem] shadow-soft p-8 md:p-12 border-2 border-playful-teal/30"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="prose prose-lg max-w-none text-gray-600">
             <p className="mb-6 text-lg">At Adopt Don't Shop, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
@@ -133,7 +134,7 @@ const PrivacyPolicy = () => {
               </PrimaryButton>
             </Link>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );

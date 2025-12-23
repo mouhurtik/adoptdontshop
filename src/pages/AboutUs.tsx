@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, Linkedin, Twitter, PawPrint, Users, Target, Award } from 'lucide-react';
-import { motion } from 'framer-motion';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const AboutUs = () => {
   useEffect(() => {
@@ -13,10 +13,9 @@ const AboutUs = () => {
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
       <div className="container mx-auto px-6">
         {/* Playful Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <ScrollReveal
+          mode="fade-up"
+          width="100%"
           className="text-center mb-24 relative"
         >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-coral/20 rounded-full blur-3xl -z-10"></div>
@@ -30,14 +29,14 @@ const AboutUs = () => {
           <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-8 font-heading">
             Connecting loving homes with pets in need 🐾
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         <div className="max-w-6xl mx-auto space-y-24">
           {/* Mission Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0}
+            width="100%"
           >
             <div className="bg-white rounded-[2.5rem] p-6 md:p-12 shadow-soft border-2 border-playful-mint/30">
               <div className="flex items-center gap-4 mb-8">
@@ -61,13 +60,13 @@ const AboutUs = () => {
                 </p>
               </div>
             </div>
-          </motion.section>
+          </ScrollReveal>
 
           {/* Founder Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.1}
+            width="100%"
             className="bg-white rounded-[3rem] p-6 md:p-12 shadow-xl border-2 border-playful-yellow/30"
           >
             <div className="flex items-center gap-4 mb-8">
@@ -117,13 +116,13 @@ const AboutUs = () => {
                 </div>
               </div>
             </div>
-          </motion.section>
+          </ScrollReveal>
 
           {/* Contact Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.1}
+            width="100%"
           >
             <div className="flex items-center gap-4 mb-8 justify-center md:justify-start">
               <div className="bg-playful-coral/20 p-4 rounded-full text-playful-coral">
@@ -133,9 +132,8 @@ const AboutUs = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div
-                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-mint/30"
-                whileHover={{ y: -8, scale: 1.02 }}
+              <div
+                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-mint/30 hover:scale-105 transition-transform duration-300"
               >
                 <div className="flex items-center mb-6">
                   <div className="bg-playful-mint/20 p-4 mr-4 rounded-full text-green-600">
@@ -149,11 +147,10 @@ const AboutUs = () => {
                 >
                   mouhurtikr@gmail.com
                 </a>
-              </motion.div>
+              </div>
 
-              <motion.div
-                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-teal/30"
-                whileHover={{ y: -8, scale: 1.02 }}
+              <div
+                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-teal/30 hover:scale-105 transition-transform duration-300"
               >
                 <div className="flex items-center mb-6">
                   <div className="bg-playful-teal/20 p-4 mr-4 rounded-full text-playful-teal">
@@ -169,11 +166,10 @@ const AboutUs = () => {
                 >
                   linkedin.com/in/mouhurtik
                 </a>
-              </motion.div>
+              </div>
 
-              <motion.div
-                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-coral/30"
-                whileHover={{ y: -8, scale: 1.02 }}
+              <div
+                className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-coral/30 hover:scale-105 transition-transform duration-300"
               >
                 <div className="flex items-center mb-6">
                   <div className="bg-playful-coral/20 p-4 mr-4 rounded-full text-playful-coral">
@@ -189,25 +185,25 @@ const AboutUs = () => {
                 >
                   x.com/mouhurtik
                 </a>
-              </motion.div>
+              </div>
             </div>
-          </motion.section>
+          </ScrollReveal>
         </div>
 
         {/* Call to Action */}
-        <motion.div
+        <ScrollReveal
           className="mt-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
+          mode="fade-up"
+          delay={0.1}
+          width="100%"
         >
           <Link to="/browse">
-            <PrimaryButton size="lg" className="text-xl px-12 py-6">
+            <PrimaryButton size="lg" className="text-xl px-10 py-4">
               <PawPrint className="mr-3 h-6 w-6" />
               Browse Available Pets
             </PrimaryButton>
           </Link>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );

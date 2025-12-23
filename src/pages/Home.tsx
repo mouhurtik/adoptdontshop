@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import HeroSection from '@/components/home/HeroSection';
 import SearchSection from '@/components/home/SearchSection';
 import FeaturedPets from '@/components/home/FeaturedPets';
 import WhyAdopt from '@/components/home/WhyAdopt';
 import SponsorsSection from '@/components/home/SponsorsSection';
 import CallToAction from '@/components/home/CallToAction';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [petCount, setPetCount] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -36,8 +35,6 @@ const Home = () => {
       }
     } catch (error) {
       console.error('Failed to fetch pet count:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -59,22 +56,25 @@ const Home = () => {
 
   return (
     <div className="overflow-hidden bg-playful-cream min-h-screen">
-      {isLoading && <LoadingSpinner />}
 
       <HeroSection petCount={petCount} />
 
-      <SearchSection
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        handleSearch={handleSearch}
-        handleKeyPress={handleKeyPress}
-      />
+      <ScrollReveal width="100%" mode="fade-up" delay={0.2}>
+        <SearchSection
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearch}
+          handleKeyPress={handleKeyPress}
+        />
+      </ScrollReveal>
 
       <FeaturedPets />
 
       <WhyAdopt />
 
-      <SponsorsSection />
+      <ScrollReveal width="100%" mode="fade-in">
+        <SponsorsSection />
+      </ScrollReveal>
 
       <CallToAction />
     </div>

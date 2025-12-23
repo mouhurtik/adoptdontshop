@@ -1,85 +1,76 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { PawPrint, ArrowLeft, Home } from "lucide-react";
-import { motion } from "framer-motion";
+import { Dog, Cat, ArrowLeft } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const NotFound = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route");
-  }, []);
+    console.error(
+      "404 Error: User attempted to access non-existent route:",
+      location.pathname
+    );
+  }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-playful-cream relative overflow-hidden">
+    <div className="min-h-screen pt-24 pb-12 bg-playful-cream flex items-center justify-center relative overflow-hidden">
       {/* Decorative background elements */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-playful-coral/20 rounded-full blur-2xl"></div>
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-playful-teal/20 rounded-full blur-2xl"></div>
+      <div className="absolute top-1/4 left-10 text-playful-yellow opacity-20 transform -rotate-12 animate-pulse">
+        <Dog size={120} />
+      </div>
+      <div className="absolute bottom-1/4 right-10 text-playful-teal opacity-20 transform rotate-12 animate-pulse delay-700">
+        <Cat size={120} />
+      </div>
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-playful-coral/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-playful-blue/10 rounded-full blur-3xl -z-10"></div>
 
-      <div className="text-center p-6 relative z-10">
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 20,
-            duration: 0.8
-          }}
-          className="mb-8 inline-block"
-        >
-          <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center mx-auto shadow-xl border-4 border-playful-yellow relative">
-            <PawPrint className="h-20 w-20 text-playful-yellow" />
-            <div className="absolute -top-2 -right-2 text-6xl">❓</div>
+      <div className="text-center px-6 max-w-2xl relative z-10">
+        <div className="mb-8 relative inline-block">
+          <div className="text-9xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-playful-coral to-playful-yellow opacity-20 select-none absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-150 blur-sm">
+            404
           </div>
-        </motion.div>
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.2}
+            width="100%"
+            className="text-6xl md:text-8xl font-heading font-black text-playful-text mb-4"
+          >
+            404
+          </ScrollReveal>
+        </div>
 
-        <motion.h1
-          className="text-6xl md:text-8xl font-heading font-black text-playful-text mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.3}
+          width="100%"
+          className="text-2xl md:text-3xl font-bold text-gray-700 mb-6"
         >
-          404
-        </motion.h1>
+          Oops! This page has gone astray
+        </ScrollReveal>
 
-        <motion.h2
-          className="text-3xl font-heading font-bold text-gray-700 mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.4}
+          width="100%"
+          className="text-gray-600 mb-10 max-w-md mx-auto text-lg"
         >
-          Uh oh! You seem lost...
-        </motion.h2>
+          The page you are looking for might have been removed, had its name changed, or joined a new family.
+        </ScrollReveal>
 
-        <motion.p
-          className="text-xl text-gray-600 mb-10 max-w-md mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          We couldn't find the page you're looking for. Maybe it went for a walk? 🐕
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.5}
+          width="100%"
         >
           <Link to="/">
-            <PrimaryButton size="lg" className="w-full sm:w-auto">
-              <Home className="mr-2 h-5 w-5" />
-              Go Home
-            </PrimaryButton>
-          </Link>
-
-          <Link to="/browse">
-            <PrimaryButton variant="secondary" size="lg" className="w-full sm:w-auto">
+            <PrimaryButton size="lg" className="shadow-xl shadow-playful-coral/20 hover:shadow-playful-coral/30">
               <ArrowLeft className="mr-2 h-5 w-5" />
-              Browse Pets
+              Return to Home
             </PrimaryButton>
           </Link>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );

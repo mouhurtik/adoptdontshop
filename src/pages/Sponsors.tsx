@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Mail, PawPrint, Eye, Users, Award, Building, UserCheck, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const Patrons = () => {
   useEffect(() => {
@@ -11,10 +11,9 @@ const Patrons = () => {
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
       <div className="container mx-auto px-6">
         {/* Playful Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <ScrollReveal
+          mode="fade-up"
+          width="100%"
           className="text-center mb-24 relative"
         >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-teal/20 rounded-full blur-3xl -z-10"></div>
@@ -28,13 +27,13 @@ const Patrons = () => {
           <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-8 font-heading">
             Supporting our mission to connect pets with loving homes 🤝
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Organizations & Doctors Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0}
+          width="100%"
           className="mb-24"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -76,13 +75,13 @@ const Patrons = () => {
               </div>
             </div>
           </div>
-        </motion.section>
+        </ScrollReveal>
 
         {/* Become a Patron Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.1}
+          width="100%"
           className="mb-24"
         >
           <div className="bg-white rounded-[3rem] p-6 md:p-12 shadow-xl text-center relative overflow-hidden">
@@ -119,13 +118,13 @@ const Patrons = () => {
               Contact us for early details on how you can support our mission.
             </p>
           </div>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Why Become a Patron Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.1}
+          width="100%"
         >
           <div className="flex items-center gap-4 mb-8 justify-center md:justify-start">
             <div className="bg-playful-yellow p-4 rounded-full text-white shadow-md">
@@ -160,7 +159,7 @@ const Patrons = () => {
               index={2}
             />
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );
@@ -176,19 +175,20 @@ interface SponsorBenefitProps {
 }
 
 const SponsorBenefit = ({ title, description, icon, bgColor, iconColor, index }: SponsorBenefitProps) => (
-  <motion.div
-    className={`bg-white rounded-[2rem] p-8 shadow-soft border-2 border-transparent hover:border-gray-100`}
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 1.0 + (index * 0.1) }}
-    whileHover={{ y: -8, scale: 1.02 }}
+  <ScrollReveal
+    mode="fade-up"
+    delay={0.1 + (index * 0.1)}
+    className="h-full"
+    width="100%"
   >
-    <div className={`${bgColor} p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full ${iconColor}`}>
-      {icon}
+    <div className={`bg-white rounded-[2rem] p-8 shadow-soft border-2 border-transparent hover:border-gray-100 h-full hover:scale-105 transition-transform duration-300`}>
+      <div className={`${bgColor} p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full ${iconColor}`}>
+        {icon}
+      </div>
+      <h3 className="text-2xl font-heading font-bold text-playful-text mb-4">{title}</h3>
+      <p className="text-gray-600 font-medium leading-relaxed">{description}</p>
     </div>
-    <h3 className="text-2xl font-heading font-bold text-playful-text mb-4">{title}</h3>
-    <p className="text-gray-600 font-medium leading-relaxed">{description}</p>
-  </motion.div>
+  </ScrollReveal>
 );
 
 export default Patrons;

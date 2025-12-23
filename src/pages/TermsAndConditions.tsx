@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, FileText } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const TermsAndConditions = () => {
   useEffect(() => {
@@ -12,11 +12,11 @@ const TermsAndConditions = () => {
   return (
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
       <div className="container mx-auto px-4 max-w-4xl">
-        <motion.div
+        <ScrollReveal
+          mode="fade-up"
+          duration={0.5}
+          width="100%"
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
           <div className="bg-playful-yellow p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full text-white shadow-lg transform -rotate-3">
             <FileText className="h-10 w-10" />
@@ -27,13 +27,14 @@ const TermsAndConditions = () => {
           <p className="text-xl text-gray-600 font-medium">
             Please read these terms carefully before using our platform 📜
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        <motion.div
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.1}
+          duration={0.5}
+          width="100%"
           className="bg-white rounded-[2.5rem] shadow-soft p-8 md:p-12 border-2 border-playful-mint/30"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="prose prose-lg max-w-none text-gray-600">
             <p className="mb-6 text-lg">Welcome to Adopt Don't Shop. By using our platform, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.</p>
@@ -130,7 +131,7 @@ const TermsAndConditions = () => {
               </PrimaryButton>
             </Link>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );

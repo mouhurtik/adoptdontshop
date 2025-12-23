@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { PawPrint, Upload, FileText, Shield } from "lucide-react";
 import PetListingForm from "@/components/pet-listing/PetListingForm";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const ListPet = () => {
   const [formOpen, setFormOpen] = useState(true);
@@ -11,10 +11,10 @@ const ListPet = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <ScrollReveal
+            mode="fade-up"
+            duration={0.5}
+            width="100%"
             className="text-center mb-16 relative"
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-yellow/20 rounded-full blur-3xl -z-10"></div>
@@ -33,16 +33,16 @@ const ListPet = () => {
             <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-2xl mx-auto font-heading">
               Help a pet find their forever home by listing them on our platform 🏡
             </p>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Info Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.2}
+            width="100%"
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-yellow/30 text-center">
+            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-yellow/30 text-center hover:scale-105 transition-transform duration-300">
               <div className="bg-playful-yellow/20 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full text-yellow-600">
                 <Upload className="h-8 w-8" />
               </div>
@@ -52,7 +52,7 @@ const ListPet = () => {
               </p>
             </div>
 
-            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-coral/30 text-center">
+            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-coral/30 text-center hover:scale-105 transition-transform duration-300">
               <div className="bg-playful-coral/20 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full text-playful-coral">
                 <FileText className="h-8 w-8" />
               </div>
@@ -62,7 +62,7 @@ const ListPet = () => {
               </p>
             </div>
 
-            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-teal/30 text-center">
+            <div className="bg-white rounded-[2rem] p-6 shadow-soft border-2 border-playful-teal/30 text-center hover:scale-105 transition-transform duration-300">
               <div className="bg-playful-teal/20 p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full text-playful-teal">
                 <Shield className="h-8 w-8" />
               </div>
@@ -71,17 +71,17 @@ const ListPet = () => {
                 We verify all listings to ensure the safety of both pets and adopters
               </p>
             </div>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Form Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.4}
+            width="100%"
             className="bg-white rounded-[2.5rem] p-6 md:p-12 shadow-xl border-2 border-gray-100"
           >
             <PetListingForm isPage={true} />
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
     </div>

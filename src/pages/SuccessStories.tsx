@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Mail, ArrowRight, PawPrint, Star, Users, Award } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const SuccessStories = () => {
   useEffect(() => {
@@ -13,10 +13,9 @@ const SuccessStories = () => {
     <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
       <div className="container mx-auto px-6">
         {/* Playful Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <ScrollReveal
+          mode="fade-up"
+          width="100%"
           className="text-center mb-24 relative"
         >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-yellow/20 rounded-full blur-3xl -z-10"></div>
@@ -30,55 +29,62 @@ const SuccessStories = () => {
           <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-8 font-heading">
             Heartwarming stories of rescued pets finding their forever homes 🏡
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24"
-        >
-          <motion.div
-            className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-mint/30"
-            whileHover={{ y: -8, scale: 1.02 }}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
+          <ScrollReveal
+            mode="fade-up"
+            delay={0}
+            className="h-full w-full"
+            width="100%"
           >
-            <div className="bg-playful-mint/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-green-600">
-              <PawPrint className="h-10 w-10" />
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-mint/30 h-full hover:scale-105 transition-transform duration-300">
+              <div className="bg-playful-mint/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-green-600">
+                <PawPrint className="h-10 w-10" />
+              </div>
+              <h3 className="font-heading font-black text-5xl text-playful-text mb-2">25+</h3>
+              <p className="text-gray-500 text-lg font-bold">Successful Adoptions</p>
             </div>
-            <h3 className="font-heading font-black text-5xl text-playful-text mb-2">25+</h3>
-            <p className="text-gray-500 text-lg font-bold">Successful Adoptions</p>
-          </motion.div>
+          </ScrollReveal>
 
-          <motion.div
-            className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-coral/30"
-            whileHover={{ y: -8, scale: 1.02 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.1}
+            className="h-full w-full"
+            width="100%"
           >
-            <div className="bg-playful-coral/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-playful-coral">
-              <Users className="h-10 w-10" />
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-coral/30 h-full hover:scale-105 transition-transform duration-300">
+              <div className="bg-playful-coral/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-playful-coral">
+                <Users className="h-10 w-10" />
+              </div>
+              <h3 className="font-heading font-black text-5xl text-playful-text mb-2">50+</h3>
+              <p className="text-gray-500 text-lg font-bold">Happy Families</p>
             </div>
-            <h3 className="font-heading font-black text-5xl text-playful-text mb-2">50+</h3>
-            <p className="text-gray-500 text-lg font-bold">Happy Families</p>
-          </motion.div>
+          </ScrollReveal>
 
-          <motion.div
-            className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-yellow/30"
-            whileHover={{ y: -8, scale: 1.02 }}
+          <ScrollReveal
+            mode="fade-up"
+            delay={0.2}
+            className="h-full w-full"
+            width="100%"
           >
-            <div className="bg-playful-yellow/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-yellow-600">
-              <Star className="h-10 w-10" />
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-soft text-center border-2 border-playful-yellow/30 h-full hover:scale-105 transition-transform duration-300">
+              <div className="bg-playful-yellow/20 p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full text-yellow-600">
+                <Star className="h-10 w-10" />
+              </div>
+              <h3 className="font-heading font-black text-5xl text-playful-text mb-2">100%</h3>
+              <p className="text-gray-500 text-lg font-bold">Satisfaction Rate</p>
             </div>
-            <h3 className="font-heading font-black text-5xl text-playful-text mb-2">100%</h3>
-            <p className="text-gray-500 text-lg font-bold">Satisfaction Rate</p>
-          </motion.div>
-        </motion.div>
+          </ScrollReveal>
+        </div>
 
         {/* Main Content */}
-        <motion.div
+        <ScrollReveal
           className="max-w-4xl mx-auto"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          mode="fade-up"
+          delay={0.1}
+          width="100%"
         >
           <div className="bg-white rounded-[3rem] p-6 md:p-12 shadow-xl text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-playful-lavender/30 rounded-full -mr-10 -mt-10 blur-3xl"></div>
@@ -122,13 +128,13 @@ const SuccessStories = () => {
               </Link>
             </div>
           </div>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Coming Soon Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.1}
+          width="100%"
           className="mt-16 text-center"
         >
           <div className="bg-playful-text text-white rounded-[2rem] p-6 md:p-12 shadow-xl max-w-3xl mx-auto relative overflow-hidden">
@@ -145,7 +151,7 @@ const SuccessStories = () => {
               </p>
             </div>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
     </div>
   );

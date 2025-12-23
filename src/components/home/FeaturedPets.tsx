@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import PetCard from '@/components/PetCard';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 interface Pet {
     id: any;
@@ -60,11 +61,9 @@ const PlayfulFeaturedPets = () => {
     return (
         <section className="py-20 bg-playful-cream">
             <div className="container mx-auto px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                <ScrollReveal
+                    mode="fade-up"
+                    width="100%"
                     className="text-center mb-16"
                 >
                     <span className="inline-block px-4 py-1 bg-playful-mint/30 text-teal-800 rounded-full font-bold text-sm tracking-wide mb-4">
@@ -76,16 +75,16 @@ const PlayfulFeaturedPets = () => {
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         These adorable pets are looking for their forever homes. Could you be the one they've been waiting for?
                     </p>
-                </motion.div>
+                </ScrollReveal>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
                     {featuredPets.map((pet, index) => (
-                        <motion.div
+                        <ScrollReveal
                             key={pet.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, duration: 0.5 }}
+                            mode="fade-up"
+                            delay={index * 0.1}
+                            width="100%"
+                            className="h-full"
                         >
                             <PetCard
                                 id={pet.id}
@@ -96,7 +95,7 @@ const PlayfulFeaturedPets = () => {
                                 image={pet.image_url || "/placeholder.svg"}
                                 type={pet.animal_type || 'dog'}
                             />
-                        </motion.div>
+                        </ScrollReveal>
                     ))}
                 </div>
 

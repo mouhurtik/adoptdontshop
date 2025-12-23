@@ -12,6 +12,7 @@ import PetInfoSection from '@/components/pet-details/PetInfoSection';
 import AdoptionModal from '@/components/pet-details/AdoptionModal';
 import ContactInfoCard from '@/components/pet-details/ContactInfoCard';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const PetDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -121,12 +122,22 @@ const PetDetails = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left column with pet info */}
           <div className="flex-grow">
-            <PetDetailsHeader pet={pet} openAdoptModal={openAdoptModal} />
-            <PetInfoSection pet={pet} />
+            <ScrollReveal mode="fade-up" width="100%">
+              <PetDetailsHeader pet={pet} openAdoptModal={openAdoptModal} />
+            </ScrollReveal>
+            <ScrollReveal mode="fade-up" delay={0.2} width="100%">
+              <PetInfoSection pet={pet} />
+            </ScrollReveal>
           </div>
 
           {/* Right column with contact info */}
-          <ContactInfoCard petName={pet.name} petId={id} petLocation={pet.location} />
+          <ScrollReveal
+            mode="slide-left"
+            delay={0.4}
+            className="w-full lg:w-auto"
+          >
+            <ContactInfoCard petName={pet.name} petId={id} petLocation={pet.location} />
+          </ScrollReveal>
         </div>
       </div>
 

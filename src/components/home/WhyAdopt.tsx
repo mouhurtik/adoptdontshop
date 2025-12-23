@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Heart, Home, ShieldCheck } from 'lucide-react';
 
 const PlayfulWhyAdopt = () => {
@@ -36,36 +35,39 @@ const PlayfulWhyAdopt = () => {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-16">
+                <ScrollReveal
+                    mode="fade-up"
+                    width="100%"
+                    className="text-center mb-16"
+                >
                     <h2 className="text-4xl md:text-5xl font-heading font-bold text-playful-text mb-6">
                         Why <span className="text-playful-teal">Adopt?</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         Adopting a pet is one of the most rewarding experiences. Here is why you should consider adoption.
                     </p>
-                </div>
+                </ScrollReveal>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {reasons.map((reason, index) => (
-                        <motion.div
+                        <ScrollReveal
                             key={index}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: reason.delay, duration: 0.5 }}
-                            whileHover={{ y: -10 }}
-                            className="bg-white p-8 rounded-[2rem] shadow-soft border border-gray-100 hover:shadow-hover transition-all duration-300"
+                            mode="fade-up"
+                            delay={reason.delay}
+                            className="h-full"
                         >
-                            <div className={`w-16 h-16 ${reason.color} rounded-2xl flex items-center justify-center mb-6 shadow-md rotate-3 group-hover:rotate-6 transition-transform`}>
-                                {reason.icon}
+                            <div className="bg-white p-8 rounded-[2rem] shadow-soft border border-gray-100 hover:shadow-hover transition-all duration-300 h-full group">
+                                <div className={`w-16 h-16 ${reason.color} rounded-2xl flex items-center justify-center mb-6 shadow-md rotate-3 group-hover:rotate-6 transition-transform`}>
+                                    {reason.icon}
+                                </div>
+                                <h3 className="text-2xl font-heading font-bold text-playful-text mb-4">
+                                    {reason.title}
+                                </h3>
+                                <p className="text-gray-600 leading-relaxed">
+                                    {reason.description}
+                                </p>
                             </div>
-                            <h3 className="text-2xl font-heading font-bold text-playful-text mb-4">
-                                {reason.title}
-                            </h3>
-                            <p className="text-gray-600 leading-relaxed">
-                                {reason.description}
-                            </p>
-                        </motion.div>
+                        </ScrollReveal>
                     ))}
                 </div>
             </div>

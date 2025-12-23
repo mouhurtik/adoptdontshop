@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { PawPrint } from 'lucide-react';
 import PetCard from '@/components/PetCard';
 import { Pet } from '@/hooks/usePets';
 import Pagination from './Pagination';
@@ -37,7 +38,19 @@ const PetGrid = ({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin"></div>
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5]
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <PawPrint className="w-16 h-16 text-playful-coral" />
+        </motion.div>
       </div>
     );
   }

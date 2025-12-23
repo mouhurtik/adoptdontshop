@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { usePets } from '@/hooks/usePets';
 import { useFilters } from '@/hooks/useFilters';
 import PetFilters from '@/components/browse/PetFilters';
 import PetGrid from '@/components/browse/PetGrid';
 import { Search, Filter } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const BrowsePets = () => {
   // Get URL parameters
@@ -73,9 +73,9 @@ const BrowsePets = () => {
     return (
       <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
         <div className="container mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <ScrollReveal
+            mode="fade-up"
+            width="100%"
             className="bg-white rounded-3xl p-12 shadow-soft border-2 border-red-100 max-w-2xl mx-auto"
           >
             <div className="text-6xl mb-6">😕</div>
@@ -87,7 +87,7 @@ const BrowsePets = () => {
             >
               Try Again
             </PrimaryButton>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
     );
@@ -98,30 +98,29 @@ const BrowsePets = () => {
       {/* Hero Header */}
       <div className="pt-28 pb-12 relative overflow-hidden mb-8">
         <div className="container mx-auto px-6 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+          <ScrollReveal
+            mode="fade-up"
+            width="100%"
           >
             <span className="inline-block px-4 py-1 bg-white border border-playful-teal/20 text-playful-teal rounded-full font-bold text-sm tracking-wide mb-6 shadow-sm">
               Adopt, Don't Shop
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-black text-playful-text mb-6 leading-tight flex flex-col md:block items-center justify-center gap-2">
-              Find Your <span className="inline-block px-4 lg:px-6 bg-playful-yellow text-playful-text rounded-2xl mx-2 shadow-sm">Perfect Match</span>
+              Find Your <span className="inline-block px-4 lg:px-6 bg-playful-yellow text-playful-text rounded-2xl shadow-sm">Perfect Match</span>
             </h1>
             <p className="text-lg text-gray-600 font-medium max-w-2xl mx-auto mb-8">
               Browse through our list of adorable pets waiting for a loving home.
             </p>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
 
       <div className="container mx-auto px-6 -mt-16 relative z-20">
         {/* Search Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <ScrollReveal
+          mode="fade-up"
+          delay={0.2}
+          width="100%"
           className="bg-white rounded-[2.5rem] p-3 shadow-xl mb-10 max-w-4xl mx-auto flex flex-col md:flex-row gap-3 items-center border border-gray-100"
         >
           <div className="flex-grow relative w-full">
@@ -144,7 +143,7 @@ const BrowsePets = () => {
             <Filter className="h-5 w-5" />
             Filters {showFilters ? 'On' : 'Off'}
           </PrimaryButton>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Filters */}
         <PetFilters
