@@ -23,6 +23,25 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+      // Allow unused vars that start with underscore (intentionally unused)
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+    },
+  },
+  // Override for UI component library files
+  {
+    files: [
+      "src/components/ui/**/*.{ts,tsx}",
+      "src/hooks/use-toast.ts"
+    ],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
     },
   }
 );

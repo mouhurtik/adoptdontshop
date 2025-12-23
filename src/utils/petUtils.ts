@@ -3,7 +3,7 @@ import { Pet } from '@/hooks/usePets';
 /**
  * Transform raw Supabase pet data to consistent format
  */
-export const transformPetData = (rawPet: any): Pet => {
+export const transformPetData = (rawPet: Record<string, unknown>): Pet => {
   return {
     ...rawPet,
     name: rawPet.pet_name,
@@ -11,7 +11,7 @@ export const transformPetData = (rawPet: any): Pet => {
     age: rawPet.age || 'Unknown',
     urgent: rawPet.status === 'urgent',
     image: rawPet.image_url
-  };
+  } as Pet;
 };
 
 /**
@@ -47,27 +47,27 @@ export const isPetUrgent = (pet: Pet): boolean => {
  */
 export const formatPetAge = (age: string): string => {
   if (!age || age === 'Unknown') return 'Unknown';
-  
+
   const ageLower = age.toLowerCase();
-  
+
   if (ageLower.includes('week')) {
     return age;
   }
-  
+
   if (ageLower.includes('month')) {
     return age;
   }
-  
+
   if (ageLower.includes('year')) {
     return age;
   }
-  
+
   // If it's just a number, assume it's years
   const years = parseInt(age);
   if (!isNaN(years)) {
     return `${years} year${years === 1 ? '' : 's'} old`;
   }
-  
+
   return age;
 };
 
@@ -76,7 +76,7 @@ export const formatPetAge = (age: string): string => {
  */
 export const getPetTypeIcon = (type: string): string => {
   const typeLower = type.toLowerCase();
-  
+
   switch (typeLower) {
     case 'dog':
       return 'Dog';

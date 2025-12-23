@@ -65,7 +65,7 @@ const BrowsePets = () => {
 
   // Handle sort change
   const handleSortChange = (value: string) => {
-    updateFilter('sortBy', value as any);
+    updateFilter('sortBy', value);
   };
 
   // Handle error state
@@ -158,7 +158,6 @@ const BrowsePets = () => {
           pets={currentPets}
           isLoading={isLoading}
           currentPage={currentPage}
-          petsPerPage={petsPerPage}
           totalPages={totalPages}
           onPageChange={paginate}
           sortBy={filters.sortBy}
