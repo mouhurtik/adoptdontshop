@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PawPrint } from 'lucide-react';
 import PetCard from '@/components/PetCard';
-import { Pet } from '@/hooks/usePets';
+import type { Pet } from '@/types';
 import Pagination from './Pagination';
 
 interface PetGridProps {
@@ -102,7 +102,7 @@ const PetGrid = ({
               id={pet.id}
               name={pet.pet_name}
               breed={pet.breed}
-              age={pet.age || '0 years'}
+              age={String(pet.age || '0 years')}
               location={pet.location}
               image={pet.image_url || '/placeholder.svg'}
               type={pet.animal_type || 'dog'}

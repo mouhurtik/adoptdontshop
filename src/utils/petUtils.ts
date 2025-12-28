@@ -1,4 +1,4 @@
-import { Pet } from '@/hooks/usePets';
+import type { Pet } from '@/types';
 
 /**
  * Transform raw Supabase pet data to consistent format

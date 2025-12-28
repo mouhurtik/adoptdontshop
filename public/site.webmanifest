@@ -1,4 +1,3 @@
-
 {
   "name": "Adopt Don't Shop",
   "short_name": "AdoptPets",
@@ -16,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#15B26E",
+  "theme_color": "#FF6B6B",
   "background_color": "#ffffff",
   "display": "standalone"
 }

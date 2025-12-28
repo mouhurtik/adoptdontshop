@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, PawPrint } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
-const PlayfulNavbar = () => {
+const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
@@ -127,7 +127,7 @@ const PlayfulNavbar = () => {
     );
 };
 
-export default PlayfulNavbar;
+export default Navbar;
 
 
 

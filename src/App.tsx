@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { AuthProvider } from "./contexts/AuthContext";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("./pages/Home"));
@@ -36,29 +37,31 @@ const App = () => {
     return (
         <ErrorBoundary>
             <QueryClientProvider client={queryClient}>
-                <TooltipProvider>
-                    <Toaster />
-                    <Sonner />
-                    <BrowserRouter>
-                        <Layout>
-                            <Suspense fallback={<LoadingSpinner />}>
-                                <Routes>
-                                    <Route path="/" element={<Home />} />
-                                    <Route path="/browse" element={<BrowsePets />} />
-                                    <Route path="/pet-essentials" element={<PetEssentials />} />
-                                    <Route path="/pet/:id" element={<PetDetails />} />
-                                    <Route path="/success-stories" element={<SuccessStories />} />
-                                    <Route path="/sponsors" element={<Patrons />} />
-                                    <Route path="/about" element={<AboutUs />} />
-                                    <Route path="/terms" element={<TermsAndConditions />} />
-                                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                                    <Route path="/list-pet" element={<ListPet />} />
-                                    <Route path="*" element={<NotFound />} />
-                                </Routes>
-                            </Suspense>
-                        </Layout>
-                    </BrowserRouter>
-                </TooltipProvider>
+                <AuthProvider>
+                    <TooltipProvider>
+                        <Toaster />
+                        <Sonner />
+                        <BrowserRouter>
+                            <Layout>
+                                <Suspense fallback={<LoadingSpinner />}>
+                                    <Routes>
+                                        <Route path="/" element={<Home />} />
+                                        <Route path="/browse" element={<BrowsePets />} />
+                                        <Route path="/pet-essentials" element={<PetEssentials />} />
+                                        <Route path="/pet/:id" element={<PetDetails />} />
+                                        <Route path="/success-stories" element={<SuccessStories />} />
+                                        <Route path="/sponsors" element={<Patrons />} />
+                                        <Route path="/about" element={<AboutUs />} />
+                                        <Route path="/terms" element={<TermsAndConditions />} />
+                                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                                        <Route path="/list-pet" element={<ListPet />} />
+                                        <Route path="*" element={<NotFound />} />
+                                    </Routes>
+                                </Suspense>
+                            </Layout>
+                        </BrowserRouter>
+                    </TooltipProvider>
+                </AuthProvider>
             </QueryClientProvider>
         </ErrorBoundary>
     );

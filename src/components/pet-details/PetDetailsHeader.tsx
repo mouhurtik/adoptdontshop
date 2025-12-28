@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Heart, Share2 } from 'lucide-react';
+import { MapPin, Heart } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import { Pet } from '@/hooks/usePets';
+import type { Pet } from '@/types';
+import ShareButton from './ShareButton';
 
 interface PetDetailsHeaderProps {
   pet: Pet;
@@ -53,9 +54,7 @@ const PetDetailsHeader = ({ pet, openAdoptModal }: PetDetailsHeaderProps) => {
                 <button className="p-3 bg-playful-cream rounded-full hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors">
                   <Heart className="w-6 h-6" />
                 </button>
-                <button className="p-3 bg-playful-cream rounded-full hover:bg-blue-50 text-gray-400 hover:text-blue-500 transition-colors">
-                  <Share2 className="w-6 h-6" />
-                </button>
+                <ShareButton pet={pet} />
               </div>
             </div>
 

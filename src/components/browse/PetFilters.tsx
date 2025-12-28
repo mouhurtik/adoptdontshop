@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { PetFilters as PetFiltersType } from '@/hooks/usePets';
+import type { PetFilters as PetFiltersType } from '@/types';
 import { Filter, RotateCcw } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 
@@ -38,7 +38,7 @@ const PetFilters = ({
             <select
               className="w-full bg-playful-cream border-2 border-transparent hover:border-playful-teal/30 rounded-xl p-3 text-gray-700 font-medium focus:outline-none focus:border-playful-teal focus:ring-4 focus:ring-playful-teal/10 transition-all cursor-pointer appearance-none"
               value={filters.selectedType}
-              onChange={(e) => onFilterChange('selectedType', e.target.value as string)}
+              onChange={(e) => onFilterChange('selectedType', e.target.value as PetFiltersType['selectedType'])}
             >
               <option value="all">All Types 🐾</option>
               <option value="Dog">Dogs 🐶</option>
@@ -55,7 +55,7 @@ const PetFilters = ({
             <select
               className="w-full bg-playful-cream border-2 border-transparent hover:border-playful-coral/30 rounded-xl p-3 text-gray-700 font-medium focus:outline-none focus:border-playful-coral focus:ring-4 focus:ring-playful-coral/10 transition-all cursor-pointer appearance-none"
               value={filters.selectedAge}
-              onChange={(e) => onFilterChange('selectedAge', e.target.value as string)}
+              onChange={(e) => onFilterChange('selectedAge', e.target.value as PetFiltersType['selectedAge'])}
             >
               <option value="all">All Ages 🎂</option>
               <option value="baby">Baby (0-1 yr)</option>

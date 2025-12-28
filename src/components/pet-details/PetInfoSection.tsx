@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { FileText, Shield, Users } from 'lucide-react';
-import { Pet } from '@/hooks/usePets';
+import type { Pet } from '@/types';
 
 interface PetInfoSectionProps {
     pet: Pet;

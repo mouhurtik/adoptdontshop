@@ -5,7 +5,7 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Link } from 'react-router-dom';
 
 interface PetProps {
-  id: number;
+  id: string;
   name: string;
   breed: string;
   age: number | string;

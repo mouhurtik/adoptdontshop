@@ -1,32 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-
-export interface Pet {
-  id: string;
-  pet_name: string;
-  animal_type: string;
-  breed: string;
-  location: string;
-  image_url: string;
-  medical_info: string;
-  description: string;
-  status: string;
-  created_at: string;
-  age?: string | number;
-  urgent?: boolean;
-  name?: string;
-  type?: string;
-  image?: string;
-}
-
-export interface PetFilters {
-  searchTerm: string;
-  selectedType: 'all' | 'Dog' | 'Cat' | 'Bird' | 'Small Pet';
-  selectedAge: 'all' | 'baby' | 'young' | 'adult' | 'senior';
-  showUrgentOnly: boolean;
-  sortBy: 'newest' | 'oldest' | 'nameAsc' | 'nameDesc';
-}
+import type { Pet } from '@/types';
 
 export const usePets = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -38,7 +13,6 @@ export const usePets = () => {
     setError(null);
 
     try {
-      console.log("Fetching pets from Supabase");
       const { data, error } = await supabase
         .from('pet_listings')
         .select('*');
@@ -58,8 +32,7 @@ export const usePets = () => {
           image: pet.image_url
         }));
 
-        setPets(transformedPets);
-        console.log("Fetched pets from Supabase:", transformedPets);
+        setPets(transformedPets as Pet[]);
       }
     } catch (error) {
       console.error('Error fetching pets:', error);

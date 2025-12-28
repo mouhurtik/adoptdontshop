@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X, Heart } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import { Pet } from '@/hooks/usePets';
+import type { Pet } from '@/types';
 
 interface AdoptionModalProps {
   pet: Pet;

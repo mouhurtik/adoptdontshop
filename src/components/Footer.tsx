@@ -59,7 +59,7 @@ const Footer = () => {
                                 <li key={link.name}>
                                     <Link
                                         to={link.path}
-                                        className="group flex items-center gap-2 opacity-80 hover:opacity-100 hover:text-playful-yellow transition-all font-medium"
+                                        className="group flex items-center gap-2 text-white hover:text-playful-yellow transition-all font-medium"
                                     >
                                         <span className="h-1.5 w-1.5 rounded-full bg-playful-yellow/50 group-hover:w-3 transition-all duration-300"></span>
                                         {link.name}
@@ -92,7 +92,7 @@ const Footer = () => {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
-                    <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-playful-yellow fill-current mx-0.5 animate-pulse" /> for pets.</p>
+                    <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
                     <div className="flex gap-6">
                         <Link to="/privacy-policy" className="hover:text-playful-yellow transition-colors">Privacy Policy</Link>
                         <Link to="/terms" className="hover:text-playful-yellow transition-colors">Terms of Service</Link>

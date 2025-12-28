@@ -4,7 +4,7 @@ import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Pet } from '@/hooks/usePets';
+import { Pet } from '@/types';
 
 // Import Playful components
 import PetDetailsHeader from '@/components/pet-details/PetDetailsHeader';
