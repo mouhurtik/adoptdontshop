@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     isAuthenticated: !!session?.user,
                     error: null,
                 });
-            } catch (err) {
+            } catch {
                 setAuthState({
                     user: null,
                     isLoading: false,

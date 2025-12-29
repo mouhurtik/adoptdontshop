@@ -1,11 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
-
-// Test component to verify navigation
-const TestComponent = () => <div>Protected Content</div>;
-const LoginComponent = () => <div>Login Page</div>;
-const HomeComponent = () => <div>Home Page</div>;
+import { describe, it, expect } from 'vitest';
 
 // Since ProtectedRoute relies on useAuth, we test the authentication logic separately
 describe('ProtectedRoute integration', () => {
