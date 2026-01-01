@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Heart, MapPin } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Link } from 'react-router-dom';
+import { generatePetSlug } from '@/utils/slugUtils';
 
 interface PetProps {
   id: string;
@@ -55,7 +56,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
           <span className="text-sm font-medium">{location}</span>
         </div>
 
-        <Link to={`/pet/${id}`} className="block">
+        <Link to={`/pet/${generatePetSlug(name, id)}`} className="block">
           <PrimaryButton
             variant="secondary"
             className="w-full group-hover:bg-playful-teal group-hover:text-white"

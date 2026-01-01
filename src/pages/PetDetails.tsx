@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Pet } from '@/types';
+import { parseSlugId, parseSlugName, slugify } from '@/utils/slugUtils';
 
 // Import Playful components
 import PetDetailsHeader from '@/components/pet-details/PetDetailsHeader';
@@ -15,7 +16,7 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const PetDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [pet, setPet] = useState<Pet | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
@@ -23,43 +24,57 @@ const PetDetails = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
+  // Extract both name and short ID from the slug for database lookup
+  const petIdPrefix = slug ? parseSlugId(slug) : '';
+  const petNameSlug = slug ? parseSlugName(slug) : '';
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    if (id) {
-      fetchPetFromSupabase(id);
+    if (petIdPrefix) {
+      fetchPetFromSupabase(petIdPrefix, petNameSlug);
     }
-  }, [id]);
+  }, [petIdPrefix, petNameSlug]);
 
-  const fetchPetFromSupabase = async (petId: string) => {
+  const fetchPetFromSupabase = async (idPrefix: string, nameSlug: string) => {
     setIsLoading(true);
     try {
+      // Fetch all pets and find the one matching our ID prefix
+      // This workaround is needed because PostgreSQL can't do prefix matching on UUID columns
       const { data, error } = await supabase
         .from('pet_listings')
-        .select('*')
-        .eq('id', petId)
-        .single();
+        .select('*');
 
       if (error) {
-        console.error('Error fetching pet from Supabase:', error);
+        console.error('Error fetching pets from Supabase:', error);
         navigate('/browse');
         toast.error('Pet not found');
         return;
       }
 
-      if (data) {
-        // Transform the Supabase data to match the expected format
-        const transformedPet: Pet = {
-          ...data,
-          name: data.pet_name,
-          type: data.animal_type,
-          age: data.age || 'Unknown',
-          urgent: data.status === 'urgent',
-          image: data.image_url,
-        };
+      // Find the pet that matches our ID prefix
+      const matchingPet = data?.find(p =>
+        p.id.toLowerCase().startsWith(idPrefix.toLowerCase())
+      );
 
-        setPet(transformedPet);
+      if (!matchingPet) {
+        console.error('No pet found matching ID prefix:', idPrefix);
+        navigate('/browse');
+        toast.error('Pet not found');
+        return;
       }
+
+      // Transform the Supabase data to match the expected format
+      const transformedPet: Pet = {
+        ...matchingPet,
+        name: matchingPet.pet_name,
+        type: matchingPet.animal_type,
+        age: matchingPet.age || 'Unknown',
+        urgent: matchingPet.status === 'urgent',
+        image: matchingPet.image_url,
+      };
+
+      setPet(transformedPet);
     } catch (error) {
       console.error('Error fetching pet:', error);
       toast.error('Failed to load pet details.');
@@ -136,7 +151,7 @@ const PetDetails = () => {
             delay={0.4}
             className="w-full lg:w-auto"
           >
-            <ContactInfoCard petName={pet.name} petId={id} petLocation={pet.location} />
+            <ContactInfoCard petId={pet.id} petLocation={pet.location} />
           </ScrollReveal>
         </div>
       </div>

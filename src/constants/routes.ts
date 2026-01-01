@@ -3,10 +3,12 @@
  * Centralized route definitions to avoid magic strings
  */
 
+import { generatePetSlug } from '@/utils/slugUtils';
+
 export const ROUTES = {
   HOME: '/',
   BROWSE: '/browse',
-  PET_DETAILS: '/pet/:id',
+  PET_DETAILS: '/pet/:slug',
   SUCCESS_STORIES: '/success-stories',
   SPONSORS: '/sponsors',
   ABOUT: '/about',
@@ -16,8 +18,8 @@ export const ROUTES = {
 } as const;
 
 /**
- * Helper function to generate pet details route
+ * Helper function to generate pet details route with clean slug URL
  */
-export const getPetDetailsRoute = (petId: string): string => {
-  return `/pet/${petId}`;
+export const getPetDetailsRoute = (petName: string, petId: string): string => {
+  return `/pet/${generatePetSlug(petName, petId)}`;
 };
