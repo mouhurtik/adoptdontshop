@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Pet } from '@/types';
-import { parseSlugId, parseSlugName, slugify } from '@/utils/slugUtils';
+import { parseSlugId } from '@/utils/slugUtils';
 
 // Import Playful components
 import PetDetailsHeader from '@/components/pet-details/PetDetailsHeader';
@@ -24,19 +24,19 @@ const PetDetails = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // Extract both name and short ID from the slug for database lookup
+  // Extract the short ID from the slug for database lookup
   const petIdPrefix = slug ? parseSlugId(slug) : '';
-  const petNameSlug = slug ? parseSlugName(slug) : '';
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     if (petIdPrefix) {
-      fetchPetFromSupabase(petIdPrefix, petNameSlug);
+      fetchPetFromSupabase(petIdPrefix);
     }
-  }, [petIdPrefix, petNameSlug]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [petIdPrefix]);
 
-  const fetchPetFromSupabase = async (idPrefix: string, nameSlug: string) => {
+  const fetchPetFromSupabase = async (idPrefix: string) => {
     setIsLoading(true);
     try {
       // Fetch all pets and find the one matching our ID prefix
