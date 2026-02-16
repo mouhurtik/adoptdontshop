@@ -1,32 +1,44 @@
+import { PawPrint } from "lucide-react";
+import PrimaryButton from "@/components/ui/PrimaryButton";
 
-import { Button } from "@/components/ui/button";
-
-interface FormSubmitButtonsProps {
+interface FormActionProps {
   isSubmitting: boolean;
   isPage?: boolean;
   onCancel?: () => void;
 }
 
-const FormSubmitButtons = ({ isSubmitting, isPage = false, onCancel }: FormSubmitButtonsProps) => {
+const FormActions = ({ isSubmitting, isPage = false, onCancel }: FormActionProps) => {
   return (
-    <div className={isPage ? "pt-4" : "flex justify-end space-x-2"}>
+    <div className="flex flex-col sm:flex-row gap-4 pt-4">
       {!isPage && onCancel && (
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <PrimaryButton
+          type="button"
+          variant="secondary"
+          onClick={onCancel}
+          className="flex-1"
+        >
           Cancel
-        </Button>
+        </PrimaryButton>
       )}
-      <Button 
-        type="submit" 
-        className={`bg-adoptGreen hover:bg-adoptGreen-dark ${isPage ? "w-full" : ""}`}
+      <PrimaryButton
+        type="submit"
         disabled={isSubmitting}
+        className={`flex-1 ${isPage ? 'w-full' : ''}`}
       >
-        {isSubmitting ? 'Submitting...' : 'Submit Listing'}
-      </Button>
+        {isSubmitting ? (
+          <span className="flex items-center gap-2">
+            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+            Submitting...
+          </span>
+        ) : (
+          <>
+            <PawPrint className="mr-2 h-5 w-5" />
+            List Pet for Adoption
+          </>
+        )}
+      </PrimaryButton>
     </div>
   );
 };
 
-export default FormSubmitButtons;
-
-
-
+export default FormActions;

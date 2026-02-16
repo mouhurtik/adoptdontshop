@@ -1,107 +1,82 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 import type { Pet } from '@/types';
+import type { Tables } from '@/integrations/supabase/types';
 
-export const usePets = () => {
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type PetListingRow = Tables<'pet_listings'>;
 
-  const fetchPets = async () => {
-    setIsLoading(true);
-    setError(null);
+/** Transform raw Supabase row into Pet with UI convenience fields */
+const transformPet = (raw: PetListingRow): Pet => ({
+  ...raw,
+  name: raw.pet_name,
+  type: raw.animal_type,
+  age: raw.age || 'Unknown',
+  urgent: raw.status === 'urgent',
+  image: raw.image_url,
+});
 
-    try {
-      const { data, error } = await supabase
-        .from('pet_listings')
-        .select('*');
+/** Fetch all pet listings */
+const fetchPets = async (): Promise<Pet[]> => {
+  const { data, error } = await supabase
+    .from('pet_listings')
+    .select('*');
 
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
-      }
-
-      if (data) {
-        const transformedPets = data.map(pet => ({
-          ...pet,
-          name: pet.pet_name,
-          type: pet.animal_type,
-          age: pet.age || 'Unknown',
-          urgent: pet.status === 'urgent',
-          image: pet.image_url
-        }));
-
-        setPets(transformedPets as Pet[]);
-      }
-    } catch (error) {
-      console.error('Error fetching pets:', error);
-      setError('Failed to load pets. Please try again.');
-      toast.error('Failed to load pets. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getPetById = async (id: string): Promise<Pet | null> => {
-    try {
-      const { data, error } = await supabase
-        .from('pet_listings')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        console.error('Error fetching pet from Supabase:', error);
-        return null;
-      }
-
-      if (data) {
-        return {
-          ...data,
-          name: data.pet_name,
-          type: data.animal_type,
-          age: data.age || 'Unknown',
-          urgent: data.status === 'urgent',
-          image: data.image_url
-        };
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Error fetching pet:', error);
-      return null;
-    }
-  };
-
-  const getPetCount = async (): Promise<number> => {
-    try {
-      const { count, error } = await supabase
-        .from('pet_listings')
-        .select('*', { count: 'exact', head: true });
-
-      if (error) {
-        console.error('Error fetching pet count:', error);
-        return 0;
-      }
-
-      return count || 0;
-    } catch (error) {
-      console.error('Failed to fetch pet count:', error);
-      return 0;
-    }
-  };
-
-  useEffect(() => {
-    fetchPets();
-  }, []);
-
-  return {
-    pets,
-    isLoading,
-    error,
-    fetchPets,
-    getPetById,
-    getPetCount
-  };
+  if (error) throw error;
+  return (data ?? []).map(transformPet);
 };
+
+/** Fetch a single pet by matching an ID prefix (slug-based lookup) */
+const fetchPetByIdPrefix = async (idPrefix: string): Promise<Pet | null> => {
+  const { data, error } = await supabase
+    .from('pet_listings')
+    .select('*');
+
+  if (error) throw error;
+
+  const match = data?.find(p =>
+    p.id.toLowerCase().startsWith(idPrefix.toLowerCase())
+  );
+
+  return match ? transformPet(match) : null;
+};
+
+/** Fetch total pet count (head-only query) */
+const fetchPetCount = async (): Promise<number> => {
+  const { count, error } = await supabase
+    .from('pet_listings')
+    .select('*', { count: 'exact', head: true });
+
+  if (error) throw error;
+  return count ?? 0;
+};
+
+// ─── Hooks ────────────────────────────────────────────────
+
+/** Hook to fetch all pets — cached, auto-refetches on window focus */
+export const usePets = () => {
+  const { data: pets = [], isLoading, error } = useQuery({
+    queryKey: ['pets'],
+    queryFn: fetchPets,
+  });
+
+  return { pets, isLoading, error: error?.message ?? null };
+};
+
+/** Hook to fetch a single pet by slug ID prefix */
+export const usePetBySlug = (idPrefix: string | undefined) => {
+  return useQuery({
+    queryKey: ['pet', idPrefix],
+    queryFn: () => fetchPetByIdPrefix(idPrefix!),
+    enabled: !!idPrefix,
+  });
+};
+
+/** Hook to fetch the total pet count */
+export const usePetCount = () => {
+  return useQuery({
+    queryKey: ['petCount'],
+    queryFn: fetchPetCount,
+  });
+};
+
+export default usePets;

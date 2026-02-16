@@ -4,6 +4,7 @@
  */
 
 export { default as usePets } from './usePets';
-export { default as useFilters } from './useFilters';
-export { useMobile } from './use-mobile';
+export { usePetBySlug, usePetCount } from './usePets';
+export { useFilters } from './useFilters';
+export { useIsMobile } from './use-mobile';
 export { useToast } from './use-toast';

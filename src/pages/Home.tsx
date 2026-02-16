@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { usePetCount } from '@/hooks/usePets';
 import HeroSection from '@/components/home/HeroSection';
 import SearchSection from '@/components/home/SearchSection';
 import FeaturedPets from '@/components/home/FeaturedPets';
@@ -11,32 +11,9 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [petCount, setPetCount] = useState<number>(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    fetchPetCount();
-  }, []);
-
-  const fetchPetCount = async () => {
-    try {
-      const { count, error } = await supabase
-        .from('pet_listings')
-        .select('*', { count: 'exact', head: true });
-
-      if (error) {
-        console.error('Error fetching pet count:', error);
-        return;
-      }
-
-      if (count !== null) {
-        setPetCount(count);
-      }
-    } catch (error) {
-      console.error('Failed to fetch pet count:', error);
-    }
-  };
+  const { data: petCount = 0 } = usePetCount();
 
   const handleSearch = (animalType?: string) => {
     if (animalType) {
@@ -82,6 +59,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
