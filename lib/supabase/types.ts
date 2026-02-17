@@ -88,8 +88,10 @@ export type Database = {
           medical_info: string
           mobile: string
           pet_name: string
+          slug: string | null
           status: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           age?: string | null
@@ -104,8 +106,10 @@ export type Database = {
           medical_info: string
           mobile: string
           pet_name: string
+          slug?: string | null
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           age?: string | null
@@ -120,8 +124,70 @@ export type Database = {
           medical_info?: string
           mobile?: string
           pet_name?: string
+          slug?: string | null
           status?: string
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          account_type: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+          location: string | null
+          organization_name: string | null
+          phone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_type?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id: string
+          location?: string | null
+          organization_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_type?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          location?: string | null
+          organization_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          user_id?: string
         }
         Relationships: []
       }
