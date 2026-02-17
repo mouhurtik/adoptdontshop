@@ -1,15 +1,15 @@
 # AdoptDontShop — Feature Roadmap
 
-**Last Updated:** February 16, 2026
+**Last Updated:** February 17, 2026
 
 ---
 
-## Current Features (v1.0)
+## Current Features (v2.0 — Post Next.js Migration)
 
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Browse pets with filters | ✅ Live | Type, age, urgent, sort |
-| Pet detail page with gallery | ✅ Live | SEO slug URLs |
+| Pet detail page with gallery | ✅ Live | SEO slug URLs + SSR `generateMetadata` |
 | List a pet for adoption | ✅ Live | Form with validation |
 | Adoption application | ✅ Live | In-modal form |
 | Shareable pet cards | ✅ Live | Image generation |
@@ -19,45 +19,41 @@
 | Dark mode | ✅ Live | System + manual toggle |
 | Responsive design | ✅ Live | Mobile-first |
 | Basic auth context | ✅ Built | Not fully integrated |
+| **Next.js App Router** | ✅ **Live** | **SSR, SEO, Cloudflare Pages** |
+| **Dynamic OG meta tags** | ✅ **Live** | **Per-pet SEO via `generateMetadata`** |
 
 ---
 
 ## Planned Features
 
-### Phase 0 — Codebase Cleanup
-- [ ] Refactor `PetListingForm.tsx` into sections
-- [ ] Migrate `usePets.ts` to React Query
-- [ ] Split `PetEssentials.tsx` into components
-
-### Phase 1 — Authentication + User Profiles
-- [ ] `profiles` table with auto-creation trigger
+### Phase 1 — Security Foundation 🔴
+- [ ] `profiles` table with auto-creation trigger on signup
 - [ ] `user_roles` table (admin, user, shelter_owner, moderator)
-- [ ] RLS on all tables
+- [ ] RLS policies on all tables (`pet_listings`, `adoption_applications`, etc.)
+- [ ] Link `pet_listings` to `user_id`
+
+### Phase 2 — Authentication + User Profiles 🟡
 - [ ] Login / Signup pages
 - [ ] Account type selection (Individual / Organization)
+- [ ] Next.js auth middleware for protected routes
 - [ ] Profile settings page
-- [ ] Link `pet_listings` to user profiles
+- [ ] "My Listings" page
+- [ ] Navbar login/profile state
 
-### Phase 2 — Admin Portal
+### Phase 3 — SEO & Performance 🟢
+- [ ] Per-page metadata on all static pages
+- [ ] `sitemap.xml` generation (dynamic from Supabase)
+- [ ] `robots.txt`
+- [ ] `next/image` optimization (PetCard, Gallery, FeaturedPets)
+- [ ] ISR (Incremental Static Regeneration) on pet pages
+
+### Phase 4 — Admin Portal & Messaging 🔵
 - [ ] Admin dashboard with analytics
 - [ ] User management (view, disable, role assignment)
 - [ ] Listing moderation (approve / reject)
 - [ ] Adoption application review
-- [ ] Admin-only route protection
-
-### Phase 3 — Privacy-Focused Messaging
-- [ ] `conversations` + `messages` + `message_read_receipts` tables
-- [ ] Realtime messaging via Supabase subscriptions
-- [ ] "Message Caregiver" from pet detail page
-- [ ] Seen indicators (optional per user)
+- [ ] Privacy-focused messaging via Supabase Realtime
 - [ ] Conversation list with unread counts
-
-### Phase 4 — SEO + Polish
-- [ ] Pre-render static pages (Home, About, Terms)
-- [ ] Dynamic OG tags per pet via Cloudflare Worker
-- [ ] Sitemap.xml generation
-- [ ] JSON-LD structured data
-- [ ] Vendor bundle splitting
 
 ---
 
@@ -67,9 +63,21 @@
 |---------|----------|-------|
 | Organization accounts | Medium | Bulk listing, team management, verified badge |
 | Email notifications | Medium | New messages, application updates |
-| Pet favorites / wishlist | Low | Requires auth |
+| Pet favorites / wishlist | Low | Requires auth (Phase 2) |
 | Advanced search (location) | Low | Geolocation filtering |
 | Blog / content section | Low | SEO value, educational content |
-| Next.js migration | Low | Only if SEO becomes primary growth channel |
 | Native mobile app | Low | Capacitor or React Native |
 | Multi-language support | Low | i18n for regional expansion |
+
+---
+
+## Completed Phases
+
+### ~~Phase 0 — Next.js Migration~~ ✅
+- [x] Migrate React + Vite → Next.js 16 App Router
+- [x] Deploy to Cloudflare Pages via @opennextjs/cloudflare
+- [x] Migrate `usePets.ts` to React Query
+- [x] Clean up deprecated Vite files (`src/`, `vite.config.ts`, etc.)
+- [x] Rename `pages_old/` → `views/`
+- [x] Update all documentation (README, .env.example)
+- [x] TypeScript strict mode: 0 errors
