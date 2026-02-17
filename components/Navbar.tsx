@@ -1,15 +1,20 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X, PawPrint } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, PawPrint, LogIn, LogOut, User, ListChecks, Shield } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const userMenuRef = useRef<HTMLDivElement>(null);
+    const { user, profile, isAdmin, isAuthenticated, signOut } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,7 +27,29 @@ const Navbar = () => {
     // Close mobile menu when route changes
     useEffect(() => {
         setIsOpen(false);
+        setUserMenuOpen(false);
     }, [pathname]);
+
+    // Close user menu on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+                setUserMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleSignOut = async () => {
+        await signOut();
+        setUserMenuOpen(false);
+        router.push('/');
+        router.refresh();
+    };
+
+    const displayName = profile?.display_name || user?.displayName || user?.email?.split('@')[0] || 'User';
+    const initials = displayName.charAt(0).toUpperCase();
 
     const navLinks = [
         { name: "Home", path: "/" },
@@ -79,6 +106,67 @@ const Navbar = () => {
                                     List a Pet
                                 </PrimaryButton>
                             </Link>
+
+                            {isAuthenticated ? (
+                                <div className="relative" ref={userMenuRef}>
+                                    <button
+                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                        className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-playful-cream transition-colors"
+                                    >
+                                        <div className="w-9 h-9 rounded-full bg-playful-teal text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                                            {initials}
+                                        </div>
+                                    </button>
+
+                                    {userMenuOpen && (
+                                        <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                            <div className="px-4 py-3 border-b border-gray-100">
+                                                <p className="font-bold text-playful-text text-sm truncate">{displayName}</p>
+                                                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                                            </div>
+                                            <Link
+                                                href="/profile"
+                                                className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
+                                            >
+                                                <User className="h-4 w-4" />
+                                                Profile
+                                            </Link>
+                                            <Link
+                                                href="/profile/my-listings"
+                                                className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
+                                            >
+                                                <ListChecks className="h-4 w-4" />
+                                                My Listings
+                                            </Link>
+                                            {isAdmin && (
+                                                <Link
+                                                    href="/admin"
+                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-playful-coral hover:bg-playful-cream transition-colors"
+                                                >
+                                                    <Shield className="h-4 w-4" />
+                                                    Admin
+                                                </Link>
+                                            )}
+                                            <div className="border-t border-gray-100 mt-1 pt-1">
+                                                <button
+                                                    onClick={handleSignOut}
+                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 w-full transition-colors"
+                                                >
+                                                    <LogOut className="h-4 w-4" />
+                                                    Sign Out
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link href="/login">
+                                    <PrimaryButton size="md" variant="outline" className="shadow-sm">
+                                        <LogIn className="h-4 w-4 mr-2" />
+                                        Login
+                                    </PrimaryButton>
+                                </Link>
+                            )}
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -115,12 +203,51 @@ const Navbar = () => {
                             ))}
 
                             {/* Mobile CTA Buttons */}
-                            <div className="pt-4">
+                            <div className="pt-4 space-y-2">
                                 <Link href="/list-pet">
                                     <PrimaryButton className="w-full justify-center shadow-md">
                                         List a Pet
                                     </PrimaryButton>
                                 </Link>
+
+                                {isAuthenticated ? (
+                                    <>
+                                        <Link href="/profile" className="block">
+                                            <PrimaryButton variant="ghost" className="w-full justify-center">
+                                                <User className="h-4 w-4 mr-2" />
+                                                Profile
+                                            </PrimaryButton>
+                                        </Link>
+                                        <Link href="/profile/my-listings" className="block">
+                                            <PrimaryButton variant="ghost" className="w-full justify-center">
+                                                <ListChecks className="h-4 w-4 mr-2" />
+                                                My Listings
+                                            </PrimaryButton>
+                                        </Link>
+                                        {isAdmin && (
+                                            <Link href="/admin" className="block">
+                                                <PrimaryButton variant="ghost" className="w-full justify-center text-playful-coral">
+                                                    <Shield className="h-4 w-4 mr-2" />
+                                                    Admin
+                                                </PrimaryButton>
+                                            </Link>
+                                        )}
+                                        <button
+                                            onClick={handleSignOut}
+                                            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-red-600 font-bold hover:bg-red-50 transition-colors"
+                                        >
+                                            <LogOut className="h-4 w-4" />
+                                            Sign Out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <Link href="/login" className="block">
+                                        <PrimaryButton variant="outline" className="w-full justify-center">
+                                            <LogIn className="h-4 w-4 mr-2" />
+                                            Login
+                                        </PrimaryButton>
+                                    </Link>
+                                )}
                             </div>
                         </nav>
                     </div>

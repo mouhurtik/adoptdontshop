@@ -5,7 +5,7 @@
 /**
  * User roles for access control
  */
-export type UserRole = 'user' | 'admin' | 'shelter';
+export type UserRole = 'user' | 'admin' | 'shelter_owner' | 'moderator';
 
 /**
  * User profile from Supabase auth
@@ -20,10 +20,29 @@ export interface User {
 }
 
 /**
+ * User profile from profiles table
+ */
+export interface Profile {
+    id: string;
+    display_name: string | null;
+    avatar_url: string | null;
+    phone: string | null;
+    account_type: string | null;
+    organization_name: string | null;
+    bio: string | null;
+    location: string | null;
+    created_at: string | null;
+    updated_at: string | null;
+}
+
+/**
  * Authentication state for context
  */
 export interface AuthState {
     user: User | null;
+    profile: Profile | null;
+    roles: string[];
+    isAdmin: boolean;
     isLoading: boolean;
     isAuthenticated: boolean;
     error: string | null;
@@ -34,9 +53,10 @@ export interface AuthState {
  */
 export interface AuthContextValue extends AuthState {
     signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
+    signUp: (email: string, password: string, metadata?: Record<string, unknown>) => Promise<void>;
     signOut: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    refreshProfile: () => Promise<void>;
 }
 
 /**
@@ -55,4 +75,6 @@ export interface RegisterFormData {
     password: string;
     confirmPassword: string;
     displayName?: string;
+    accountType?: 'individual' | 'organization';
+    organizationName?: string;
 }

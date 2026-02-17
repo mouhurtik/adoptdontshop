@@ -2,6 +2,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { generatePetSlug } from "@/utils/slugUtils";
 import SuccessDialog from "./form-sections/SuccessDialog";
 import CaregiverInfoSection from "./form-sections/CaregiverInfoSection";
 import PetInfoSection from "./form-sections/PetInfoSection";
@@ -17,6 +19,7 @@ interface PetListingFormProps {
 }
 
 const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false }: PetListingFormProps) => {
+    const { user } = useAuth();
     const [formData, setFormData] = useState({ ...INITIAL_FORM_DATA });
     const [image, setImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -114,7 +117,9 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
                 description: formData.description,
                 age: formData.age,
                 image_url: imageUrl,
-                status: 'pending'
+                status: 'pending',
+                user_id: user?.id || null,
+                slug: generatePetSlug(formData.petName, petId),
             });
 
             if (error) {

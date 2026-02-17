@@ -15,6 +15,11 @@ export const ROUTES = {
   TERMS: '/terms',
   PRIVACY_POLICY: '/privacy-policy',
   LIST_PET: '/list-pet',
+  LOGIN: '/login',
+  SIGNUP: '/signup',
+  PROFILE: '/profile',
+  MY_LISTINGS: '/profile/my-listings',
+  ADMIN: '/admin',
 } as const;
 
 /**

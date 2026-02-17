@@ -1,14 +1,17 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase/client';
-import type { User, AuthState, AuthContextValue, UserRole } from '@/types';
+import type { User, AuthState, AuthContextValue, Profile, UserRole } from '@/types';
 
 /**
  * Default auth state
  */
 const defaultAuthState: AuthState = {
     user: null,
+    profile: null,
+    roles: [],
+    isAdmin: false,
     isLoading: true,
     isAuthenticated: false,
     error: null,
@@ -29,7 +32,7 @@ const transformUser = (supabaseUser: { id: string; email?: string; user_metadata
         id: supabaseUser.id,
         email: supabaseUser.email || '',
         role: (supabaseUser.user_metadata?.role as UserRole) || 'user',
-        displayName: supabaseUser.user_metadata?.display_name as string | undefined,
+        displayName: supabaseUser.user_metadata?.full_name as string | undefined,
         avatarUrl: supabaseUser.user_metadata?.avatar_url as string | undefined,
     };
 };
@@ -41,34 +44,79 @@ const transformUser = (supabaseUser: { id: string; email?: string; user_metadata
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [authState, setAuthState] = useState<AuthState>(defaultAuthState);
 
+    /**
+     * Load user profile and roles from database
+     */
+    const loadProfileAndRoles = useCallback(async (userId: string) => {
+        try {
+            // Fetch profile
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            // Fetch roles
+            const { data: roleRows } = await supabase
+                .from('user_roles')
+                .select('role')
+                .eq('user_id', userId);
+
+            const roles = (roleRows || []).map(r => r.role).filter(Boolean) as string[];
+            const isAdmin = roles.includes('admin');
+
+            setAuthState(prev => ({
+                ...prev,
+                profile: profile as Profile | null,
+                roles,
+                isAdmin,
+            }));
+        } catch {
+            // Profile/roles fetch failed — non-critical
+        }
+    }, []);
+
+    /**
+     * Refresh profile data (callable from components)
+     */
+    const refreshProfile = useCallback(async () => {
+        if (authState.user?.id) {
+            await loadProfileAndRoles(authState.user.id);
+        }
+    }, [authState.user?.id, loadProfileAndRoles]);
+
     // Initialize auth state on mount
     useEffect(() => {
-        // Get initial session
         const initializeAuth = async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
 
                 if (error) {
                     setAuthState({
-                        user: null,
+                        ...defaultAuthState,
                         isLoading: false,
-                        isAuthenticated: false,
                         error: error.message,
                     });
                     return;
                 }
 
-                setAuthState({
-                    user: transformUser(session?.user ?? null),
+                const user = transformUser(session?.user ?? null);
+
+                setAuthState(prev => ({
+                    ...prev,
+                    user,
                     isLoading: false,
-                    isAuthenticated: !!session?.user,
+                    isAuthenticated: !!user,
                     error: null,
-                });
+                }));
+
+                if (user) {
+                    await loadProfileAndRoles(user.id);
+                }
             } catch {
                 setAuthState({
-                    user: null,
+                    ...defaultAuthState,
                     isLoading: false,
-                    isAuthenticated: false,
                     error: 'Failed to initialize authentication',
                 });
             }
@@ -79,20 +127,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Subscribe to auth state changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (_event, session) => {
-                setAuthState({
-                    user: transformUser(session?.user ?? null),
+                const user = transformUser(session?.user ?? null);
+
+                setAuthState(prev => ({
+                    ...prev,
+                    user,
                     isLoading: false,
-                    isAuthenticated: !!session?.user,
+                    isAuthenticated: !!user,
                     error: null,
-                });
+                    // Clear profile/roles when logging out
+                    ...(!user ? { profile: null, roles: [], isAdmin: false } : {}),
+                }));
+
+                if (user) {
+                    await loadProfileAndRoles(user.id);
+                }
             }
         );
 
-        // Cleanup subscription on unmount
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [loadProfileAndRoles]);
 
     /**
      * Sign in with email and password
@@ -128,13 +184,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     /**
      * Sign up with email and password
      */
-    const signUp = async (email: string, password: string): Promise<void> => {
+    const signUp = async (email: string, password: string, metadata?: Record<string, unknown>): Promise<void> => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
         try {
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: metadata ? { data: metadata } : undefined,
             });
 
             if (error) {
@@ -145,6 +202,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 }));
                 throw error;
             }
+
+            setAuthState(prev => ({
+                ...prev,
+                isLoading: false,
+            }));
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Sign up failed';
             setAuthState(prev => ({
@@ -175,10 +237,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
 
             setAuthState({
-                user: null,
+                ...defaultAuthState,
                 isLoading: false,
-                isAuthenticated: false,
-                error: null,
             });
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Sign out failed';
@@ -232,6 +292,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signUp,
         signOut,
         resetPassword,
+        refreshProfile,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
