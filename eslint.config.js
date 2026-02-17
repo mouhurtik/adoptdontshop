@@ -5,7 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", ".next", ".open-next", "node_modules"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
@@ -33,15 +33,16 @@ export default tseslint.config(
       ],
     },
   },
-  // Override for UI component library files
+  // Override for UI component library files and auto-generated code
   {
     files: [
-      "src/components/ui/**/*.{ts,tsx}",
-      "src/hooks/use-toast.ts"
+      "components/ui/**/*.{ts,tsx}",
+      "hooks/use-toast.ts"
     ],
     rules: {
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-empty-object-type": "off",
+      "react-refresh/only-export-components": "off",
     },
   }
 );

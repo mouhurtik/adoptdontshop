@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { PawPrint, Trash2, Edit, Eye, ArrowLeft, Plus } from 'lucide-react';
+import { PawPrint, Trash2, Eye, ArrowLeft, Plus } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { toast } from 'sonner';

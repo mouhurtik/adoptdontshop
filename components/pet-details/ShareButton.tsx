@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Pet } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
-import html2canvas from 'html2canvas';
 import ShareablePetCard from './ShareablePetCard';
 import PrimaryButton from '../ui/PrimaryButton';
 
@@ -44,9 +43,10 @@ const ShareButton = ({ pet }: ShareButtonProps) => {
         // Short delay to ensure rendering (especially images)
         await new Promise(resolve => setTimeout(resolve, 500));
 
+        const { default: html2canvas } = await import('html2canvas');
         const canvas = await html2canvas(element, {
           useCORS: true,
-          scale: 2, // Reting quality
+          scale: 2, // Retina quality
           backgroundColor: null,
         });
         const dataUrl = canvas.toDataURL('image/png');

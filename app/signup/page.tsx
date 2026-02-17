@@ -1,15 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PawPrint, Mail, Lock, Eye, EyeOff, User, Building2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 
 export default function SignupPage() {
-  const router = useRouter();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
