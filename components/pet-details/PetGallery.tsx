@@ -1,4 +1,5 @@
 
+import Image from 'next/image';
 import { Pet } from '@/types/pet.types';
 
 interface PetGalleryProps {
@@ -15,10 +16,13 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-soft mb-8">
       <div className="h-80 sm:h-96 bg-gray-100">
-        <img
-          src={petImage}
+        <Image
+          src={petImage || '/placeholder-pet.jpg'}
           alt={petName}
+          width={800}
+          height={384}
           className="w-full h-full object-cover"
+          priority
         />
       </div>
 
@@ -27,9 +31,11 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-2">
           {/* We would map through additional images here */}
           <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden">
-            <img
-              src={petImage}
+            <Image
+              src={petImage || '/placeholder-pet.jpg'}
               alt={`${petName} thumbnail 1`}
+              width={200}
+              height={200}
               className="w-full h-full object-cover"
             />
           </div>
