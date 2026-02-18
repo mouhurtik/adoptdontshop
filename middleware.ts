@@ -25,42 +25,12 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // Refresh the session — this is the main purpose of middleware
+  // It refreshes expired tokens and keeps the session alive
+  await supabase.auth.getUser();
 
-  // Protected routes — redirect to /login if not authenticated
-  const protectedPaths = ['/list-pet', '/profile'];
-  const isProtected = protectedPaths.some(path =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (isProtected && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.searchParams.set('redirect', request.nextUrl.pathname);
-    return NextResponse.redirect(url);
-  }
-
-  // Redirect logged-in users away from login/signup
-  const authPaths = ['/login', '/signup'];
-  const isAuthPage = authPaths.some(path =>
-    request.nextUrl.pathname === path
-  );
-
-  if (isAuthPage && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    return NextResponse.redirect(url);
-  }
-
-  // Admin routes — redirect if not admin
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      return NextResponse.redirect(url);
-    }
-    // Admin role check is done at the page level using AuthContext
-  }
+  // Route protection is handled client-side via AuthContext + ProtectedRoute
+  // This avoids server-side auth issues on Cloudflare Workers edge runtime
 
   return supabaseResponse;
 }

@@ -18,6 +18,7 @@ interface Listing {
     caregiver_name: string;
     created_at: string;
     slug: string | null;
+    user_id: string | null;
 }
 
 const statusColors: Record<string, string> = {
@@ -39,7 +40,7 @@ export default function ListingsPage() {
 
         let query = supabase
             .from('pet_listings')
-            .select('id, pet_name, breed, animal_type, location, status, image_url, caregiver_name, created_at, slug')
+            .select('id, pet_name, breed, animal_type, location, status, image_url, caregiver_name, created_at, slug, user_id')
             .order('created_at', { ascending: false });
 
         if (statusFilter !== 'all') {
@@ -155,7 +156,11 @@ export default function ListingsPage() {
                                     {listing.breed} · {listing.animal_type || 'Unknown'} · {listing.location}
                                 </p>
                                 <p className="text-xs text-gray-400 mt-1">
-                                    Listed by {listing.caregiver_name} · {new Date(listing.created_at).toLocaleDateString()}
+                                    Listed by {listing.caregiver_name}
+                                    {' · '}{new Date(listing.created_at).toLocaleDateString()}
+                                    {!listing.user_id && (
+                                        <span className="ml-2 text-xs bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-medium">Unassigned</span>
+                                    )}
                                 </p>
                             </div>
 

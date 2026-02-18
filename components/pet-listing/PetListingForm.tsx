@@ -56,6 +56,11 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!user) {
+            toast.error("Please sign in to submit a listing");
+            return;
+        }
+
         if (!formData.agreeToTerms) {
             toast.error("Please agree to the Terms and Conditions");
             return;
@@ -174,6 +179,7 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
             <FormActions
                 isSubmitting={isSubmitting}
                 isPage={isPage}
+                isAuthenticated={!!user}
                 onCancel={!isPage ? () => onOpenChange(false) : undefined}
             />
         </form>
