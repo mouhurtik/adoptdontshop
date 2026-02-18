@@ -2,22 +2,32 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
+
+const AUTH_TIMEOUT_MS = 8000;
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
     const { user, isAdmin, isLoading } = useAuth();
     const router = useRouter();
+    const [timedOut, setTimedOut] = useState(false);
+
+    // Timeout fallback — if auth takes too long, redirect to login
+    useEffect(() => {
+        if (!isLoading) return;
+        const timer = setTimeout(() => setTimedOut(true), AUTH_TIMEOUT_MS);
+        return () => clearTimeout(timer);
+    }, [isLoading]);
 
     useEffect(() => {
-        if (!isLoading && !user) {
+        if (timedOut || (!isLoading && !user)) {
             router.replace('/login?redirect=/admin');
         } else if (!isLoading && user && !isAdmin) {
             router.replace('/');
         }
-    }, [user, isAdmin, isLoading, router]);
+    }, [user, isAdmin, isLoading, timedOut, router]);
 
-    if (isLoading) {
+    if (isLoading && !timedOut) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
