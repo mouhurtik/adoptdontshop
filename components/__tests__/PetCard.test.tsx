@@ -1,12 +1,27 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
-import PetCard from '../PetCard';
+import { describe, it, expect, vi } from 'vitest';
 
-// Wrapper component for router context
-const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <BrowserRouter>{children}</BrowserRouter>;
-};
+// Mock next/image
+vi.mock('next/image', () => ({
+  default: (props: Record<string, unknown>) => <img {...props} />,
+}));
+
+// Mock next/link
+vi.mock('next/link', () => ({
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
+
+// Mock framer-motion to avoid animation issues in tests
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: Record<string, unknown>) => <div {...props}>{children as React.ReactNode}</div>,
+  },
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+import PetCard from '../PetCard';
 
 describe('PetCard', () => {
   const mockPet = {
@@ -15,16 +30,12 @@ describe('PetCard', () => {
     breed: 'Golden Retriever',
     age: '2 years',
     location: 'New York, NY',
-    imageUrl: 'https://example.com/buddy.jpg',
-    animalType: 'Dog' as const,
+    image: 'https://example.com/buddy.jpg',
+    type: 'Dog',
   };
 
   it('renders pet information correctly', () => {
-    render(
-      <RouterWrapper>
-        <PetCard {...mockPet} />
-      </RouterWrapper>
-    );
+    render(<PetCard {...mockPet} />);
 
     expect(screen.getByText('Buddy')).toBeInTheDocument();
     expect(screen.getByText(/2 years/i)).toBeInTheDocument();
@@ -32,35 +43,22 @@ describe('PetCard', () => {
   });
 
   it('renders pet image with correct alt text', () => {
-    render(
-      <RouterWrapper>
-        <PetCard {...mockPet} />
-      </RouterWrapper>
-    );
+    render(<PetCard {...mockPet} />);
 
     const image = screen.getByAltText('Buddy');
     expect(image).toBeInTheDocument();
   });
 
   it('displays breed information', () => {
-    render(
-      <RouterWrapper>
-        <PetCard {...mockPet} />
-      </RouterWrapper>
-    );
+    render(<PetCard {...mockPet} />);
 
-    // The breed is displayed in the component
     expect(screen.getByText(/Golden Retriever/i)).toBeInTheDocument();
   });
 
   it('renders with different pet names', () => {
-    const catPet = { ...mockPet, name: 'Whiskers', breed: 'Persian', animalType: 'Cat' as const };
+    const catPet = { ...mockPet, name: 'Whiskers', breed: 'Persian', type: 'Cat' };
     
-    render(
-      <RouterWrapper>
-        <PetCard {...catPet} />
-      </RouterWrapper>
-    );
+    render(<PetCard {...catPet} />);
 
     expect(screen.getByText('Whiskers')).toBeInTheDocument();
     expect(screen.getByText(/Persian/i)).toBeInTheDocument();
