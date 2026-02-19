@@ -57,10 +57,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 .single();
 
             // Fetch roles
-            const { data: roleRows } = await supabase
+            const { data: roleRows, error: rolesError } = await supabase
                 .from('user_roles')
                 .select('role')
                 .eq('user_id', userId);
+
+            if (rolesError) {
+                console.error('[AuthContext] Failed to fetch user_roles:', rolesError.message, rolesError);
+            }
 
             const roles = (roleRows || []).map(r => r.role).filter(Boolean) as string[];
             const isAdmin = roles.includes('admin');
