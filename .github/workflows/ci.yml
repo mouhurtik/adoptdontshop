@@ -36,13 +36,16 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-ci-build
 
       - name: Upload build artifacts
         if: matrix.node-version == '20.x'
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: dist/
+          path: .next/
           retention-days: 7
 
   type-check:

@@ -4,14 +4,10 @@ import { Heart, Search } from 'lucide-react';
 import ParallaxSection from '@/components/ui/ParallaxSection';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
-interface PlayfulHeroSectionProps {
-    petCount: number;
-}
-
-const PlayfulHeroSection = ({ petCount }: PlayfulHeroSectionProps) => {
+const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
     return (
         <ParallaxSection
-            className="pt-32 pb-20 min-h-[90vh] flex items-center bg-playful-cream"
+            className="pt-16 pb-16 min-h-[90vh] flex items-center bg-playful-cream"
             bgClassName="bg-playful-cream"
             speed={0.2}
             overlayOpacity={0}

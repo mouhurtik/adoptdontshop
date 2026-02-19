@@ -33,7 +33,7 @@ export default function RootLayout({
                 <Providers>
                     <div className="min-h-screen flex flex-col bg-playful-cream">
                         <Navbar />
-                        <main className="flex-grow pt-20">{children}</main>
+                        <main className="flex-grow pt-16">{children}</main>
                         <Footer />
                     </div>
                 </Providers>
