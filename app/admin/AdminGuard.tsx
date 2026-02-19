@@ -6,11 +6,26 @@ import { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 
 const AUTH_TIMEOUT_MS = 8000;
+const STORAGE_KEY = 'admin-sidebar-collapsed';
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
     const { user, isAdmin, isLoading } = useAuth();
     const router = useRouter();
     const [timedOut, setTimedOut] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
+
+    // Load persisted sidebar state
+    useEffect(() => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'true') setCollapsed(true);
+    }, []);
+
+    const toggleCollapse = () => {
+        setCollapsed(prev => {
+            localStorage.setItem(STORAGE_KEY, String(!prev));
+            return !prev;
+        });
+    };
 
     // Timeout fallback — if auth takes too long, redirect to login
     useEffect(() => {
@@ -44,12 +59,12 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="flex">
-                <AdminSidebar />
-                <main className="flex-1 p-6 md:p-8 md:ml-64">
-                    {children}
-                </main>
-            </div>
+            <AdminSidebar collapsed={collapsed} onToggle={toggleCollapse} />
+            <main
+                className={`min-h-screen p-6 md:p-8 transition-all duration-300 ${collapsed ? 'md:ml-[68px]' : 'md:ml-64'}`}
+            >
+                {children}
+            </main>
         </div>
     );
 }

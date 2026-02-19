@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Image from 'next/image';
-import { Check, X, Trash2, Search, Eye } from 'lucide-react';
+import { Check, X as XIcon, Trash2, Search, Eye, Archive, CheckCheck, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { generatePetSlug } from '@/utils/slugUtils';
 
@@ -21,11 +21,18 @@ interface Listing {
     user_id: string | null;
 }
 
+interface UserProfile {
+    id: string;
+    display_name: string | null;
+    location: string | null;
+}
+
 const statusColors: Record<string, string> = {
     available: 'bg-green-50 text-green-700',
     pending: 'bg-yellow-50 text-yellow-700',
     adopted: 'bg-blue-50 text-blue-700',
     rejected: 'bg-red-50 text-red-700',
+    archived: 'bg-gray-100 text-gray-600',
 };
 
 export default function ListingsPage() {
@@ -34,6 +41,13 @@ export default function ListingsPage() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [updating, setUpdating] = useState<string | null>(null);
+    const [bulkUpdating, setBulkUpdating] = useState(false);
+
+    // Assign modal state
+    const [assigningId, setAssigningId] = useState<string | null>(null);
+    const [userSearch, setUserSearch] = useState('');
+    const [userResults, setUserResults] = useState<UserProfile[]>([]);
+    const [searchingUsers, setSearchingUsers] = useState(false);
 
     const loadListings = useCallback(async () => {
         setLoading(true);
@@ -66,10 +80,47 @@ export default function ListingsPage() {
         setUpdating(null);
     };
 
+    const approveAllPending = async () => {
+        if (!confirm(`Approve all ${pendingCount} pending listings?`)) return;
+        setBulkUpdating(true);
+        await supabase
+            .from('pet_listings')
+            .update({ status: 'available' })
+            .eq('status', 'pending');
+        await loadListings();
+        setBulkUpdating(false);
+    };
+
     const deleteListing = async (id: string) => {
         if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return;
         setUpdating(id);
         await supabase.from('pet_listings').delete().eq('id', id);
+        await loadListings();
+        setUpdating(null);
+    };
+
+    // --- Assign user ---
+    const searchUsers = async (query: string) => {
+        if (query.length < 2) { setUserResults([]); return; }
+        setSearchingUsers(true);
+        const { data } = await supabase
+            .from('profiles')
+            .select('id, display_name, location')
+            .ilike('display_name', `%${query}%`)
+            .limit(8);
+        setUserResults(data || []);
+        setSearchingUsers(false);
+    };
+
+    const assignUser = async (listingId: string, userId: string) => {
+        setUpdating(listingId);
+        await supabase
+            .from('pet_listings')
+            .update({ user_id: userId })
+            .eq('id', listingId);
+        setAssigningId(null);
+        setUserSearch('');
+        setUserResults([]);
         await loadListings();
         setUpdating(null);
     };
@@ -85,9 +136,25 @@ export default function ListingsPage() {
         );
     });
 
+    const pendingCount = listings.filter(l => l.status === 'pending').length;
+
     return (
         <div>
-            <h1 className="text-3xl font-heading font-bold text-playful-text mb-6">Listing Moderation</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <h1 className="text-3xl font-heading font-bold text-playful-text">Listing Moderation</h1>
+
+                {/* Approve All button */}
+                {pendingCount > 0 && (
+                    <button
+                        onClick={approveAllPending}
+                        disabled={bulkUpdating}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition-colors disabled:opacity-50 shadow-sm"
+                    >
+                        <CheckCheck className="w-4 h-4" />
+                        {bulkUpdating ? 'Approving...' : `Approve All Pending (${pendingCount})`}
+                    </button>
+                )}
+            </div>
 
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -102,8 +169,8 @@ export default function ListingsPage() {
                     />
                 </div>
 
-                <div className="flex gap-2">
-                    {['all', 'available', 'pending', 'adopted', 'rejected'].map(s => (
+                <div className="flex gap-2 flex-wrap">
+                    {['all', 'available', 'pending', 'adopted', 'rejected', 'archived'].map(s => (
                         <button
                             key={s}
                             onClick={() => setStatusFilter(s)}
@@ -165,7 +232,7 @@ export default function ListingsPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex gap-2 flex-shrink-0">
+                            <div className="flex gap-2 flex-shrink-0 flex-wrap">
                                 <Link
                                     href={`/pet/${listing.slug || generatePetSlug(listing.pet_name, listing.id)}`}
                                     className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
@@ -174,7 +241,7 @@ export default function ListingsPage() {
                                     <Eye className="w-4 h-4" />
                                 </Link>
 
-                                {listing.status !== 'available' && (
+                                {listing.status !== 'available' && listing.status !== 'archived' && (
                                     <button
                                         onClick={() => updateStatus(listing.id, 'available')}
                                         disabled={updating === listing.id}
@@ -185,22 +252,98 @@ export default function ListingsPage() {
                                     </button>
                                 )}
 
-                                {listing.status !== 'rejected' && (
+                                {listing.status !== 'rejected' && listing.status !== 'archived' && (
                                     <button
                                         onClick={() => updateStatus(listing.id, 'rejected')}
                                         disabled={updating === listing.id}
                                         className="p-2 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition-colors disabled:opacity-50"
                                         title="Reject"
                                     >
-                                        <X className="w-4 h-4" />
+                                        <XIcon className="w-4 h-4" />
                                     </button>
+                                )}
+
+                                {listing.status !== 'archived' && (
+                                    <button
+                                        onClick={() => updateStatus(listing.id, 'archived')}
+                                        disabled={updating === listing.id}
+                                        className="p-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+                                        title="Archive (hide from public)"
+                                    >
+                                        <Archive className="w-4 h-4" />
+                                    </button>
+                                )}
+
+                                {listing.status === 'archived' && (
+                                    <button
+                                        onClick={() => updateStatus(listing.id, 'available')}
+                                        disabled={updating === listing.id}
+                                        className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50"
+                                        title="Unarchive"
+                                    >
+                                        <Check className="w-4 h-4" />
+                                    </button>
+                                )}
+
+                                {/* Assign user */}
+                                {!listing.user_id && (
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => {
+                                                setAssigningId(assigningId === listing.id ? null : listing.id);
+                                                setUserSearch('');
+                                                setUserResults([]);
+                                            }}
+                                            disabled={updating === listing.id}
+                                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50"
+                                            title="Assign to user"
+                                        >
+                                            <UserPlus className="w-4 h-4" />
+                                        </button>
+
+                                        {/* Assign dropdown */}
+                                        {assigningId === listing.id && (
+                                            <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 z-50 p-3">
+                                                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Assign to User</p>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search by email or name..."
+                                                    value={userSearch}
+                                                    onChange={e => {
+                                                        setUserSearch(e.target.value);
+                                                        searchUsers(e.target.value);
+                                                    }}
+                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                                    autoFocus
+                                                />
+                                                <div className="mt-2 max-h-40 overflow-y-auto">
+                                                    {searchingUsers && (
+                                                        <p className="text-xs text-gray-400 py-2 text-center">Searching...</p>
+                                                    )}
+                                                    {userResults.map(u => (
+                                                        <button
+                                                            key={u.id}
+                                                            onClick={() => assignUser(listing.id, u.id)}
+                                                            className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                                                        >
+                                                            <p className="text-sm font-medium text-gray-700">{u.display_name || 'Unnamed'}</p>
+                                                            <p className="text-xs text-gray-400">{u.location || 'No location'}</p>
+                                                        </button>
+                                                    ))}
+                                                    {userSearch.length >= 2 && !searchingUsers && userResults.length === 0 && (
+                                                        <p className="text-xs text-gray-400 py-2 text-center">No users found</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
 
                                 <button
                                     onClick={() => deleteListing(listing.id)}
                                     disabled={updating === listing.id}
                                     className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
-                                    title="Delete"
+                                    title="Delete permanently"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -216,6 +359,14 @@ export default function ListingsPage() {
                         </div>
                     )}
                 </div>
+            )}
+
+            {/* Close assign dropdown on outside click */}
+            {assigningId && (
+                <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => { setAssigningId(null); setUserSearch(''); setUserResults([]); }}
+                />
             )}
         </div>
     );

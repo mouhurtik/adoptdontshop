@@ -33,6 +33,7 @@ const PlayfulFeaturedPets = () => {
             const { data, error } = await supabase
                 .from('pet_listings')
                 .select('*')
+                .eq('status', 'available')
                 .order('created_at', { ascending: false })
                 .limit(4);
 
