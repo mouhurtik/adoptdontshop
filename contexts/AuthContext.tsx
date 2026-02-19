@@ -106,6 +106,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
                 const user = transformUser(session?.user ?? null);
 
+                // Set user first but keep isLoading=true until roles are loaded
+                if (user) {
+                    setAuthState(prev => ({
+                        ...prev,
+                        user,
+                        isAuthenticated: true,
+                        error: null,
+                    }));
+                    await loadProfileAndRoles(user.id);
+                }
+
+                // NOW set isLoading=false — roles/profile are loaded
                 setAuthState(prev => ({
                     ...prev,
                     user,
@@ -113,10 +125,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     isAuthenticated: !!user,
                     error: null,
                 }));
-
-                if (user) {
-                    await loadProfileAndRoles(user.id);
-                }
             } catch {
                 setAuthState({
                     ...defaultAuthState,
@@ -133,19 +141,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             async (_event, session) => {
                 const user = transformUser(session?.user ?? null);
 
+                if (!user) {
+                    // Logged out — clear everything immediately
+                    setAuthState({
+                        ...defaultAuthState,
+                        isLoading: false,
+                    });
+                    return;
+                }
+
+                // Set user but keep isLoading=true until roles are fetched
                 setAuthState(prev => ({
                     ...prev,
                     user,
-                    isLoading: false,
-                    isAuthenticated: !!user,
+                    isAuthenticated: true,
                     error: null,
-                    // Clear profile/roles when logging out
-                    ...(!user ? { profile: null, roles: [], isAdmin: false } : {}),
                 }));
 
-                if (user) {
-                    await loadProfileAndRoles(user.id);
-                }
+                await loadProfileAndRoles(user.id);
+
+                // NOW mark loading complete
+                setAuthState(prev => ({
+                    ...prev,
+                    isLoading: false,
+                }));
             }
         );
 
