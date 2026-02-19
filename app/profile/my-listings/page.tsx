@@ -18,7 +18,7 @@ export default function MyListingsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
     const fetchListings = async () => {
       setIsLoading(true);
@@ -37,7 +37,7 @@ export default function MyListingsPage() {
     };
 
     fetchListings();
-  }, [user]);
+  }, [user?.id]);
 
   const handleDelete = async (id: string, petName: string) => {
     if (!confirm(`Are you sure you want to delete "${petName}"? This cannot be undone.`)) return;

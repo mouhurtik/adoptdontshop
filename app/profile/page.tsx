@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const [appCount, setAppCount] = useState(0);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
     const fetchStats = async () => {
       // Count user's pet listings
@@ -41,7 +41,7 @@ export default function ProfilePage() {
     };
 
     fetchStats();
-  }, [user]);
+  }, [user?.id]);
 
   if (isLoading) {
     return (
