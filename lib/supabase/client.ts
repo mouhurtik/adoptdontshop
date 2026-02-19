@@ -35,7 +35,7 @@ export const supabase = (() => {
     return new Proxy({} as ReturnType<typeof createBrowserClient<Database>>, {
         get(_target, prop, _receiver) {
             const client = getSupabase();
-            const value = (client as Record<string | symbol, unknown>)[prop];
+            const value = (client as unknown as Record<string | symbol, unknown>)[prop];
             if (typeof value === 'function') {
                 return value.bind(client);
             }
