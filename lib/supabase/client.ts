@@ -16,13 +16,30 @@ export function createClient() {
     return createBrowserClient<Database>(url, key);
 }
 
-// Lazy singleton for client-side use — only initializes when first accessed,
-// preventing crashes during Next.js static prerendering in CI (where env vars may be absent).
-export const supabase = new Proxy({} as ReturnType<typeof createBrowserClient<Database>>, {
-    get(_target, prop, receiver) {
-        if (!_supabase) {
-            _supabase = createClient();
-        }
-        return Reflect.get(_supabase, prop, receiver);
-    },
-});
+/**
+ * Lazy singleton for client-side use.
+ * Only initializes when first called, preventing crashes during
+ * Next.js static prerendering in CI (where env vars may be absent).
+ */
+export function getSupabase() {
+    if (!_supabase) {
+        _supabase = createClient();
+    }
+    return _supabase;
+}
+
+// Re-export as `supabase` for backward compat — getter that returns the real client.
+// IMPORTANT: Use this only at call sites (inside functions/hooks/effects), NOT at module top level.
+export const supabase = (() => {
+    // Return a proxy that defers initialization but properly binds methods
+    return new Proxy({} as ReturnType<typeof createBrowserClient<Database>>, {
+        get(_target, prop, _receiver) {
+            const client = getSupabase();
+            const value = (client as Record<string | symbol, unknown>)[prop];
+            if (typeof value === 'function') {
+                return value.bind(client);
+            }
+            return value;
+        },
+    });
+})();
