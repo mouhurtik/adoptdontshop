@@ -13,6 +13,11 @@ const nextConfig = {
         optimizePackageImports: [
             "lucide-react",
             "framer-motion",
+            "date-fns",
+            "@supabase/supabase-js",
+            "@supabase/ssr",
+            "react-hot-toast",
+            "@tanstack/react-query",
             "@tiptap/react",
             "@tiptap/starter-kit",
             "@tiptap/pm",
