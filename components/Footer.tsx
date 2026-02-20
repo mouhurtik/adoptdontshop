@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Facebook, Twitter, Instagram, Mail, PawPrint, Heart } from 'lucide-react';
-import PrimaryButton from '@/components/ui/PrimaryButton';
 
 const Footer = () => {
     return (
@@ -43,25 +42,24 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Quick Links - Desktop: col-span-2+ */}
-                    <div className="md:col-span-3 lg:col-span-2 md:col-start-7 lg:col-start-6">
+                    {/* About Links */}
+                    <div className="md:col-span-2 lg:col-span-2 md:col-start-7 lg:col-start-6">
                         <h3 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-                            Explore
+                            About
                         </h3>
                         <ul className="space-y-4">
                             {[
-                                { name: 'Browse Pets', path: '/browse' },
-                                { name: 'Success Stories', path: '/success-stories' },
-                                { name: 'Our Patrons', path: '/sponsors' },
-                                { name: 'About Us', path: '/about' },
-                                { name: 'List a Pet', path: '/list-pet' },
+                                { name: 'Our Story', path: '/about?tab=story' },
+                                { name: 'Patrons', path: '/about?tab=patrons' },
+                                { name: 'Pet Essentials', path: '/about?tab=store' },
+                                { name: 'Contact', path: '/about?tab=story#contact' },
                             ].map((link) => (
                                 <li key={link.name}>
                                     <Link
                                         href={link.path}
                                         className="group flex items-center gap-2 text-white hover:text-playful-yellow transition-all font-medium"
                                     >
-                                        <span className="h-1.5 w-1.5 rounded-full bg-playful-yellow/50 group-hover:w-3 transition-all duration-300"></span>
+                                        <span className="h-1.5 w-1.5 rounded-full bg-playful-yellow/50 group-hover:w-3 transition-all duration-300" />
                                         {link.name}
                                     </Link>
                                 </li>
@@ -69,24 +67,52 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Newsletter / Action - Desktop: col-span-4 */}
-                    <div className="md:col-span-4 lg:col-span-4">
-                        <h3 className="text-xl font-heading font-bold mb-6">Stay Connected</h3>
-                        <div className="bg-white/10 p-6 rounded-3xl border border-white/10 backdrop-blur-sm relative overflow-hidden group">
-                            <div className="absolute -top-12 -right-12 w-24 h-24 bg-playful-yellow/10 rounded-full blur-2xl group-hover:bg-playful-yellow/20 transition-all duration-500"></div>
+                    {/* Community Links */}
+                    <div className="md:col-span-2 lg:col-span-2">
+                        <h3 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+                            Community
+                        </h3>
+                        <ul className="space-y-4">
+                            {[
+                                { name: 'Latest Posts', path: '/community' },
+                                { name: 'Write a Post', path: '/community/write' },
+                                { name: 'Messages', path: '/messages' },
+                            ].map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.path}
+                                        className="group flex items-center gap-2 text-white hover:text-playful-yellow transition-all font-medium"
+                                    >
+                                        <span className="h-1.5 w-1.5 rounded-full bg-playful-yellow/50 group-hover:w-3 transition-all duration-300" />
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-                            <p className="opacity-90 mb-4 text-sm font-medium relative z-10">Join our community and get the latest updates on new pets and success stories.</p>
-                            <div className="space-y-3 relative z-10">
-                                <input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="w-full px-4 py-3 rounded-xl bg-white/95 border border-transparent text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-playful-yellow focus:bg-white transition-all font-medium shadow-inner"
-                                />
-                                <PrimaryButton variant="accent" className="w-full justify-center text-playful-text font-black shadow-lg hover:shadow-xl hover:scale-[1.02]">
-                                    Subscribe to Newsletter
-                                </PrimaryButton>
-                            </div>
-                        </div>
+                    {/* Quick Links */}
+                    <div className="md:col-span-2 lg:col-span-2">
+                        <h3 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+                            Quick Links
+                        </h3>
+                        <ul className="space-y-4">
+                            {[
+                                { name: 'Browse Pets', path: '/browse' },
+                                { name: 'List a Pet', path: '/list-pet' },
+                                { name: 'Login', path: '/login' },
+                            ].map((link) => (
+                                <li key={link.name}>
+                                    <Link
+                                        href={link.path}
+                                        className="group flex items-center gap-2 text-white hover:text-playful-yellow transition-all font-medium"
+                                    >
+                                        <span className="h-1.5 w-1.5 rounded-full bg-playful-yellow/50 group-hover:w-3 transition-all duration-300" />
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 

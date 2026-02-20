@@ -9,6 +9,7 @@ import FeaturedPets from '@/components/home/FeaturedPets';
 import WhyAdopt from '@/components/home/WhyAdopt';
 import SponsorsSection from '@/components/home/SponsorsSection';
 import CallToAction from '@/components/home/CallToAction';
+import OurStoryWidget from '@/components/home/OurStoryWidget';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const Home = () => {
@@ -56,6 +57,8 @@ const Home = () => {
       </ScrollReveal>
 
       <CallToAction />
+
+      <OurStoryWidget />
     </div>
   );
 };

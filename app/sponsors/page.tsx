@@ -1,7 +1,5 @@
-'use client';
-
-import Sponsors from '@/views/Sponsors';
+import { redirect } from 'next/navigation';
 
 export default function SponsorsPage() {
-    return <Sponsors />;
+    redirect('/about?tab=patrons');
 }

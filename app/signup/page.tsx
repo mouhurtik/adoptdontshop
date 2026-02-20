@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { PawPrint, Mail, Lock, Eye, EyeOff, User, Building2 } from 'lucide-react';
+import { PawPrint, Mail, Lock, Eye, EyeOff, User, Building2, AtSign, Check, X, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 
@@ -11,12 +11,40 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
   const [accountType, setAccountType] = useState<'individual' | 'organization'>('individual');
   const [organizationName, setOrganizationName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Username validation: lowercase, alphanumeric, underscores, 3-20 chars
+  const isValidUsername = (u: string) => /^[a-z0-9_]{3,20}$/.test(u);
+
+  // Debounced username availability check
+  const checkUsername = useCallback(async (value: string) => {
+    if (!value || !isValidUsername(value)) {
+      setUsernameStatus(value.length > 0 ? 'invalid' : 'idle');
+      return;
+    }
+    setUsernameStatus('checking');
+    const { data } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', value)
+      .maybeSingle();
+    setUsernameStatus(data ? 'taken' : 'available');
+  }, []);
+
+  const handleUsernameChange = (value: string) => {
+    const normalized = value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+    setUsername(normalized);
+    // Debounce check
+    const timeout = setTimeout(() => checkUsername(normalized), 500);
+    return () => clearTimeout(timeout);
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +65,25 @@ export default function SignupPage() {
       return;
     }
 
+    if (!username || !isValidUsername(username)) {
+      setError('Please choose a valid username (3-20 chars, lowercase letters, numbers, underscores)');
+      return;
+    }
+
+    if (usernameStatus === 'taken') {
+      setError('Username is already taken');
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
+          username: username,
           account_type: accountType,
           organization_name: accountType === 'organization' ? organizationName : undefined,
         },
@@ -55,6 +94,13 @@ export default function SignupPage() {
       setError(error.message);
       setLoading(false);
     } else {
+      // Set username on profile immediately
+      if (signUpData.user?.id) {
+        await supabase
+          .from('profiles')
+          .update({ username })
+          .eq('id', signUpData.user.id);
+      }
       setSuccess(true);
     }
   };
@@ -122,6 +168,46 @@ export default function SignupPage() {
                   placeholder="Your full name"
                 />
               </div>
+            </div>
+
+            {/* Username */}
+            <div>
+              <label htmlFor="username" className="block text-sm font-bold text-playful-text mb-2">
+                Username
+                <span className="text-xs font-normal text-gray-400 ml-1">(cannot be changed later)</span>
+              </label>
+              <div className="relative">
+                <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  id="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  className={`block w-full rounded-xl border-2 bg-gray-50 pl-10 pr-10 py-3 text-sm focus:bg-white transition-colors ${
+                    usernameStatus === 'available' ? 'border-green-400 focus:border-green-500 focus:ring-green-500' :
+                    usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'border-red-400 focus:border-red-500 focus:ring-red-500' :
+                    'border-gray-200 focus:border-playful-teal focus:ring-playful-teal'
+                  }`}
+                  placeholder="your_username"
+                  maxLength={20}
+                />
+                {/* Status indicator */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  {usernameStatus === 'checking' && <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />}
+                  {usernameStatus === 'available' && <Check className="h-4 w-4 text-green-500" />}
+                  {(usernameStatus === 'taken' || usernameStatus === 'invalid') && <X className="h-4 w-4 text-red-500" />}
+                </div>
+              </div>
+              {usernameStatus === 'taken' && (
+                <p className="text-xs text-red-500 mt-1 font-medium">Username is already taken</p>
+              )}
+              {usernameStatus === 'invalid' && username.length > 0 && (
+                <p className="text-xs text-red-500 mt-1 font-medium">3-20 chars, lowercase letters, numbers & underscores only</p>
+              )}
+              {usernameStatus === 'available' && (
+                <p className="text-xs text-green-600 mt-1 font-medium">Username is available! ✓</p>
+              )}
             </div>
 
             {/* Email */}

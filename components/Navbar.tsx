@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, PawPrint, LogIn, LogOut, User, ListChecks, Shield } from "lucide-react";
+import { Menu, X, PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -54,10 +54,7 @@ const Navbar = () => {
     const navLinks = [
         { name: "Home", path: "/" },
         { name: "Browse Pets", path: "/browse" },
-        { name: "Essentials", path: "/pet-essentials" },
-        { name: "Stories", path: "/success-stories" },
         { name: "Community", path: "/community" },
-        { name: "Patrons", path: "/sponsors" },
         { name: "About", path: "/about" },
     ];
 
@@ -127,7 +124,7 @@ const Navbar = () => {
                                                 <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                                             </div>
                                             <Link
-                                                href="/profile"
+                                                href={`/user/${profile?.username || user?.id}`}
                                                 prefetch={false}
                                                 className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
                                             >
@@ -141,6 +138,22 @@ const Navbar = () => {
                                             >
                                                 <ListChecks className="h-4 w-4" />
                                                 My Listings
+                                            </Link>
+                                            <Link
+                                                href="/messages"
+                                                prefetch={false}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
+                                            >
+                                                <MessageCircle className="h-4 w-4" />
+                                                Messages
+                                            </Link>
+                                            <Link
+                                                href="/community/my-posts"
+                                                prefetch={false}
+                                                className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
+                                            >
+                                                <FileText className="h-4 w-4" />
+                                                My Posts
                                             </Link>
                                             {isAdmin && (
                                                 <Link
@@ -228,6 +241,18 @@ const Navbar = () => {
                                             <PrimaryButton variant="ghost" className="w-full justify-center">
                                                 <ListChecks className="h-4 w-4 mr-2" />
                                                 My Listings
+                                            </PrimaryButton>
+                                        </Link>
+                                        <Link href="/messages" prefetch={false} className="block">
+                                            <PrimaryButton variant="ghost" className="w-full justify-center">
+                                                <MessageCircle className="h-4 w-4 mr-2" />
+                                                Messages
+                                            </PrimaryButton>
+                                        </Link>
+                                        <Link href="/community/my-posts" prefetch={false} className="block">
+                                            <PrimaryButton variant="ghost" className="w-full justify-center">
+                                                <FileText className="h-4 w-4 mr-2" />
+                                                My Posts
                                             </PrimaryButton>
                                         </Link>
                                         {isAdmin && (

@@ -43,6 +43,7 @@ const MenuButton = ({
 
 const TiptapEditor = ({ content, onChange, placeholder = 'Start writing your story...' }: TiptapEditorProps) => {
     const editor = useEditor({
+        immediatelyRender: false,
         extensions: [
             StarterKit.configure({
                 heading: { levels: [2, 3] },

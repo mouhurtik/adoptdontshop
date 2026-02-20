@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
-export default function PetEssentialsPage() {
+export default function ResourcesPage() {
     redirect('/about?tab=store');
 }
