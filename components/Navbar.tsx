@@ -70,7 +70,7 @@ const Navbar = () => {
                     }`}>
                     <div className="flex items-center justify-between">
                         {/* Logo */}
-                        <Link href="/" className="flex items-center gap-2 group">
+                        <Link href="/" prefetch={false} className="flex items-center gap-2 group">
                             <div className="bg-playful-coral text-white p-2 rounded-xl rotate-3 group-hover:rotate-6 transition-transform duration-300 shadow-sm">
                                 <PawPrint className="h-6 w-6 fill-current" />
                             </div>
@@ -86,6 +86,7 @@ const Navbar = () => {
                                     <Link
                                         key={link.name}
                                         href={link.path}
+                                        prefetch={false}
                                         className={`relative font-bold transition-all duration-300 hover:scale-105 px-4 py-2 rounded-full hover:shadow-sm ${pathname === link.path
                                             ? 'bg-playful-yellow text-playful-text shadow-sm'
                                             : scrolled
@@ -101,7 +102,7 @@ const Navbar = () => {
 
                         {/* CTA Buttons */}
                         <div className="hidden lg:flex items-center space-x-3">
-                            <Link href="/list-pet">
+                            <Link href="/list-pet" prefetch={false}>
                                 <PrimaryButton size="md" className="shadow-lg hover:shadow-xl">
                                     List a Pet
                                 </PrimaryButton>
@@ -126,6 +127,7 @@ const Navbar = () => {
                                             </div>
                                             <Link
                                                 href="/profile"
+                                                prefetch={false}
                                                 className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
                                             >
                                                 <User className="h-4 w-4" />
@@ -133,6 +135,7 @@ const Navbar = () => {
                                             </Link>
                                             <Link
                                                 href="/profile/my-listings"
+                                                prefetch={false}
                                                 className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
                                             >
                                                 <ListChecks className="h-4 w-4" />
@@ -141,6 +144,7 @@ const Navbar = () => {
                                             {isAdmin && (
                                                 <Link
                                                     href="/admin"
+                                                    prefetch={false}
                                                     className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-playful-coral hover:bg-playful-cream transition-colors"
                                                 >
                                                     <Shield className="h-4 w-4" />
@@ -160,7 +164,7 @@ const Navbar = () => {
                                     )}
                                 </div>
                             ) : (
-                                <Link href="/login">
+                                <Link href="/login" prefetch={false}>
                                     <PrimaryButton size="md" variant="outline" className="shadow-sm">
                                         <LogIn className="h-4 w-4 mr-2" />
                                         Login
@@ -193,6 +197,7 @@ const Navbar = () => {
                                 <Link
                                     key={link.name}
                                     href={link.path}
+                                    prefetch={false}
                                     className={`py-3 px-4 rounded-xl font-bold transition-all duration-300 ${pathname === link.path
                                         ? 'bg-playful-cream text-playful-coral'
                                         : 'text-gray-600 hover:bg-gray-50'
@@ -204,7 +209,7 @@ const Navbar = () => {
 
                             {/* Mobile CTA Buttons */}
                             <div className="pt-4 space-y-2">
-                                <Link href="/list-pet">
+                                <Link href="/list-pet" prefetch={false}>
                                     <PrimaryButton className="w-full justify-center shadow-md">
                                         List a Pet
                                     </PrimaryButton>
@@ -212,20 +217,20 @@ const Navbar = () => {
 
                                 {isAuthenticated ? (
                                     <>
-                                        <Link href="/profile" className="block">
+                                        <Link href="/profile" prefetch={false} className="block">
                                             <PrimaryButton variant="ghost" className="w-full justify-center">
                                                 <User className="h-4 w-4 mr-2" />
                                                 Profile
                                             </PrimaryButton>
                                         </Link>
-                                        <Link href="/profile/my-listings" className="block">
+                                        <Link href="/profile/my-listings" prefetch={false} className="block">
                                             <PrimaryButton variant="ghost" className="w-full justify-center">
                                                 <ListChecks className="h-4 w-4 mr-2" />
                                                 My Listings
                                             </PrimaryButton>
                                         </Link>
                                         {isAdmin && (
-                                            <Link href="/admin" className="block">
+                                            <Link href="/admin" prefetch={false} className="block">
                                                 <PrimaryButton variant="ghost" className="w-full justify-center text-playful-coral">
                                                     <Shield className="h-4 w-4 mr-2" />
                                                     Admin
@@ -241,7 +246,7 @@ const Navbar = () => {
                                         </button>
                                     </>
                                 ) : (
-                                    <Link href="/login" className="block">
+                                    <Link href="/login" prefetch={false} className="block">
                                         <PrimaryButton variant="outline" className="w-full justify-center">
                                             <LogIn className="h-4 w-4 mr-2" />
                                             Login
