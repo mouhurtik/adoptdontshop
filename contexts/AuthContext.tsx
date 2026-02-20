@@ -91,93 +91,65 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [authState.user?.id, loadProfileAndRoles]);
 
     // Initialize auth state on mount
+    // Uses ONLY onAuthStateChange (Supabase recommended pattern) to avoid
+    // the double-fire race condition where getSession() + INITIAL_SESSION
+    // both trigger state updates concurrently when logged in.
     useEffect(() => {
         let cancelled = false;
+        // Track in-flight profile loads to prevent duplicates
+        let profileLoadId = 0;
 
-        const initializeAuth = async () => {
-            try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+        const handleAuthChange = async (
+            event: string,
+            session: { user: { id: string; email?: string; user_metadata?: Record<string, unknown> } } | null
+        ) => {
+            if (cancelled) return;
 
-                if (cancelled) return;
+            const user = transformUser(session?.user ?? null);
 
-                if (error) {
-                    // Session is corrupted — clear it so the user isn't stuck
-                    console.warn('[AuthContext] Session error, clearing corrupted state:', error.message);
-                    try { await supabase.auth.signOut(); } catch { /* ignore */ }
-                    setAuthState({
-                        ...defaultAuthState,
-                        isLoading: false,
-                        error: null, // Don't show error — just treat as logged out
-                    });
-                    return;
-                }
-
-                const user = transformUser(session?.user ?? null);
-
-                // Set user first but keep isLoading=true until roles are loaded
-                if (user) {
-                    setAuthState(prev => ({
-                        ...prev,
-                        user,
-                        isAuthenticated: true,
-                        error: null,
-                    }));
-                    if (!cancelled) await loadProfileAndRoles(user.id);
-                }
-
-                if (cancelled) return;
-
-                // NOW set isLoading=false — roles/profile are loaded
-                setAuthState(prev => ({
-                    ...prev,
-                    user,
-                    isLoading: false,
-                    isAuthenticated: !!user,
-                    error: null,
-                }));
-            } catch {
-                if (cancelled) return;
-                // Total failure — try clearing session, treat as logged out
-                try { await supabase.auth.signOut(); } catch { /* ignore */ }
+            if (!user) {
+                // Logged out or no session — clear everything
                 setAuthState({
                     ...defaultAuthState,
                     isLoading: false,
-                    error: null,
                 });
+                return;
             }
+
+            // Set user immediately (still loading profile/roles)
+            setAuthState(prev => ({
+                ...prev,
+                user,
+                isAuthenticated: true,
+                error: null,
+            }));
+
+            // Load profile and roles (with dedup guard)
+            const thisLoadId = ++profileLoadId;
+            try {
+                if (cancelled) return;
+                await loadProfileAndRoles(user.id);
+            } catch {
+                // Non-critical — profile/roles fetch failed
+            }
+
+            // Only apply if this is still the latest load
+            if (cancelled || thisLoadId !== profileLoadId) return;
+
+            setAuthState(prev => ({
+                ...prev,
+                isLoading: false,
+            }));
         };
 
-        initializeAuth();
-
-        // Subscribe to auth state changes
+        // Subscribe to auth state changes — this fires INITIAL_SESSION
+        // on mount, which replaces the old getSession() call.
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
-                const user = transformUser(session?.user ?? null);
-
-                if (!user) {
-                    // Logged out — clear everything immediately
-                    setAuthState({
-                        ...defaultAuthState,
-                        isLoading: false,
-                    });
-                    return;
-                }
-
-                // Set user but keep isLoading=true until roles are fetched
-                setAuthState(prev => ({
-                    ...prev,
-                    user,
-                    isAuthenticated: true,
-                    error: null,
-                }));
-
-                await loadProfileAndRoles(user.id);
-
-                // NOW mark loading complete
-                setAuthState(prev => ({
-                    ...prev,
-                    isLoading: false,
-                }));
+            (event, session) => {
+                // Ignore TOKEN_REFRESHED during initial load since
+                // INITIAL_SESSION already provides the session
+                if (event === 'TOKEN_REFRESHED') return;
+                handleAuthChange(event, session);
             }
         );
 
