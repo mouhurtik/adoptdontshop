@@ -1,0 +1,15 @@
+import type { Metadata } from 'next';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+    title: 'Community | AdoptDontShop',
+    description: 'Join our pet-loving community. Share stories, tips, and connect with fellow adopters.',
+};
+
+export default function CommunityLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return <>{children}</>;
+}

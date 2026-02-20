@@ -56,6 +56,7 @@ const Navbar = () => {
         { name: "Browse Pets", path: "/browse" },
         { name: "Essentials", path: "/pet-essentials" },
         { name: "Stories", path: "/success-stories" },
+        { name: "Community", path: "/community" },
         { name: "Patrons", path: "/sponsors" },
         { name: "About", path: "/about" },
     ];
