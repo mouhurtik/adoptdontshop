@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2 } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import TiptapRenderer from '@/components/community/TiptapRenderer';
+const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
 import { TAG_LABELS, TAG_COLORS } from '@/components/community/PostCard';
 import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';

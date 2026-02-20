@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "test": "vitest",
     "type-check": "tsc --noEmit",
-    "cf:build": "npx opennextjs-cloudflare build && node scripts/strip-vercel-og.js",
+    "cf:build": "node scripts/strip-vercel-og.js && npx opennextjs-cloudflare build && node scripts/strip-vercel-og.js",
     "cf:dev": "npx wrangler dev",
-    "cf:deploy": "npx opennextjs-cloudflare build && node scripts/strip-vercel-og.js && npx wrangler deploy",
+    "cf:deploy": "npm run cf:build && npx wrangler deploy",
     "preview": "npm run cf:build && npx wrangler dev",
     "prepare": "husky"
   },
