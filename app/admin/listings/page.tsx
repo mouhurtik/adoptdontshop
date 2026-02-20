@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Image from 'next/image';
-import { Check, X as XIcon, Trash2, Search, Eye, Archive, CheckCheck, UserPlus } from 'lucide-react';
+import { Check, X as XIcon, Trash2, Search, Eye, Archive, CheckCheck, UserPlus, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { generatePetSlug } from '@/utils/slugUtils';
 
@@ -241,7 +241,7 @@ export default function ListingsPage() {
                                     <Eye className="w-4 h-4" />
                                 </Link>
 
-                                {listing.status !== 'available' && listing.status !== 'archived' && (
+                                {listing.status !== 'available' && listing.status !== 'archived' && listing.status !== 'adopted' && (
                                     <button
                                         onClick={() => updateStatus(listing.id, 'available')}
                                         disabled={updating === listing.id}
@@ -249,6 +249,17 @@ export default function ListingsPage() {
                                         title="Approve"
                                     >
                                         <Check className="w-4 h-4" />
+                                    </button>
+                                )}
+
+                                {listing.status === 'available' && (
+                                    <button
+                                        onClick={() => updateStatus(listing.id, 'adopted')}
+                                        disabled={updating === listing.id}
+                                        className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50"
+                                        title="Mark as Adopted"
+                                    >
+                                        <Heart className="w-4 h-4" />
                                     </button>
                                 )}
 

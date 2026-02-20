@@ -83,7 +83,7 @@ const AboutUs = () => {
                 <div className="bg-playful-yellow/10 rounded-[2rem] p-4 shadow-inner">
                   <div className="aspect-square bg-white rounded-[1.5rem] overflow-hidden shadow-md">
                     <img
-                      src="/placeholder.svg"
+                      src="https://lh3.googleusercontent.com/pw/AP1GczPP3ut83cBmFXmNL9D5I76DmwBvAYi8spjCclhrpwDDXXK51LZ8qIgojWYJNXPqznl0Go7jeWg-5vDIu3rtfHgbKXRkMogYq9mOo4Dkoce3lGFJXpOlZIxXzfpdO1w4ETX6KlxqqFhFOmZmk66u6Cq-wA=w711-h949-s-no-gm"
                       alt="Mouhurtik Ray"
                       className="w-full h-full object-cover"
                     />
