@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase/client';
-import Image from 'next/image';
-import { Check, X as XIcon, Trash2, Search, Eye, Archive, CheckCheck, UserPlus, Heart } from 'lucide-react';
+import { Trash2, Search, Eye, CheckCheck, UserPlus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { generatePetSlug } from '@/utils/slugUtils';
 
@@ -27,20 +26,71 @@ interface UserProfile {
     location: string | null;
 }
 
-const statusColors: Record<string, string> = {
-    available: 'bg-green-50 text-green-700',
-    pending: 'bg-yellow-50 text-yellow-700',
-    adopted: 'bg-blue-50 text-blue-700',
-    rejected: 'bg-red-50 text-red-700',
-    archived: 'bg-gray-100 text-gray-600',
+const statusOptions = ['available', 'adopted', 'pending', 'rejected', 'archived'] as const;
+
+const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
+    available: { bg: 'bg-green-50 hover:bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
+    pending: { bg: 'bg-yellow-50 hover:bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
+    adopted: { bg: 'bg-blue-50 hover:bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
+    rejected: { bg: 'bg-red-50 hover:bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
+    archived: { bg: 'bg-gray-100 hover:bg-gray-200', text: 'text-gray-600', dot: 'bg-gray-400' },
 };
+
+function StatusDropdown({ listing, onUpdate }: { listing: Listing; onUpdate: (id: string, status: string) => void }) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+        };
+        if (open) document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, [open]);
+
+    const style = statusStyles[listing.status] || statusStyles.pending;
+
+    return (
+        <div ref={ref} className="relative">
+            <button
+                onClick={() => setOpen(!open)}
+                className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg font-semibold capitalize transition-colors cursor-pointer ${style.bg} ${style.text}`}
+            >
+                <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+                {listing.status}
+                <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+            </button>
+
+            {open && (
+                <div className="absolute left-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-200 z-50 py-1 overflow-hidden">
+                    {statusOptions.map(s => {
+                        const st = statusStyles[s];
+                        const isActive = s === listing.status;
+                        return (
+                            <button
+                                key={s}
+                                onClick={() => { onUpdate(listing.id, s); setOpen(false); }}
+                                disabled={isActive}
+                                className={`w-full text-left px-3 py-2 text-sm capitalize flex items-center gap-2 transition-colors
+                                    ${isActive ? 'bg-gray-50 text-gray-400 cursor-default' : `hover:bg-gray-50 ${st.text}`}`}
+                            >
+                                <span className={`w-2 h-2 rounded-full ${st.dot}`} />
+                                {s}
+                                {isActive && <span className="ml-auto text-xs text-gray-400">current</span>}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function ListingsPage() {
     const [listings, setListings] = useState<Listing[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
-    const [updating, setUpdating] = useState<string | null>(null);
     const [bulkUpdating, setBulkUpdating] = useState(false);
 
     // Assign modal state
@@ -70,14 +120,21 @@ export default function ListingsPage() {
         loadListings();
     }, [loadListings]);
 
+    // Optimistic status update — update local state immediately, then persist
     const updateStatus = async (id: string, status: string) => {
-        setUpdating(id);
-        await supabase
+        // Optimistic update
+        setListings(prev => prev.map(l => l.id === id ? { ...l, status } : l));
+
+        const { error } = await supabase
             .from('pet_listings')
             .update({ status })
             .eq('id', id);
-        await loadListings();
-        setUpdating(null);
+
+        // If failed, revert by refetching
+        if (error) {
+            console.error('Failed to update status:', error);
+            await loadListings();
+        }
     };
 
     const approveAllPending = async () => {
@@ -93,10 +150,9 @@ export default function ListingsPage() {
 
     const deleteListing = async (id: string) => {
         if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return;
-        setUpdating(id);
+        // Optimistic removal
+        setListings(prev => prev.filter(l => l.id !== id));
         await supabase.from('pet_listings').delete().eq('id', id);
-        await loadListings();
-        setUpdating(null);
     };
 
     // --- Assign user ---
@@ -113,16 +169,14 @@ export default function ListingsPage() {
     };
 
     const assignUser = async (listingId: string, userId: string) => {
-        setUpdating(listingId);
+        setListings(prev => prev.map(l => l.id === listingId ? { ...l, user_id: userId } : l));
+        setAssigningId(null);
+        setUserSearch('');
+        setUserResults([]);
         await supabase
             .from('pet_listings')
             .update({ user_id: userId })
             .eq('id', listingId);
-        setAssigningId(null);
-        setUserSearch('');
-        setUserResults([]);
-        await loadListings();
-        setUpdating(null);
     };
 
     const filteredListings = listings.filter(l => {
@@ -143,7 +197,6 @@ export default function ListingsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h1 className="text-3xl font-heading font-bold text-playful-text">Listing Moderation</h1>
 
-                {/* Approve All button */}
                 {pendingCount > 0 && (
                     <button
                         onClick={approveAllPending}
@@ -194,15 +247,14 @@ export default function ListingsPage() {
                             key={listing.id}
                             className="bg-white rounded-2xl shadow-soft border border-gray-100 p-4 flex flex-col sm:flex-row gap-4 items-start"
                         >
-                            {/* Image */}
+                            {/* Image — using plain img to avoid next/image loader issues in admin */}
                             <div className="w-full sm:w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                                 {listing.image_url ? (
-                                    <Image
+                                    <img
                                         src={listing.image_url}
                                         alt={listing.pet_name}
-                                        width={96}
-                                        height={96}
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-2xl">
@@ -213,11 +265,9 @@ export default function ListingsPage() {
 
                             {/* Info */}
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex items-center gap-2 mb-1 flex-wrap">
                                     <h3 className="font-bold text-playful-text">{listing.pet_name}</h3>
-                                    <span className={`text-xs px-2 py-0.5 rounded-lg font-medium capitalize ${statusColors[listing.status] || 'bg-gray-100 text-gray-600'}`}>
-                                        {listing.status}
-                                    </span>
+                                    <StatusDropdown listing={listing} onUpdate={updateStatus} />
                                 </div>
                                 <p className="text-sm text-gray-500">
                                     {listing.breed} · {listing.animal_type || 'Unknown'} · {listing.location}
@@ -231,8 +281,8 @@ export default function ListingsPage() {
                                 </p>
                             </div>
 
-                            {/* Actions */}
-                            <div className="flex gap-2 flex-shrink-0 flex-wrap">
+                            {/* Actions — minimal: View, Assign, Delete */}
+                            <div className="flex gap-2 flex-shrink-0">
                                 <Link
                                     href={`/pet/${listing.slug || generatePetSlug(listing.pet_name, listing.id)}`}
                                     className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
@@ -240,61 +290,6 @@ export default function ListingsPage() {
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Link>
-
-                                {listing.status !== 'available' && listing.status !== 'archived' && listing.status !== 'adopted' && (
-                                    <button
-                                        onClick={() => updateStatus(listing.id, 'available')}
-                                        disabled={updating === listing.id}
-                                        className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50"
-                                        title="Approve"
-                                    >
-                                        <Check className="w-4 h-4" />
-                                    </button>
-                                )}
-
-                                {listing.status === 'available' && (
-                                    <button
-                                        onClick={() => updateStatus(listing.id, 'adopted')}
-                                        disabled={updating === listing.id}
-                                        className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50"
-                                        title="Mark as Adopted"
-                                    >
-                                        <Heart className="w-4 h-4" />
-                                    </button>
-                                )}
-
-                                {listing.status !== 'rejected' && listing.status !== 'archived' && (
-                                    <button
-                                        onClick={() => updateStatus(listing.id, 'rejected')}
-                                        disabled={updating === listing.id}
-                                        className="p-2 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition-colors disabled:opacity-50"
-                                        title="Reject"
-                                    >
-                                        <XIcon className="w-4 h-4" />
-                                    </button>
-                                )}
-
-                                {listing.status !== 'archived' && (
-                                    <button
-                                        onClick={() => updateStatus(listing.id, 'archived')}
-                                        disabled={updating === listing.id}
-                                        className="p-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-                                        title="Archive (hide from public)"
-                                    >
-                                        <Archive className="w-4 h-4" />
-                                    </button>
-                                )}
-
-                                {listing.status === 'archived' && (
-                                    <button
-                                        onClick={() => updateStatus(listing.id, 'available')}
-                                        disabled={updating === listing.id}
-                                        className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50"
-                                        title="Unarchive"
-                                    >
-                                        <Check className="w-4 h-4" />
-                                    </button>
-                                )}
 
                                 {/* Assign user */}
                                 {!listing.user_id && (
@@ -305,20 +300,18 @@ export default function ListingsPage() {
                                                 setUserSearch('');
                                                 setUserResults([]);
                                             }}
-                                            disabled={updating === listing.id}
-                                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50"
+                                            className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
                                             title="Assign to user"
                                         >
                                             <UserPlus className="w-4 h-4" />
                                         </button>
 
-                                        {/* Assign dropdown */}
                                         {assigningId === listing.id && (
                                             <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 z-50 p-3">
                                                 <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Assign to User</p>
                                                 <input
                                                     type="text"
-                                                    placeholder="Search by email or name..."
+                                                    placeholder="Search by name..."
                                                     value={userSearch}
                                                     onChange={e => {
                                                         setUserSearch(e.target.value);
@@ -352,8 +345,7 @@ export default function ListingsPage() {
 
                                 <button
                                     onClick={() => deleteListing(listing.id)}
-                                    disabled={updating === listing.id}
-                                    className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                                    className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                                     title="Delete permanently"
                                 >
                                     <Trash2 className="w-4 h-4" />

@@ -81,11 +81,11 @@ const AboutUs = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
               <div className="lg:col-span-1">
                 <div className="bg-playful-yellow/10 rounded-[2rem] p-4 shadow-inner">
-                  <div className="aspect-square bg-white rounded-[1.5rem] overflow-hidden shadow-md">
+                  <div className="aspect-[3/4] bg-white rounded-[1.5rem] overflow-hidden shadow-md">
                     <img
                       src="https://lh3.googleusercontent.com/pw/AP1GczPP3ut83cBmFXmNL9D5I76DmwBvAYi8spjCclhrpwDDXXK51LZ8qIgojWYJNXPqznl0Go7jeWg-5vDIu3rtfHgbKXRkMogYq9mOo4Dkoce3lGFJXpOlZIxXzfpdO1w4ETX6KlxqqFhFOmZmk66u6Cq-wA=w711-h949-s-no-gm"
                       alt="Mouhurtik Ray"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-top"
                     />
                   </div>
                 </div>

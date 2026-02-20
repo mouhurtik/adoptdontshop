@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
@@ -91,15 +92,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Initialize auth state on mount
     useEffect(() => {
+        let cancelled = false;
+
         const initializeAuth = async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
 
+                if (cancelled) return;
+
                 if (error) {
+                    // Session is corrupted — clear it so the user isn't stuck
+                    console.warn('[AuthContext] Session error, clearing corrupted state:', error.message);
+                    try { await supabase.auth.signOut(); } catch { /* ignore */ }
                     setAuthState({
                         ...defaultAuthState,
                         isLoading: false,
-                        error: error.message,
+                        error: null, // Don't show error — just treat as logged out
                     });
                     return;
                 }
@@ -114,8 +122,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                         isAuthenticated: true,
                         error: null,
                     }));
-                    await loadProfileAndRoles(user.id);
+                    if (!cancelled) await loadProfileAndRoles(user.id);
                 }
+
+                if (cancelled) return;
 
                 // NOW set isLoading=false — roles/profile are loaded
                 setAuthState(prev => ({
@@ -126,10 +136,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     error: null,
                 }));
             } catch {
+                if (cancelled) return;
+                // Total failure — try clearing session, treat as logged out
+                try { await supabase.auth.signOut(); } catch { /* ignore */ }
                 setAuthState({
                     ...defaultAuthState,
                     isLoading: false,
-                    error: 'Failed to initialize authentication',
+                    error: null,
                 });
             }
         };
@@ -169,6 +182,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         );
 
         return () => {
+            cancelled = true;
             subscription.unsubscribe();
         };
     }, [loadProfileAndRoles]);

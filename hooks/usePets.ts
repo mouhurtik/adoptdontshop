@@ -15,14 +15,24 @@ const transformPet = (raw: PetListingRow): Pet => ({
   image: raw.image_url ?? undefined,
 });
 
-/** Fetch all pet listings */
+/** Fetch all pet listings with a timeout to prevent hangs */
 const fetchPets = async (): Promise<Pet[]> => {
-  const { data, error } = await supabase
-    .from('pet_listings')
-    .select('*');
+  // Timeout guard: if fetch takes >15s, abort
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
 
-  if (error) throw error;
-  return (data ?? []).map(transformPet);
+  try {
+    const { data, error } = await supabase
+      .from('pet_listings')
+      .select('*')
+      .eq('status', 'available')
+      .abortSignal(controller.signal);
+
+    if (error) throw error;
+    return (data ?? []).map(transformPet);
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 /** Fetch a single pet by matching an ID prefix (slug-based lookup) */
