@@ -2,18 +2,29 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PawPrint, Users, ShoppingBag, LogIn } from 'lucide-react';
+import { PawPrint, Users, ShoppingBag, LogIn, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUnreadCount } from '@/hooks/useMessages';
 
-const tabs = [
+const publicTabs = [
     { name: 'Browse', icon: PawPrint, path: '/browse' },
     { name: 'Community', icon: Users, path: '/community' },
+    { name: 'Store', icon: ShoppingBag, path: '/resources' },
+];
+
+const authTabs = [
+    { name: 'Browse', icon: PawPrint, path: '/browse' },
+    { name: 'Community', icon: Users, path: '/community' },
+    { name: 'Messages', icon: MessageCircle, path: '/messages' },
     { name: 'Store', icon: ShoppingBag, path: '/resources' },
 ];
 
 export default function BottomNav() {
     const pathname = usePathname();
     const { isAuthenticated, profile, user } = useAuth();
+    const { data: unreadCount = 0 } = useUnreadCount();
+
+    const tabs = isAuthenticated ? authTabs : publicTabs;
 
     const isActive = (path: string) => pathname.startsWith(path);
 
@@ -27,6 +38,7 @@ export default function BottomNav() {
                     {tabs.map((tab) => {
                         const active = isActive(tab.path);
                         const Icon = tab.icon;
+                        const isMessages = tab.name === 'Messages';
                         return (
                             <Link
                                 key={tab.name}
@@ -42,13 +54,20 @@ export default function BottomNav() {
                                     }
                                 `}
                             >
-                                <Icon
-                                    className="h-[22px] w-[22px]"
-                                    strokeWidth={active ? 2.4 : 1.8}
-                                />
-                                <span className={`text-[10px] mt-0.5 leading-tight ${
-                                    active ? 'font-bold' : 'font-medium'
-                                }`}>
+                                <div className="relative">
+                                    <Icon
+                                        className="h-[22px] w-[22px]"
+                                        strokeWidth={active ? 2.4 : 1.8}
+                                    />
+                                    {/* Unread badge on Messages */}
+                                    {isMessages && unreadCount > 0 && (
+                                        <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 flex items-center justify-center bg-playful-coral text-white text-[9px] font-bold rounded-full px-1">
+                                            {unreadCount > 99 ? '99+' : unreadCount}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className={`text-[10px] mt-0.5 leading-tight ${active ? 'font-bold' : 'font-medium'
+                                    }`}>
                                     {tab.name}
                                 </span>
                             </Link>
@@ -85,9 +104,8 @@ export default function BottomNav() {
                                 strokeWidth={meActive ? 2.4 : 1.8}
                             />
                         )}
-                        <span className={`text-[10px] mt-0.5 leading-tight ${
-                            meActive ? 'font-bold' : 'font-medium'
-                        }`}>
+                        <span className={`text-[10px] mt-0.5 leading-tight ${meActive ? 'font-bold' : 'font-medium'
+                            }`}>
                             {isAuthenticated ? 'Me' : 'Login'}
                         </span>
                     </Link>
