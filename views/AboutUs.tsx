@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,7 +15,7 @@ import { PRODUCTS } from './essentials/productsData';
 
 type TabKey = 'story' | 'patrons' | 'store';
 
-const AboutUs = () => {
+const AboutUsInner = () => {
     const searchParams = useSearchParams();
     const initialTab = (searchParams.get('tab') as TabKey) || 'story';
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
@@ -337,5 +337,11 @@ function StoreTab({
         </div>
     );
 }
+
+const AboutUs = () => (
+    <Suspense fallback={<div className="min-h-screen pt-32 pb-16 bg-playful-cream" />}>
+        <AboutUsInner />
+    </Suspense>
+);
 
 export default AboutUs;

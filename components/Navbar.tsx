@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText, Plus } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuth } from "@/contexts/AuthContext";
 
-const Navbar = () => {
+const NavbarInner = () => {
     const [scrolled, setScrolled] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const pathname = usePathname();
@@ -233,5 +233,11 @@ const Navbar = () => {
         </>
     );
 };
+
+const Navbar = () => (
+    <Suspense fallback={<div className="h-14 bg-white border-b border-gray-100" />}>
+        <NavbarInner />
+    </Suspense>
+);
 
 export default Navbar;

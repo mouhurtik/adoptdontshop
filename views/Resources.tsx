@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Heart, Package, Mail, PawPrint, Building, UserCheck, Star, Eye, Users, Award } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -10,7 +10,7 @@ import { PRODUCTS } from './essentials/productsData';
 
 type TabKey = 'essentials' | 'patrons';
 
-const Resources = () => {
+const ResourcesInner = () => {
     const searchParams = useSearchParams();
     const initialTab = (searchParams.get('tab') as TabKey) || 'essentials';
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
@@ -203,5 +203,11 @@ function PatronsContent() {
         </div>
     );
 }
+
+const Resources = () => (
+    <Suspense fallback={<div className="min-h-screen pt-32 pb-16 bg-playful-cream" />}>
+        <ResourcesInner />
+    </Suspense>
+);
 
 export default Resources;

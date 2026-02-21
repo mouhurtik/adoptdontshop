@@ -8,7 +8,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense } from 'react';
 import PostCard from '@/components/community/PostCard';
 import TagFilter from '@/components/community/TagFilter';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
@@ -20,7 +20,7 @@ const SORT_OPTIONS: { value: SortOption; label: string; icon: React.ReactNode }[
     { value: 'top', label: 'Top', icon: <TrendingUp className="h-4 w-4" /> },
 ];
 
-const CommunityFeed = () => {
+const CommunityFeedInner = () => {
     const searchParams = useSearchParams();
     const initialTag = searchParams.get('tag') || 'all';
 
@@ -185,5 +185,11 @@ const CommunityFeed = () => {
         </div>
     );
 };
+
+const CommunityFeed = () => (
+    <Suspense fallback={<div className="min-h-screen pt-32 pb-16 bg-playful-cream" />}>
+        <CommunityFeedInner />
+    </Suspense>
+);
 
 export default CommunityFeed;
