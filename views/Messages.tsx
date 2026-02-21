@@ -82,11 +82,11 @@ const Messages = () => {
     }
 
     return (
-        <div className="pt-24 pb-0 min-h-screen bg-playful-cream">
-            <div className="container mx-auto px-4">
-                <ScrollReveal mode="fade-up" width="100%">
-                    <div className="bg-white rounded-[2rem] shadow-soft overflow-hidden border border-gray-100" style={{ height: 'calc(100vh - 7rem)' }}>
-                        <div className="flex h-full">
+        <div className="py-6 h-[calc(100vh-64px)] bg-playful-cream">
+            <div className="container mx-auto px-4 h-full">
+                <ScrollReveal mode="fade-up" width="100%" className="h-full">
+                    <div className="bg-white rounded-[2rem] shadow-soft border border-gray-100 h-full flex flex-col overflow-hidden">
+                        <div className="flex h-full flex-1">
                             {/* Conversation List — hidden on mobile when thread is shown */}
                             <div
                                 className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 ${

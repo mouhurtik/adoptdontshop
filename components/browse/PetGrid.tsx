@@ -94,7 +94,7 @@ const PetGrid = ({
         <p className="text-xl font-heading font-bold text-playful-text">
           Found <span className="text-playful-coral">{pets.length}</span> friends
         </p>
-        <div className="flex items-center gap-3 w-full sm:w-auto relative" ref={sortRef}>
+        <div className="hidden md:flex items-center gap-3 w-full sm:w-auto relative" ref={sortRef}>
            <span className="text-sm font-bold text-gray-500 hidden md:inline">Sort by:</span>
            <button
               onClick={() => setIsSortOpen(!isSortOpen)}

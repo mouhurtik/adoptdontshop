@@ -22,8 +22,8 @@ export const useFavorites = () => {
                     .eq('user_id', user.id);
 
                 if (error) throw error;
-                setFavorites(data.map((f: any) => f.pet_id));
-            } catch (err: any) {
+                setFavorites(data.map((f: { pet_id: string }) => f.pet_id));
+            } catch (err) {
                 console.error('Error fetching favorites:', err);
             } finally {
                 setIsLoading(false);
@@ -56,7 +56,7 @@ export const useFavorites = () => {
                     .insert({ user_id: user.id, pet_id: petId });
                 if (error) throw error;
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error toggling favorite:', err);
             // Revert optimistic update
             setFavorites(prev =>

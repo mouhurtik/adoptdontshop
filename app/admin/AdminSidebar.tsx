@@ -10,6 +10,7 @@ const navItems = [
     { href: '/admin/users', label: 'Users', icon: Users },
     { href: '/admin/listings', label: 'Listings', icon: PawPrint },
     { href: '/admin/posts', label: 'Posts', icon: MessageSquare },
+    { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
 ];
 
 interface AdminSidebarProps {

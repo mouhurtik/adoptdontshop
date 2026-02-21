@@ -28,6 +28,13 @@ const AGE_OPTIONS = [
   { value: 'senior', label: 'Senior (8+ yrs)' },
 ];
 
+const SORT_OPTIONS = [
+  { value: 'newest', label: 'Newest First' },
+  { value: 'oldest', label: 'Oldest First' },
+  { value: 'nameAsc', label: 'Name (A-Z)' },
+  { value: 'nameDesc', label: 'Name (Z-A)' },
+];
+
 const PetFilters = ({
   filters,
   onFilterChange,
@@ -37,10 +44,12 @@ const PetFilters = ({
 }: PetFiltersProps) => {
   const [isTypeOpen, setIsTypeOpen] = useState(false);
   const [isAgeOpen, setIsAgeOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   // Helper to get labels
   const typeLabel = TYPE_OPTIONS.find(opt => opt.value === filters.selectedType)?.label || 'All Types 🐾';
   const ageLabel = AGE_OPTIONS.find(opt => opt.value === filters.selectedAge)?.label || 'All Ages 🎂';
+  const sortLabel = SORT_OPTIONS.find(opt => opt.value === filters.sortBy)?.label || 'Sort By';
   return (
     <AnimatePresence>
       {showFilters && (
@@ -153,7 +162,50 @@ const PetFilters = ({
             </AnimatePresence>
           </div>
         </div>
-      </div>
+        </div>
+
+        <div className="block md:hidden">
+          <label className="block text-sm font-bold text-gray-600 mb-2 ml-2">Sort by</label>
+          <div className="relative">
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsSortOpen(!isSortOpen); setIsTypeOpen(false); setIsAgeOpen(false); }}
+              className="w-full flex justify-between items-center bg-playful-cream border-2 border-transparent hover:border-playful-yellow/30 rounded-xl p-3 text-gray-700 font-medium transition-all cursor-pointer"
+            >
+              <span>{sortLabel}</span>
+              <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isSortOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full mt-2 left-0 right-0 z-50 bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.5rem] p-2 max-h-[40vh] overflow-y-auto hide-scrollbar"
+                >
+                  {SORT_OPTIONS.map(opt => {
+                    const isActive = filters.sortBy === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onFilterChange('sortBy', opt.value as PetFiltersType['sortBy']);
+                          setIsSortOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-colors flex justify-between items-center ${isActive ? 'bg-playful-yellow/20 text-playful-text' : 'text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        {opt.label}
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-playful-yellow"></div>}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
 
       <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <label className="inline-flex items-center cursor-pointer group">

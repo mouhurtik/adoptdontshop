@@ -127,59 +127,69 @@ const MessageThread = ({
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="text-center py-12">
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400 text-sm mb-4">
                             No messages yet. Say hello! 👋
+                        </p>
+                        <p className="text-[11px] font-semibold text-gray-500 bg-white/60 py-2 px-4 rounded-full mx-auto w-fit shadow-sm border border-gray-100">
+                            🛡️ All messages are monitored by the admin for safety and monitoring purposes.
                         </p>
                     </div>
                 ) : (
-                    dateGroups.map((group) => (
-                        <div key={group.label}>
-                            {/* Date separator */}
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="flex-1 h-px bg-gray-200" />
-                                <span className="text-xs font-medium text-gray-400 bg-white px-3 py-1 rounded-full border border-gray-100">
-                                    {group.label}
-                                </span>
-                                <div className="flex-1 h-px bg-gray-200" />
-                            </div>
+                    <>
+                        <div className="text-center py-4 px-6 bg-white/60 mb-6 rounded-2xl mx-auto w-fit shadow-sm border border-gray-100">
+                            <p className="text-xs font-semibold text-gray-500">
+                                🛡️ All messages are monitored by the admin for safety and monitoring purposes.
+                            </p>
+                        </div>
+                        {dateGroups.map((group) => (
+                            <div key={group.label}>
+                                {/* Date separator */}
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="flex-1 h-px bg-gray-200" />
+                                    <span className="text-xs font-medium text-gray-400 bg-white px-3 py-1 rounded-full border border-gray-100">
+                                        {group.label}
+                                    </span>
+                                    <div className="flex-1 h-px bg-gray-200" />
+                                </div>
 
-                            {/* Messages in this date group */}
-                            <div className="space-y-2">
-                                {group.messages.map((msg) => (
-                                    <div
-                                        key={msg.id}
-                                        className={`flex ${msg.is_mine ? 'justify-end' : 'justify-start'}`}
-                                    >
+                                {/* Messages in this date group */}
+                                <div className="space-y-2">
+                                    {group.messages.map((msg) => (
                                         <div
-                                            className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm ${
-                                                msg.is_mine
-                                                    ? 'bg-playful-coral text-white rounded-br-md'
-                                                    : 'bg-white text-gray-800 rounded-bl-md border border-gray-100'
-                                            }`}
+                                            key={msg.id}
+                                            className={`flex ${msg.is_mine ? 'justify-end' : 'justify-start'}`}
                                         >
-                                            {!msg.is_mine && (
-                                                <p className="text-xs font-bold text-playful-teal mb-1">
-                                                    {msg.sender_name}
-                                                </p>
-                                            )}
-                                            <p className="text-sm whitespace-pre-wrap break-words">
-                                                {msg.content}
-                                            </p>
-                                            <p
-                                                className={`text-[10px] mt-1 ${
-                                                    msg.is_mine ? 'text-white/70' : 'text-gray-400'
+                                            <div
+                                                className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm ${
+                                                    msg.is_mine
+                                                        ? 'bg-playful-coral text-white rounded-br-md'
+                                                        : 'bg-white text-gray-800 rounded-bl-md border border-gray-100'
                                                 }`}
                                             >
-                                                {formatDistanceToNow(new Date(msg.created_at), {
-                                                    addSuffix: true,
-                                                })}
-                                            </p>
+                                                {!msg.is_mine && (
+                                                    <p className="text-xs font-bold text-playful-teal mb-1">
+                                                        {msg.sender_name}
+                                                    </p>
+                                                )}
+                                                <p className="text-sm whitespace-pre-wrap break-words">
+                                                    {msg.content}
+                                                </p>
+                                                <p
+                                                    className={`text-[10px] mt-1 ${
+                                                        msg.is_mine ? 'text-white/70' : 'text-gray-400'
+                                                    }`}
+                                                >
+                                                    {formatDistanceToNow(new Date(msg.created_at), {
+                                                        addSuffix: true,
+                                                    })}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </>
                 )}
                 <div ref={bottomRef} />
             </div>

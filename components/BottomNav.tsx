@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PawPrint, Users, ShoppingBag, User, LogIn } from 'lucide-react';
+import { PawPrint, Users, ShoppingBag, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const tabs = [

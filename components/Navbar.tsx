@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText, Plus } from "lucide-react";
+import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuth } from "@/contexts/AuthContext";
 
