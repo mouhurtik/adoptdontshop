@@ -1,68 +1,156 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { PetFilters as PetFiltersType } from '@/types';
-import { Filter, RotateCcw } from 'lucide-react';
+import { Filter, RotateCcw, X, ChevronDown } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import { useState } from 'react';
 
 interface PetFiltersProps {
   filters: PetFiltersType;
   onFilterChange: <K extends keyof PetFiltersType>(key: K, value: PetFiltersType[K]) => void;
   onResetFilters: () => void;
   showFilters: boolean;
+  onClose: () => void;
 }
+
+const TYPE_OPTIONS = [
+  { value: 'all', label: 'All Types 🐾' },
+  { value: 'Dog', label: 'Dogs 🐶' },
+  { value: 'Cat', label: 'Cats 🐱' },
+  { value: 'Bird', label: 'Birds 🐦' },
+  { value: 'Small Pet', label: 'Small Pets 🐰' },
+];
+
+const AGE_OPTIONS = [
+  { value: 'all', label: 'All Ages 🎂' },
+  { value: 'baby', label: 'Baby (0-1 yr)' },
+  { value: 'young', label: 'Young (1-3 yrs)' },
+  { value: 'adult', label: 'Adult (3-8 yrs)' },
+  { value: 'senior', label: 'Senior (8+ yrs)' },
+];
 
 const PetFilters = ({
   filters,
   onFilterChange,
   onResetFilters,
-  showFilters
+  showFilters,
+  onClose
 }: PetFiltersProps) => {
-  if (!showFilters) return null;
+  const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const [isAgeOpen, setIsAgeOpen] = useState(false);
 
+  // Helper to get labels
+  const typeLabel = TYPE_OPTIONS.find(opt => opt.value === filters.selectedType)?.label || 'All Types 🐾';
+  const ageLabel = AGE_OPTIONS.find(opt => opt.value === filters.selectedAge)?.label || 'All Ages 🎂';
   return (
-    <motion.div
-      className="bg-white rounded-[2rem] p-8 shadow-soft mb-8 border-2 border-playful-cream"
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex items-center gap-2 mb-6 text-playful-teal">
-        <Filter className="w-5 h-5" />
-        <h3 className="font-heading font-bold text-lg">Filter Friends</h3>
-      </div>
+    <AnimatePresence>
+      {showFilters && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
+            <motion.div
+              className="bg-white rounded-[2rem] p-4 shadow-xl w-full max-w-2xl border-2 border-playful-cream relative"
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.95 }}
+            transition={{ duration: 0.3, type: 'spring', damping: 25, stiffness: 300 }}
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside from closing the modal
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2 text-playful-teal">
+                <Filter className="w-5 h-5" />
+                <h3 className="font-heading font-bold text-xl">Filter Friends</h3>
+              </div>
+              <button 
+                onClick={onClose} 
+                className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors active-scale"
+                aria-label="Close filters"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-bold text-gray-600 mb-2 ml-2">Type</label>
           <div className="relative">
-            <select
-              className="w-full bg-playful-cream border-2 border-transparent hover:border-playful-teal/30 rounded-xl p-3 text-gray-700 font-medium focus:outline-none focus:border-playful-teal focus:ring-4 focus:ring-playful-teal/10 transition-all cursor-pointer appearance-none"
-              value={filters.selectedType}
-              onChange={(e) => onFilterChange('selectedType', e.target.value as PetFiltersType['selectedType'])}
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsTypeOpen(!isTypeOpen); setIsAgeOpen(false); }}
+              className="w-full flex justify-between items-center bg-playful-cream border-2 border-transparent hover:border-playful-teal/30 rounded-xl p-3 text-gray-700 font-medium transition-all cursor-pointer"
             >
-              <option value="all">All Types 🐾</option>
-              <option value="Dog">Dogs 🐶</option>
-              <option value="Cat">Cats 🐱</option>
-              <option value="Bird">Birds 🐦</option>
-              <option value="Small Pet">Small Pets 🐰</option>
-            </select>
+              <span>{typeLabel}</span>
+              <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isTypeOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full mt-2 left-0 right-0 z-50 bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.5rem] p-2 max-h-[40vh] overflow-y-auto hide-scrollbar"
+                >
+                  {TYPE_OPTIONS.map(opt => {
+                    const isActive = filters.selectedType === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onFilterChange('selectedType', opt.value as PetFiltersType['selectedType']);
+                          setIsTypeOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-colors flex justify-between items-center ${isActive ? 'bg-playful-cream text-playful-teal' : 'text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        {opt.label}
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-playful-teal"></div>}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-bold text-gray-600 mb-2 ml-2">Age</label>
           <div className="relative">
-            <select
-              className="w-full bg-playful-cream border-2 border-transparent hover:border-playful-coral/30 rounded-xl p-3 text-gray-700 font-medium focus:outline-none focus:border-playful-coral focus:ring-4 focus:ring-playful-coral/10 transition-all cursor-pointer appearance-none"
-              value={filters.selectedAge}
-              onChange={(e) => onFilterChange('selectedAge', e.target.value as PetFiltersType['selectedAge'])}
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsAgeOpen(!isAgeOpen); setIsTypeOpen(false); }}
+              className="w-full flex justify-between items-center bg-playful-cream border-2 border-transparent hover:border-playful-coral/30 rounded-xl p-3 text-gray-700 font-medium transition-all cursor-pointer"
             >
-              <option value="all">All Ages 🎂</option>
-              <option value="baby">Baby (0-1 yr)</option>
-              <option value="young">Young (1-3 yrs)</option>
-              <option value="adult">Adult (3-8 yrs)</option>
-              <option value="senior">Senior (8+ yrs)</option>
-            </select>
+              <span>{ageLabel}</span>
+              <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isAgeOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isAgeOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full mt-2 left-0 right-0 z-50 bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.5rem] p-2 max-h-[40vh] overflow-y-auto hide-scrollbar"
+                >
+                  {AGE_OPTIONS.map(opt => {
+                    const isActive = filters.selectedAge === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onFilterChange('selectedAge', opt.value as PetFiltersType['selectedAge']);
+                          setIsAgeOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-colors flex justify-between items-center ${isActive ? 'bg-playful-coral/10 text-playful-coral' : 'text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        {opt.label}
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-playful-coral"></div>}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -91,7 +179,10 @@ const PetFilters = ({
           Reset Filters
         </PrimaryButton>
       </div>
-    </motion.div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 };
 

@@ -68,6 +68,31 @@
   .blob-shape {
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
+
+  /* Mobile App Utilities */
+  .tap-transparent {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 20px);
+  }
+
+  /* Physical feel for buttons */
+  .active-scale {
+    @apply active:scale-95 transition-transform duration-100;
+  }
 }
 
 .playful-transition {
@@ -77,4 +102,14 @@
 
 .hover-lift {
   @apply hover:-translate-y-1 hover:shadow-lg transition-transform duration-300;
+}
+
+/* Global mobile resets */
+@media (max-width: 1024px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    overscroll-behavior-y: none; /* Prevent bounce on mobile */
+  }
 }

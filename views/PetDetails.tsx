@@ -76,36 +76,54 @@ const PetDetails = () => {
   }
 
   return (
-    <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-      <div className="container mx-auto px-4">
+    <div className="pt-0 lg:pt-32 pb-24 lg:pb-16 bg-white lg:bg-playful-cream min-h-screen relative">
+      {/* Absolute Back Button for Mobile (Floating over image) / Standard for Desktop */}
+      <div className="absolute lg:relative top-safe lg:top-0 left-4 lg:left-0 z-50 lg:container lg:mx-auto lg:px-4 mt-4 lg:mt-0 lg:mb-6">
         <Link
           href="/browse"
-          className="inline-flex items-center text-gray-600 hover:text-playful-coral font-bold mb-6 transition-colors"
+          className="inline-flex items-center justify-center lg:justify-start w-10 h-10 lg:w-auto lg:h-auto bg-black/30 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none rounded-full lg:rounded-none text-white lg:text-gray-600 hover:text-white lg:hover:text-playful-coral font-bold transition-colors shadow-sm lg:shadow-none active-scale lg:active:scale-100"
         >
-          <ArrowLeft className="mr-2 h-5 w-5" />
-          Back to Browse
+          <ArrowLeft className="h-6 w-6 lg:mr-2 lg:h-5 lg:w-5" />
+          <span className="hidden lg:inline">Back to Browse</span>
         </Link>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="container mx-auto px-0 lg:px-4">
+        <div className="flex flex-col lg:flex-row gap-0 lg:gap-8">
           {/* Left column with pet info */}
           <div className="flex-grow">
             <ScrollReveal mode="fade-up" width="100%">
               <PetDetailsHeader pet={pet} openAdoptModal={openAdoptModal} />
             </ScrollReveal>
-            <ScrollReveal mode="fade-up" delay={0.2} width="100%">
-              <PetInfoSection pet={pet} />
-            </ScrollReveal>
+            <div className="px-6 lg:px-0">
+              <ScrollReveal mode="fade-up" delay={0.2} width="100%">
+                <PetInfoSection pet={pet} />
+              </ScrollReveal>
+            </div>
           </div>
 
           {/* Right column with contact info */}
-          <ScrollReveal
-            mode="slide-left"
-            delay={0.4}
-            className="w-full lg:w-auto"
-          >
-            <ContactInfoCard petId={pet.id} petLocation={pet.location} />
-          </ScrollReveal>
+          <div className="px-6 lg:px-0 mt-8 lg:mt-0">
+            <ScrollReveal
+              mode="slide-left"
+              delay={0.4}
+              className="w-full lg:w-auto"
+            >
+              <ContactInfoCard petId={pet.id} petLocation={pet.location} />
+            </ScrollReveal>
+          </div>
         </div>
+      </div>
+
+      {/* Mobile Sticky Floating Action Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-xl border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-40 pb-safe">
+        <PrimaryButton
+          onClick={openAdoptModal}
+          size="lg"
+          className="w-full text-[17px] justify-center active-scale shadow-lg rounded-2xl py-4"
+        >
+          Adopt {pet.name || pet.pet_name} 🐾
+        </PrimaryButton>
       </div>
 
       {/* Adoption Modal */}
@@ -137,7 +155,7 @@ const PetDetails = () => {
                 setShowSuccess(false);
                 closeAdoptModal();
               }}
-              className="w-full justify-center"
+              className="w-full justify-center active-scale py-3.5 rounded-xl"
             >
               Yay!
             </PrimaryButton>

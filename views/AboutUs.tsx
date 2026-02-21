@@ -40,25 +40,25 @@ const AboutUs = () => {
     ];
 
     return (
-        <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
+        <div className={`lg:pt-32 pb-16 bg-playful-cream min-h-screen ${activeTab === 'store' ? 'pt-2' : 'pt-6'}`}>
             <div className="container mx-auto px-6">
                 {/* Hero */}
-                <ScrollReveal mode="fade-up" width="100%" className="text-center mb-12 relative">
+                <ScrollReveal mode="fade-up" width="100%" className={`text-center mb-8 lg:mb-12 relative ${activeTab === 'store' ? 'hidden lg:block' : ''}`}>
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-coral/20 rounded-full blur-3xl -z-10" />
-                    <h1 className="text-4xl md:text-7xl font-heading font-black text-playful-text mb-6 leading-tight">
+                    <h1 className="text-4xl md:text-7xl font-heading font-black text-playful-text mb-4 lg:mb-6 leading-tight">
                         About
-                        <span className="relative inline-block ml-4 transform -rotate-2">
-                            <span className="absolute inset-0 bg-playful-teal rounded-2xl transform rotate-2" />
-                            <span className="relative text-white px-6 py-2">Us</span>
+                        <span className="relative inline-block ml-3 lg:ml-4 transform -rotate-2">
+                            <span className="absolute inset-0 bg-playful-teal rounded-xl lg:rounded-2xl transform rotate-2" />
+                            <span className="relative text-white px-4 lg:px-6 py-1 lg:py-2">Us</span>
                         </span>
                     </h1>
-                    <p className="text-2xl md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-8 font-heading">
+                    <p className="text-lg md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-4 lg:mt-8 font-heading">
                         Connecting loving homes with pets in need 🐾
                     </p>
                 </ScrollReveal>
 
                 {/* Tab Switcher */}
-                <ScrollReveal mode="fade-up" delay={0.05} width="100%" className="flex justify-center mb-12">
+                <ScrollReveal mode="fade-up" delay={0.05} width="100%" className={`flex justify-center mb-12 ${activeTab === 'store' ? 'hidden lg:flex' : ''}`}>
                     <div className="inline-flex bg-white rounded-full p-1.5 shadow-soft border border-gray-100">
                         {tabs.map((tab) => (
                             <button

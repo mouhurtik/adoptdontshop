@@ -15,10 +15,10 @@ const ProductsSection = ({ products, activeTab, onTabChange }: ProductsSectionPr
     const filteredProducts = products.filter(product => product.petType === activeTab);
 
     return (
-        <section className="py-20">
+        <section className="py-6 lg:py-20">
             <div className="container mx-auto px-4">
                 <Tabs defaultValue="dog" className="w-full" onValueChange={onTabChange}>
-                    <div className="flex justify-center mb-12">
+                    <div className="flex justify-center mb-6 lg:mb-12">
                         <TabsList className="bg-playful-cream/50 p-1 rounded-full border border-gray-100">
                             <TabsTrigger value="dog" className="rounded-full px-6 py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-playful-coral font-bold flex items-center gap-2">
                                 <Dog className="w-4 h-4" /> Dogs
