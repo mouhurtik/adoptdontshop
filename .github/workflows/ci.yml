@@ -33,6 +33,9 @@ jobs:
 
       - name: Run tests
         run: npm test -- --run
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-ci-tests
 
       - name: Build project
         run: npm run build
