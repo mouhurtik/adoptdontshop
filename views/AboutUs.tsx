@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
     Mail, Linkedin, Twitter, PawPrint, Users, Target, Award,
-    Building, UserCheck, Star, Eye, ShoppingBag, Package, Heart
+    Building, UserCheck, Star, Eye, ShoppingBag, Heart
 } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';

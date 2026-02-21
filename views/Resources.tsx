@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ShoppingBag, Heart, Package, Shield, Mail, PawPrint, Building, UserCheck, Star, Eye, Users, Award } from 'lucide-react';
+import { Heart, Package, Mail, PawPrint, Building, UserCheck, Star, Eye, Users, Award } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import ProductsSection from './essentials/ProductsSection';
 import InsuranceSection from './essentials/InsuranceSection';

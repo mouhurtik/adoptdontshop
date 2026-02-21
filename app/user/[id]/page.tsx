@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
-import { User, MapPin, Building2, Calendar, PawPrint, FileText, MessageCircle, ArrowLeft } from 'lucide-react';
+import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { format } from 'date-fns';
