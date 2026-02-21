@@ -82,16 +82,15 @@ const Messages = () => {
     }
 
     return (
-        <div className="py-6 h-[calc(100vh-64px)] bg-playful-cream">
-            <div className="container mx-auto px-4 h-full">
+        <div className="pt-16 lg:pt-24 pb-20 lg:pb-6 h-screen bg-playful-cream">
+            <div className="container mx-auto px-4 h-full max-w-6xl">
                 <ScrollReveal mode="fade-up" width="100%" className="h-full">
                     <div className="bg-white rounded-[2rem] shadow-soft border border-gray-100 h-full flex flex-col overflow-hidden">
                         <div className="flex h-full flex-1">
                             {/* Conversation List — hidden on mobile when thread is shown */}
                             <div
-                                className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 ${
-                                    showThread ? 'hidden lg:flex' : 'flex'
-                                }`}
+                                className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 ${showThread ? 'hidden lg:flex' : 'flex'
+                                    }`}
                             >
                                 <div className="p-4 border-b border-gray-100">
                                     <h1 className="text-xl font-heading font-bold text-playful-text flex items-center gap-2">
@@ -109,9 +108,8 @@ const Messages = () => {
 
                             {/* Message Thread — hidden on mobile when list is shown */}
                             <div
-                                className={`flex-1 flex flex-col ${
-                                    showThread ? 'flex' : 'hidden lg:flex'
-                                }`}
+                                className={`flex-1 flex flex-col ${showThread ? 'flex' : 'hidden lg:flex'
+                                    }`}
                             >
                                 <MessageThread
                                     conversation={selectedConversation}
