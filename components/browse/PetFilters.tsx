@@ -1,3 +1,5 @@
+'use client';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PetFilters as PetFiltersType } from '@/types';
 import { Filter, RotateCcw, X, ChevronDown } from 'lucide-react';

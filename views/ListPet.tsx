@@ -1,3 +1,5 @@
+'use client';
+
 import { PawPrint, Upload, FileText, Shield } from "lucide-react";
 import PetListingForm from "@/components/pet-listing/PetListingForm";
 import ScrollReveal from "@/components/ui/ScrollReveal";
