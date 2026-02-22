@@ -116,7 +116,7 @@ const BrowsePets = () => {
 
       <div className="container mx-auto px-0 md:px-6 md:-mt-16 relative z-20">
         {/* Search Bar */}
-        <div className="relative lg:sticky lg:top-[6.5rem] z-40 px-4 md:px-0 pt-2 md:pt-4 pb-2 bg-playful-cream/90 backdrop-blur-md">
+        <div className="relative z-40 px-4 md:px-0 pt-2 md:pt-4 pb-2 bg-playful-cream/90 backdrop-blur-md">
           <ScrollReveal
             mode="fade-up"
             delay={0.2}

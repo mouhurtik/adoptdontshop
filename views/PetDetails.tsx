@@ -76,7 +76,7 @@ const PetDetails = () => {
   }
 
   return (
-    <div className="pt-0 lg:pt-32 pb-24 lg:pb-16 bg-white lg:bg-playful-cream min-h-screen relative">
+    <div className="pt-0 lg:pt-32 pb-32 lg:pb-16 bg-white lg:bg-playful-cream min-h-screen relative">
       {/* Absolute Back Button for Mobile (Floating over image) / Standard for Desktop */}
       <div className="absolute lg:relative top-safe lg:top-0 left-4 lg:left-0 z-50 lg:container lg:mx-auto lg:px-4 mt-4 lg:mt-0 lg:mb-6">
         <Link

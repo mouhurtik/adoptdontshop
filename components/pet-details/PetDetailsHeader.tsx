@@ -14,7 +14,7 @@ const PetDetailsHeader = ({ pet, openAdoptModal }: PetDetailsHeaderProps) => {
   return (
     <div className="relative mb-6 lg:mb-12">
       {/* Mobile Hero Image (hidden on desktop) */}
-      <div className="lg:hidden absolute top-0 left-0 w-full h-[45vh] -mt-14 z-0">
+      <div className="lg:hidden absolute top-0 left-0 w-full h-[50vh] z-0">
         <img
           src={pet.image || pet.image_url || '/placeholder.svg'}
           alt={pet.name || pet.pet_name}
@@ -29,7 +29,7 @@ const PetDetailsHeader = ({ pet, openAdoptModal }: PetDetailsHeaderProps) => {
       </div>
 
       {/* Content Sheet */}
-      <div className="bg-white rounded-t-[2rem] lg:rounded-[3rem] px-6 py-8 lg:p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] lg:shadow-xl border-t lg:border-2 border-gray-100 lg:border-playful-cream relative z-10 mt-[35vh] lg:mt-0 overflow-hidden">
+      <div className="bg-white rounded-t-[2rem] lg:rounded-[3rem] px-6 py-8 lg:p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] lg:shadow-xl border-t lg:border-2 border-gray-100 lg:border-playful-cream relative z-10 mt-[40vh] lg:mt-0 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           {/* Desktop Image Section (hidden on mobile) */}

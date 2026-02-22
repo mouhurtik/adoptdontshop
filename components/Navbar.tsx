@@ -67,6 +67,15 @@ const NavbarInner = () => {
         if (pathname.startsWith('/about')) {
             return searchParams.get('tab') === 'store' ? 'Store' : 'About';
         }
+        if (pathname.startsWith('/pet/')) {
+            // Extract pet name prefix from the slug (e.g., pithe-xxxx -> pithe)
+            const slugSegments = pathname.split('/');
+            const petSlug = slugSegments[slugSegments.length - 1]; // pithe-xxxx
+            const petNameStr = petSlug ? petSlug.split('-')[0] : '';
+            // Capitalize first letter
+            const formatName = petNameStr ? petNameStr.charAt(0).toUpperCase() + petNameStr.slice(1) : 'Pet';
+            return `Meet ${formatName}`;
+        }
         if (pathname.startsWith('/login')) return 'Login';
         if (pathname.startsWith('/signup')) return 'Sign Up';
         return null;
@@ -99,7 +108,8 @@ const NavbarInner = () => {
                                                     pathname.startsWith('/list-pet') ? 'bg-green-100 text-green-700' :
                                                         pathname.startsWith('/about') ? 'bg-teal-100 text-teal-700' :
                                                             pathname.startsWith('/login') || pathname.startsWith('/signup') ? 'bg-playful-coral/15 text-playful-coral' :
-                                                                'bg-playful-yellow text-playful-text'
+                                                                pathname.startsWith('/pet/') ? 'bg-playful-coral text-white' :
+                                                                    'bg-playful-yellow text-playful-text'
                                 }`}>
                                 {mobileTitle}
                             </span>

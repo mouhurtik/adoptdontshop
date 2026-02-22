@@ -93,13 +93,13 @@ const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="bg-white rounded-[2rem] p-8 shadow-soft border border-gray-100 lg:w-96 flex-shrink-0 h-fit sticky top-24"
+        className="bg-white rounded-[2rem] p-6 lg:p-8 shadow-soft border border-gray-100 lg:w-96 flex-shrink-0 h-fit sticky top-24"
       >
-        <h3 className="text-2xl font-heading font-bold text-playful-text mb-6">
+        <h3 className="text-xl lg:text-2xl font-heading font-bold text-playful-text mb-4 lg:mb-6">
           Contact Information
         </h3>
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           <div className="flex items-start gap-4">
             <div className="bg-playful-coral/10 p-3 rounded-full text-playful-coral">
               <User className="w-5 h-5" />
