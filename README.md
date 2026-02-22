@@ -1,6 +1,6 @@
-# 🐾 Adopt Don't Shop - Pet Adoption Portal
+# 🐾 Adopt Don't Shop - Pet Adoption Community
 
-A modern, open-source pet adoption platform connecting shelters, rescues, and potential pet parents. Built with Next.js for SEO-first rendering and deployed on Cloudflare Pages.
+A modern, open-source pet adoption platform and community hub connecting shelters, rescues, and potential pet parents. Built with Next.js for SEO-first rendering and deployed on Cloudflare Pages.
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)]()
@@ -21,6 +21,12 @@ A modern, open-source pet adoption platform connecting shelters, rescues, and po
 ### For Shelters & Caregivers
 - 📝 **Easy Pet Listing** — Simple form to list pets for adoption
 - 🔒 **Secure** — Supabase Auth with Row-Level Security
+
+### Community & Engagement
+- 💬 **Community Forums** — Discuss tips, share success stories, and ask for advice
+- 🛍️ **Pet Essentials Store** — Browse recommended products and essential starter kits
+- 📬 **Direct Messaging** — Connect directly with shelters, caregivers, and fellow adopters
+- 🛡️ **Admin Safety Monitoring** — Platform communications are monitored to ensure a safe environment
 
 ### Technical Highlights
 - 🚀 **SSR + SEO** — Server-rendered pages with dynamic Open Graph meta tags per pet
