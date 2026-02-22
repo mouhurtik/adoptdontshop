@@ -4,14 +4,15 @@ import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BottomNav from '@/components/BottomNav';
+import FloatingMessages from '@/components/FloatingMessages';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isAdminRoute = pathname.startsWith('/admin');
     
     const isMessages = pathname === '/messages' || pathname.startsWith('/messages/');
-    // Deep views where bottom nav should be hidden
-    const isDeepView = pathname.startsWith('/pet/') || isMessages;
+    // Deep views where bottom nav should be hidden (Messages removed so users can navigate away)
+    const isDeepView = pathname.startsWith('/pet/');
     const showBottomNav = !isAdminRoute && !isDeepView;
     const showFooter = !isAdminRoute && !isMessages;
 
@@ -23,6 +24,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
             </main>
             {showFooter && <div className="hidden lg:block"><Footer /></div>}
             {showBottomNav && <BottomNav />}
+            <FloatingMessages />
         </div>
     );
 }

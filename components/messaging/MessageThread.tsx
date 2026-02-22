@@ -175,8 +175,8 @@ const MessageThread = ({
                                                     {msg.content}
                                                 </p>
                                                 <p
-                                                    className={`text-[10px] mt-1 ${
-                                                        msg.is_mine ? 'text-white/70' : 'text-gray-400'
+                                                    className={`text-[10px] mt-1.5 ${
+                                                        msg.is_mine ? 'text-white/80 text-right' : 'text-gray-400 text-left'
                                                     }`}
                                                 >
                                                     {formatDistanceToNow(new Date(msg.created_at), {
@@ -197,7 +197,7 @@ const MessageThread = ({
             {/* Input */}
             <form
                 onSubmit={handleSubmit}
-                className="border-t border-gray-100 p-3 bg-white flex items-center gap-2"
+                className="border-t border-gray-100 p-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] bg-white flex items-center gap-2"
             >
                 <input
                     type="text"

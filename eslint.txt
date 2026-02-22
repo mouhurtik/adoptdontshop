@@ -1,0 +1,16 @@
+﻿
+C:\Users\mouhu\OneDrive\Desktop\adoptdontshop\app\admin\layout.tsx
+  4:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+C:\Users\mouhu\OneDrive\Desktop\adoptdontshop\app\community\layout.tsx
+  3:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+C:\Users\mouhu\OneDrive\Desktop\adoptdontshop\components\FloatingMessages.tsx
+  5:25  error  'X' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mouhu\OneDrive\Desktop\adoptdontshop\contexts\AuthContext.tsx
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-refresh/only-export-components')
+
+Γ£û 4 problems (1 error, 3 warnings)
+  0 errors and 3 warnings potentially fixable with the `--fix` option.
+

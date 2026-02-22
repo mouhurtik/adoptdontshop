@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import AdminGuard from './AdminGuard';
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 export const metadata: Metadata = {
     title: 'Admin Dashboard | AdoptDontShop',
     description: 'Admin dashboard for managing users, listings, and applications.',

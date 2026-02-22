@@ -82,17 +82,17 @@ const Messages = () => {
     }
 
     return (
-        <div className="pt-16 lg:pt-24 pb-20 lg:pb-6 h-screen bg-playful-cream">
-            <div className="container mx-auto px-4 h-full max-w-6xl">
-                <ScrollReveal mode="fade-up" width="100%" className="h-full">
-                    <div className="bg-white rounded-[2rem] shadow-soft border border-gray-100 h-full flex flex-col overflow-hidden">
-                        <div className="flex h-full flex-1">
+        <div className="pt-14 lg:pt-24 lg:pb-6 h-[100dvh] lg:h-[calc(100vh-4rem)] bg-white lg:bg-playful-cream flex flex-col">
+            <div className="container mx-auto px-0 lg:px-4 h-full max-w-6xl flex-1 flex flex-col min-h-0">
+                <ScrollReveal mode="fade-up" width="100%" className="h-full flex-1 flex flex-col min-h-0">
+                    <div className="bg-white lg:bg-white lg:rounded-[2rem] lg:shadow-soft lg:border lg:border-gray-100 h-full flex flex-col overflow-hidden min-h-0">
+                        <div className="flex h-full flex-1 min-h-0">
                             {/* Conversation List — hidden on mobile when thread is shown */}
                             <div
-                                className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 ${showThread ? 'hidden lg:flex' : 'flex'
+                                className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 min-h-0 ${showThread ? 'hidden lg:flex' : 'flex'
                                     }`}
                             >
-                                <div className="p-4 border-b border-gray-100">
+                                <div className="hidden lg:block p-4 border-b border-gray-100">
                                     <h1 className="text-xl font-heading font-bold text-playful-text flex items-center gap-2">
                                         <MessageCircle className="w-5 h-5 text-playful-coral" />
                                         Messages

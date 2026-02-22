@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
-import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft } from 'lucide-react';
+import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { format } from 'date-fns';
@@ -49,8 +49,10 @@ export default function PublicProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [pets, setPets] = useState<PetListing[]>([]);
     const [posts, setPosts] = useState<CommunityPost[]>([]);
+    const [favoritePets, setFavoritePets] = useState<PetListing[]>([]);
+    const [likedPosts, setLikedPosts] = useState<CommunityPost[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'pets' | 'posts'>('pets');
+    const [activeTab, setActiveTab] = useState<'pets' | 'posts' | 'favorites' | 'liked_posts'>('pets');
 
     useEffect(() => {
         if (!userId) return;
@@ -102,6 +104,28 @@ export default function PublicProfilePage() {
                     .order('created_at', { ascending: false }) as { data: CommunityPost[] | null };
 
                 if (postsData) setPosts(postsData);
+
+                // Fetch favorite pets
+                const { data: favoriteData } = await supabase
+                    .from('pet_favorites')
+                    .select('pet_listings:pet_id(id, pet_name, animal_type, breed, image_url, status, created_at)')
+                    .eq('user_id', uid) as { data: { pet_listings: PetListing }[] | null };
+
+                if (favoriteData) {
+                    const favorites = favoriteData.map(f => f.pet_listings).filter(Boolean);
+                    setFavoritePets(favorites);
+                }
+
+                // Fetch liked posts
+                const { data: likedData } = await supabase
+                    .from('post_likes')
+                    .select('community_posts:post_id(id, title, slug, tags, like_count, comment_count, created_at, featured_image_url)')
+                    .eq('user_id', uid) as { data: { community_posts: CommunityPost }[] | null };
+
+                if (likedData) {
+                    const liked = likedData.map(l => l.community_posts).filter(Boolean);
+                    setLikedPosts(liked);
+                }
             }
 
             setLoading(false);
@@ -212,10 +236,10 @@ export default function PublicProfilePage() {
 
                 {/* Tab Switcher */}
                 <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="flex justify-center mb-8">
-                    <div className="inline-flex bg-white rounded-full p-1.5 shadow-soft border border-gray-100">
+                    <div className="grid grid-cols-2 md:flex justify-center gap-2 bg-white rounded-[2rem] md:rounded-full p-2 shadow-soft border border-gray-100 max-w-full w-full">
                         <button
                             onClick={() => setActiveTab('pets')}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
                                 activeTab === 'pets'
                                     ? 'bg-playful-coral text-white shadow-md'
                                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -226,7 +250,7 @@ export default function PublicProfilePage() {
                         </button>
                         <button
                             onClick={() => setActiveTab('posts')}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 ${
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
                                 activeTab === 'posts'
                                     ? 'bg-playful-coral text-white shadow-md'
                                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -235,15 +259,36 @@ export default function PublicProfilePage() {
                             <FileText className="w-4 h-4" />
                             Posts ({posts.length})
                         </button>
+                        <button
+                            onClick={() => setActiveTab('favorites')}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
+                                activeTab === 'favorites'
+                                    ? 'bg-playful-coral text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                            }`}
+                        >
+                            <Bookmark className="w-4 h-4" />
+                            Favorites ({favoritePets.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('liked_posts')}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
+                                activeTab === 'liked_posts'
+                                    ? 'bg-playful-coral text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                            }`}
+                        >
+                            <Heart className="w-4 h-4" />
+                            Likes ({likedPosts.length})
+                        </button>
                     </div>
                 </ScrollReveal>
 
                 {/* Tab Content */}
-                {activeTab === 'pets' ? (
-                    <PetsGrid pets={pets} />
-                ) : (
-                    <PostsList posts={posts} />
-                )}
+                {activeTab === 'pets' && <PetsGrid pets={pets} />}
+                {activeTab === 'posts' && <PostsList posts={posts} />}
+                {activeTab === 'favorites' && <FavoritePetsGrid pets={favoritePets} />}
+                {activeTab === 'liked_posts' && <LikedPostsList posts={likedPosts} />}
             </div>
         </div>
     );
@@ -353,4 +398,34 @@ function PostsList({ posts }: { posts: CommunityPost[] }) {
             ))}
         </div>
     );
+}
+
+// ─── Favorite Pets Grid ────────────────────────────────────
+function FavoritePetsGrid({ pets }: { pets: PetListing[] }) {
+    if (pets.length === 0) {
+        return (
+            <ScrollReveal mode="fade-up" width="100%">
+                <div className="bg-white rounded-[2rem] p-12 shadow-soft text-center">
+                    <Bookmark className="h-12 w-12 text-gray-200 mx-auto mb-3" />
+                    <p className="text-gray-400 font-bold">No favorite pets yet</p>
+                </div>
+            </ScrollReveal>
+        );
+    }
+    return <PetsGrid pets={pets} />;
+}
+
+// ─── Liked Posts List ─────────────────────────────────
+function LikedPostsList({ posts }: { posts: CommunityPost[] }) {
+    if (posts.length === 0) {
+        return (
+            <ScrollReveal mode="fade-up" width="100%">
+                <div className="bg-white rounded-[2rem] p-12 shadow-soft text-center">
+                    <Heart className="h-12 w-12 text-gray-200 mx-auto mb-3" />
+                    <p className="text-gray-400 font-bold">No liked posts yet</p>
+                </div>
+            </ScrollReveal>
+        );
+    }
+    return <PostsList posts={posts} />;
 }
