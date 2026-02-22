@@ -107,6 +107,7 @@ const PetDetails = () => {
             <ScrollReveal
               mode="slide-left"
               delay={0.4}
+              width="100%"
               className="w-full lg:w-auto"
             >
               <ContactInfoCard petId={pet.id} petLocation={pet.location} />

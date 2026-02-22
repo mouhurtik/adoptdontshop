@@ -28,8 +28,11 @@ const PetDetailsHeader = ({ pet, openAdoptModal }: PetDetailsHeaderProps) => {
         )}
       </div>
 
+      {/* Content Spacer for Native Scrolling over Absolute Image */}
+      <div className="lg:hidden w-full h-[40vh]"></div>
+
       {/* Content Sheet */}
-      <div className="bg-white rounded-t-[2rem] lg:rounded-[3rem] px-6 py-8 lg:p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] lg:shadow-xl border-t lg:border-2 border-gray-100 lg:border-playful-cream relative z-10 mt-[40vh] lg:mt-0 overflow-hidden">
+      <div className="bg-white rounded-t-[2rem] lg:rounded-[3rem] px-6 py-8 lg:p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] lg:shadow-xl border-t lg:border-2 border-gray-100 lg:border-playful-cream relative z-10 lg:mt-0 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           
           {/* Desktop Image Section (hidden on mobile) */}
