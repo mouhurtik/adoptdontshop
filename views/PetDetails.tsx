@@ -117,11 +117,11 @@ const PetDetails = () => {
       </div>
 
       {/* Mobile Sticky Floating Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-xl border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-40 pb-safe">
+      <div className="lg:hidden fixed bottom-6 left-4 right-4 p-4 bg-white/90 backdrop-blur-xl border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] z-40 rounded-[2rem]">
         <PrimaryButton
           onClick={openAdoptModal}
           size="lg"
-          className="w-full text-[17px] justify-center active-scale shadow-lg rounded-2xl py-4"
+          className="w-full text-[17px] justify-center active-scale shadow-lg rounded-2xl py-3"
         >
           Adopt {pet.name || pet.pet_name} 🐾
         </PrimaryButton>
