@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePetCount } from '@/hooks/usePets';
 import HeroSection from '@/components/home/HeroSection';
@@ -17,6 +17,13 @@ const Home = () => {
   const router = useRouter();
 
   const { data: petCount = 0 } = usePetCount();
+
+  // Redirect mobile users to community feed
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      router.replace('/community');
+    }
+  }, [router]);
 
   const handleSearch = (animalType?: string) => {
     if (animalType) {

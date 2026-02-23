@@ -16,6 +16,7 @@ import AdoptionModal from '@/components/pet-details/AdoptionModal';
 import ContactInfoCard from '@/components/pet-details/ContactInfoCard';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import PawprintLoader from '@/components/ui/PawprintLoader';
 
 const PetDetails = () => {
   const params = useParams();
@@ -47,14 +48,7 @@ const PetDetails = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center bg-playful-cream">
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading pet details...</p>
-        </div>
-      </div>
-    );
+    return <PawprintLoader fullScreen size="lg" message="Loading pet details..." />;
   }
 
   if (!pet) {

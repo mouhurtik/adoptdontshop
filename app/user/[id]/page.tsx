@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase/client';
 import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import PawprintLoader from '@/components/ui/PawprintLoader';
+import UserBadge from '@/components/ui/UserBadge';
 import { format } from 'date-fns';
 
 interface UserProfile {
@@ -19,6 +21,9 @@ interface UserProfile {
     organization_name: string | null;
     created_at: string | null;
     username: string | null;
+    badge: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    privacy_settings: any;
 }
 
 interface PetListing {
@@ -54,6 +59,9 @@ export default function PublicProfilePage() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'pets' | 'posts' | 'favorites' | 'liked_posts'>('pets');
 
+    // Privacy: which tabs to show for this user
+    const _privacy = profile?.privacy_settings ?? { show_favorites: false, show_posts: true, show_likes: true };
+
     useEffect(() => {
         if (!userId) return;
 
@@ -68,7 +76,7 @@ export default function PublicProfilePage() {
                 // Look up by username
                 const { data } = await supabase
                     .from('profiles')
-                    .select('id, display_name, avatar_url, bio, location, account_type, organization_name, created_at, username')
+                    .select('id, display_name, avatar_url, bio, location, account_type, organization_name, created_at, username, badge, privacy_settings')
                     .eq('username', userId)
                     .single();
                 profileData = data;
@@ -76,7 +84,7 @@ export default function PublicProfilePage() {
                 // Fall back to UUID
                 const { data } = await supabase
                     .from('profiles')
-                    .select('id, display_name, avatar_url, bio, location, account_type, organization_name, created_at, username')
+                    .select('id, display_name, avatar_url, bio, location, account_type, organization_name, created_at, username, badge, privacy_settings')
                     .eq('id', userId)
                     .single();
                 profileData = data;
@@ -135,11 +143,7 @@ export default function PublicProfilePage() {
     }, [userId]);
 
     if (loading) {
-        return (
-            <div className="pt-32 min-h-screen flex items-center justify-center bg-playful-cream">
-                <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin" />
-            </div>
-        );
+        return <PawprintLoader fullScreen size="lg" message="Loading profile..." />;
     }
 
     if (!profile) {
@@ -193,11 +197,12 @@ export default function PublicProfilePage() {
 
                             {/* Info */}
                             <div className="flex-1 text-center sm:text-left">
-                                <h1 className="text-3xl font-heading font-black text-playful-text mb-0.5">
+                                <h1 className="text-3xl font-heading font-black text-playful-text mb-0.5 flex items-center gap-2">
                                     {displayName}
+                                    {profile.badge && <UserBadge badge={profile.badge} />}
                                 </h1>
-                                {(profile as UserProfile).username && (
-                                    <p className="text-gray-400 font-bold text-sm mb-1">@{(profile as UserProfile).username}</p>
+                                {profile.username && (
+                                    <p className="text-gray-400 font-bold text-sm mb-1">@{profile.username}</p>
                                 )}
                                 {profile.account_type === 'organization' && profile.organization_name && (
                                     <p className="text-playful-teal font-bold flex items-center justify-center sm:justify-start gap-1 mb-1">
@@ -239,44 +244,40 @@ export default function PublicProfilePage() {
                     <div className="grid grid-cols-2 md:flex justify-center gap-2 bg-white rounded-[2rem] md:rounded-full p-2 shadow-soft border border-gray-100 max-w-full w-full">
                         <button
                             onClick={() => setActiveTab('pets')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
-                                activeTab === 'pets'
-                                    ? 'bg-playful-coral text-white shadow-md'
-                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            }`}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'pets'
+                                ? 'bg-playful-coral text-white shadow-md'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
                         >
                             <PawPrint className="w-4 h-4" />
                             Pets ({pets.length})
                         </button>
                         <button
                             onClick={() => setActiveTab('posts')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
-                                activeTab === 'posts'
-                                    ? 'bg-playful-coral text-white shadow-md'
-                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            }`}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'posts'
+                                ? 'bg-playful-coral text-white shadow-md'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
                         >
                             <FileText className="w-4 h-4" />
                             Posts ({posts.length})
                         </button>
                         <button
                             onClick={() => setActiveTab('favorites')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
-                                activeTab === 'favorites'
-                                    ? 'bg-playful-coral text-white shadow-md'
-                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            }`}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'favorites'
+                                ? 'bg-playful-coral text-white shadow-md'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
                         >
                             <Bookmark className="w-4 h-4" />
                             Favorites ({favoritePets.length})
                         </button>
                         <button
                             onClick={() => setActiveTab('liked_posts')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${
-                                activeTab === 'liked_posts'
-                                    ? 'bg-playful-coral text-white shadow-md'
-                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                            }`}
+                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'liked_posts'
+                                ? 'bg-playful-coral text-white shadow-md'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
                         >
                             <Heart className="w-4 h-4" />
                             Likes ({likedPosts.length})
@@ -331,11 +332,10 @@ function PetsGrid({ pets }: { pets: PetListing[] }) {
                                 <p className="text-sm text-gray-500 font-medium">
                                     {pet.breed ? `${pet.breed} · ` : ''}{pet.animal_type || 'Pet'}
                                 </p>
-                                <span className={`inline-block mt-2 text-xs font-bold px-3 py-1 rounded-full ${
-                                    pet.status === 'adopted'
-                                        ? 'bg-green-100 text-green-700'
-                                        : 'bg-playful-yellow/20 text-yellow-700'
-                                }`}>
+                                <span className={`inline-block mt-2 text-xs font-bold px-3 py-1 rounded-full ${pet.status === 'adopted'
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-playful-yellow/20 text-yellow-700'
+                                    }`}>
                                     {pet.status === 'adopted' ? '🏠 Adopted' : '🔍 Available'}
                                 </span>
                             </div>

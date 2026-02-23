@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { PawPrint, Trash2, Eye, ArrowLeft, Plus } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import PawprintLoader from '@/components/ui/PawprintLoader';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { toast } from 'sonner';
 import { generatePetSlug } from '@/utils/slugUtils';
 import type { Pet } from '@/types';
@@ -16,6 +18,7 @@ export default function MyListingsPage() {
   const [listings, setListings] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -39,8 +42,10 @@ export default function MyListingsPage() {
     fetchListings();
   }, [user?.id]);
 
-  const handleDelete = async (id: string, petName: string) => {
-    if (!confirm(`Are you sure you want to delete "${petName}"? This cannot be undone.`)) return;
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    const { id, name: petName } = deleteTarget;
+    setDeleteTarget(null);
 
     setDeletingId(id);
     const { error } = await supabase
@@ -68,11 +73,7 @@ export default function MyListingsPage() {
   };
 
   if (authLoading || isLoading) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center bg-playful-cream">
-        <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <PawprintLoader fullScreen size="lg" message="Loading listings..." />;
   }
 
   if (!user) return null;
@@ -176,7 +177,7 @@ export default function MyListingsPage() {
                       </PrimaryButton>
                     </Link>
                     <button
-                      onClick={() => handleDelete(pet.id, pet.pet_name)}
+                      onClick={() => setDeleteTarget({ id: pet.id, name: pet.pet_name })}
                       disabled={deletingId === pet.id}
                       className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 py-1.5 rounded-full border-2 border-red-200 text-red-600 hover:bg-red-50 font-bold text-sm transition-colors disabled:opacity-50"
                     >
@@ -189,6 +190,18 @@ export default function MyListingsPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Listing?"
+        message={`Are you sure you want to delete "${deleteTarget?.name}"? This cannot be undone.`}
+        confirmLabel="Delete"
+        variant="danger"
+        loading={!!deletingId}
+      />
     </div>
   );
 }
+

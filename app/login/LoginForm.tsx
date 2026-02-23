@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { PawPrint, Mail, Lock, Eye, EyeOff, Phone, Check } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import Turnstile from '@/components/ui/Turnstile';
 
 export default function LoginForm() {
     const router = useRouter();
@@ -21,6 +22,8 @@ export default function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [authMode, setAuthMode] = useState<'email' | 'phone'>('email');
+    const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+    const handleCaptcha = useCallback((token: string) => setCaptchaToken(token), []);
 
     const handleOAuth = async (provider: 'google' | 'facebook') => {
         setLoading(true);
@@ -44,7 +47,7 @@ export default function LoginForm() {
 
         if (!otpSent) {
             // Send OTP
-            const { error } = await supabase.auth.signInWithOtp({ phone });
+            const { error } = await supabase.auth.signInWithOtp({ phone, options: { captchaToken } });
             if (error) {
                 setError(error.message);
             } else {
@@ -72,7 +75,7 @@ export default function LoginForm() {
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email, password, options: { captchaToken } });
 
         if (error) {
             setError(error.message);
@@ -172,9 +175,14 @@ export default function LoginForm() {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="password" className="block text-sm font-bold text-playful-text mb-2">
-                                        Password
-                                    </label>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <label htmlFor="password" className="block text-sm font-bold text-playful-text">
+                                            Password
+                                        </label>
+                                        <Link href="/forgot-password" className="text-xs font-bold text-playful-coral hover:underline">
+                                            Forgot password?
+                                        </Link>
+                                    </div>
                                     <div className="relative">
                                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                                         <input
@@ -239,6 +247,8 @@ export default function LoginForm() {
                                 )}
                             </>
                         )}
+
+                        <Turnstile onVerify={handleCaptcha} className="flex justify-center" />
 
                         <PrimaryButton type="submit" disabled={loading} className="w-full justify-center">
                             {loading ? (authMode === 'phone' && !otpSent ? 'Sending Code...' : 'Signing in...') : (authMode === 'phone' && !otpSent ? 'Send Code' : 'Sign In')}

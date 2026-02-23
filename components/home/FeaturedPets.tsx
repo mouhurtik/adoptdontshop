@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 import PetCard from '@/components/PetCard';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import PawprintLoader from '@/components/ui/PawprintLoader';
 
 interface Pet {
     id: string | number;
@@ -55,7 +56,7 @@ const PlayfulFeaturedPets = () => {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center py-20">
-                <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin"></div>
+                <PawprintLoader size="lg" />
             </div>
         );
     }

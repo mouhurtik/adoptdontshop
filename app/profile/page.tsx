@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Mail, MapPin, Phone, Building2, Edit, ListChecks, PawPrint, MessageCircle, FileText, Info, Shield, LogOut, ChevronRight } from 'lucide-react';
+import { User, Mail, MapPin, Phone, Building2, Edit, ListChecks, PawPrint, MessageCircle, FileText, Info, Shield, LogOut, ChevronRight, Bookmark } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import PawprintLoader from '@/components/ui/PawprintLoader';
 
 export default function ProfilePage() {
   const { user, profile, isAdmin, isLoading, signOut } = useAuth();
@@ -52,11 +53,7 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center bg-playful-cream">
-        <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+    return <PawprintLoader fullScreen size="lg" message="Loading profile..." />;
   }
 
   if (!user) return null;
@@ -69,6 +66,7 @@ export default function ProfilePage() {
     { icon: ListChecks, label: 'My Listings', href: '/profile/my-listings', color: 'text-playful-coral' },
     { icon: MessageCircle, label: 'Messages', href: '/messages', color: 'text-blue-500' },
     { icon: FileText, label: 'My Posts', href: '/community/my-posts', color: 'text-green-500' },
+    { icon: Bookmark, label: 'Saved Posts', href: '/community/saved', color: 'text-purple-500' },
     { icon: PawPrint, label: 'List a Pet', href: '/list-pet', color: 'text-playful-yellow' },
   ];
 
@@ -181,9 +179,8 @@ export default function ProfilePage() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3.5 active:bg-gray-50 transition-colors ${
-                    i < menuItems.length - 1 ? 'border-b border-gray-50' : ''
-                  }`}
+                  className={`flex items-center gap-3 px-4 py-3.5 active:bg-gray-50 transition-colors ${i < menuItems.length - 1 ? 'border-b border-gray-50' : ''
+                    }`}
                 >
                   <Icon className={`h-5 w-5 ${item.color}`} />
                   <span className="flex-1 font-semibold text-playful-text text-[15px]">{item.label}</span>
@@ -201,9 +198,8 @@ export default function ProfilePage() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3.5 active:bg-gray-50 transition-colors ${
-                    i < secondaryMenuItems.length - 1 ? 'border-b border-gray-50' : ''
-                  }`}
+                  className={`flex items-center gap-3 px-4 py-3.5 active:bg-gray-50 transition-colors ${i < secondaryMenuItems.length - 1 ? 'border-b border-gray-50' : ''
+                    }`}
                 >
                   <Icon className={`h-5 w-5 ${item.color}`} />
                   <span className="flex-1 font-semibold text-playful-text text-[15px]">{item.label}</span>

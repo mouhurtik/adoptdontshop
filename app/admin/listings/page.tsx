@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Trash2, Search, Eye, CheckCheck, UserPlus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { generatePetSlug } from '@/utils/slugUtils';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 interface Listing {
     id: string;
@@ -92,6 +93,8 @@ export default function ListingsPage() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [bulkUpdating, setBulkUpdating] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+    const [showApproveAll, setShowApproveAll] = useState(false);
 
     // Assign modal state
     const [assigningId, setAssigningId] = useState<string | null>(null);
@@ -138,7 +141,7 @@ export default function ListingsPage() {
     };
 
     const approveAllPending = async () => {
-        if (!confirm(`Approve all ${pendingCount} pending listings?`)) return;
+        setShowApproveAll(false);
         setBulkUpdating(true);
         await supabase
             .from('pet_listings')
@@ -148,8 +151,10 @@ export default function ListingsPage() {
         setBulkUpdating(false);
     };
 
-    const deleteListing = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return;
+    const deleteListing = async () => {
+        if (!deleteTarget) return;
+        const id = deleteTarget;
+        setDeleteTarget(null);
         // Optimistic removal
         setListings(prev => prev.filter(l => l.id !== id));
         await supabase.from('pet_listings').delete().eq('id', id);
@@ -199,7 +204,7 @@ export default function ListingsPage() {
 
                 {pendingCount > 0 && (
                     <button
-                        onClick={approveAllPending}
+                        onClick={() => setShowApproveAll(true)}
                         disabled={bulkUpdating}
                         className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition-colors disabled:opacity-50 shadow-sm"
                     >
@@ -228,8 +233,8 @@ export default function ListingsPage() {
                             key={s}
                             onClick={() => setStatusFilter(s)}
                             className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors capitalize ${statusFilter === s
-                                    ? 'bg-playful-teal text-white'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-playful-teal text-white'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
                             {s}
@@ -344,7 +349,7 @@ export default function ListingsPage() {
                                 )}
 
                                 <button
-                                    onClick={() => deleteListing(listing.id)}
+                                    onClick={() => setDeleteTarget(listing.id)}
                                     className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                                     title="Delete permanently"
                                 >
@@ -371,6 +376,26 @@ export default function ListingsPage() {
                     onClick={() => { setAssigningId(null); setUserSearch(''); setUserResults([]); }}
                 />
             )}
+
+            <ConfirmDialog
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={deleteListing}
+                title="Delete Listing?"
+                message="Are you sure you want to delete this listing? This cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+            />
+
+            <ConfirmDialog
+                isOpen={showApproveAll}
+                onClose={() => setShowApproveAll(false)}
+                onConfirm={approveAllPending}
+                title="Approve All Pending?"
+                message={`This will approve all ${pendingCount} pending listings and make them publicly visible.`}
+                confirmLabel="Approve All"
+                variant="default"
+            />
         </div>
     );
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { PawPrint, Mail, Lock, Eye, EyeOff, User, Building2, AtSign, Check, X, Loader2, Phone } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import PrimaryButton from '@/components/ui/PrimaryButton';
+import Turnstile from '@/components/ui/Turnstile';
 
 export default function SignupForm() {
   const [email, setEmail] = useState('');
@@ -23,6 +24,8 @@ export default function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const handleCaptcha = useCallback((token: string) => setCaptchaToken(token), []);
 
   const handleOAuth = async (provider: 'google' | 'facebook') => {
     setLoading(true);
@@ -93,6 +96,7 @@ export default function SignupForm() {
       const { error } = await supabase.auth.signInWithOtp({
         phone,
         options: {
+          captchaToken,
           data: {
             full_name: fullName,
             username: username,
@@ -128,7 +132,7 @@ export default function SignupForm() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (authMode === 'phone') {
-        return handlePhoneSignup(e);
+      return handlePhoneSignup(e);
     }
     setError(null);
 
@@ -163,6 +167,7 @@ export default function SignupForm() {
       email,
       password,
       options: {
+        captchaToken,
         data: {
           full_name: fullName,
           username: username,
@@ -255,18 +260,18 @@ export default function SignupForm() {
           </div>
           <div className="flex justify-center p-1 bg-gray-100 rounded-xl mb-6">
             <button
-                type="button"
-                onClick={() => { setAuthMode('email'); setError(null); }}
-                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${authMode === 'email' ? 'bg-white shadow-sm text-playful-text' : 'text-gray-500 hover:text-gray-700'}`}
+              type="button"
+              onClick={() => { setAuthMode('email'); setError(null); }}
+              className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${authMode === 'email' ? 'bg-white shadow-sm text-playful-text' : 'text-gray-500 hover:text-gray-700'}`}
             >
-                Email
+              Email
             </button>
             <button
-                type="button"
-                onClick={() => { setAuthMode('phone'); setError(null); }}
-                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${authMode === 'phone' ? 'bg-white shadow-sm text-playful-text' : 'text-gray-500 hover:text-gray-700'}`}
+              type="button"
+              onClick={() => { setAuthMode('phone'); setError(null); }}
+              className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${authMode === 'phone' ? 'bg-white shadow-sm text-playful-text' : 'text-gray-500 hover:text-gray-700'}`}
             >
-                Phone
+              Phone
             </button>
           </div>
 
@@ -355,8 +360,8 @@ export default function SignupForm() {
                       value={username}
                       onChange={(e) => handleUsernameChange(e.target.value)}
                       className={`block w-full rounded-xl border-2 bg-gray-50 pl-10 pr-10 py-3 text-sm focus:bg-white transition-colors ${usernameStatus === 'available' ? 'border-green-400 focus:border-green-500 focus:ring-green-500' :
-                          usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'border-red-400 focus:border-red-500 focus:ring-red-500' :
-                            'border-gray-200 focus:border-playful-teal focus:ring-playful-teal'
+                        usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'border-red-400 focus:border-red-500 focus:ring-red-500' :
+                          'border-gray-200 focus:border-playful-teal focus:ring-playful-teal'
                         }`}
                       placeholder="your_username"
                       maxLength={20}
@@ -454,8 +459,8 @@ export default function SignupForm() {
                       type="button"
                       onClick={() => setAccountType('individual')}
                       className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all ${accountType === 'individual'
-                          ? 'border-playful-teal bg-playful-teal/10 text-playful-teal'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                        ? 'border-playful-teal bg-playful-teal/10 text-playful-teal'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}
                     >
                       <User className="h-4 w-4" />
@@ -465,8 +470,8 @@ export default function SignupForm() {
                       type="button"
                       onClick={() => setAccountType('organization')}
                       className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 text-sm font-bold transition-all ${accountType === 'organization'
-                          ? 'border-playful-teal bg-playful-teal/10 text-playful-teal'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                        ? 'border-playful-teal bg-playful-teal/10 text-playful-teal'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}
                     >
                       <Building2 className="h-4 w-4" />
@@ -497,6 +502,8 @@ export default function SignupForm() {
                 )}
               </>
             )}
+
+            <Turnstile onVerify={handleCaptcha} className="flex justify-center" />
 
             <PrimaryButton type="submit" disabled={loading} variant="secondary" className="w-full justify-center">
               {loading ? (authMode === 'phone' && !otpSent ? 'Sending Code...' : 'Creating Account...') : (authMode === 'phone' && !otpSent ? 'Send Code' : 'Create Account')}

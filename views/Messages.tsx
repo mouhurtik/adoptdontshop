@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import ConversationList from '@/components/messaging/ConversationList';
 import MessageThread from '@/components/messaging/MessageThread';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import PawprintLoader from '@/components/ui/PawprintLoader';
 
 const Messages = () => {
     const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -46,11 +47,7 @@ const Messages = () => {
 
     // Auth guard
     if (authLoading) {
-        return (
-            <div className="pt-32 min-h-screen flex items-center justify-center bg-playful-cream">
-                <div className="w-16 h-16 border-4 border-playful-coral border-t-transparent rounded-full animate-spin" />
-            </div>
-        );
+        return <PawprintLoader fullScreen size="lg" message="Loading messages..." />;
     }
 
     if (!isAuthenticated) {

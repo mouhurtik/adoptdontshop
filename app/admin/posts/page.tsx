@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Search, Eye, Trash2, Pin, PinOff, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 interface CommunityPost {
     id: string;
@@ -77,6 +78,7 @@ export default function PostsPage() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
     const loadPosts = useCallback(async () => {
         setLoading(true);
@@ -122,8 +124,10 @@ export default function PostsPage() {
         await supabase.from('community_posts').update({ is_pinned: !currentlyPinned }).eq('id', id);
     };
 
-    const deletePost = async (id: string) => {
-        if (!confirm('Permanently delete this post? This cannot be undone.')) return;
+    const deletePost = async () => {
+        if (!deleteTarget) return;
+        const id = deleteTarget;
+        setDeleteTarget(null);
         setPosts(prev => prev.filter(p => p.id !== id));
         await supabase.from('community_posts').delete().eq('id', id);
     };
@@ -264,7 +268,7 @@ export default function PostsPage() {
                                                     {post.is_pinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
                                                 </button>
                                                 <button
-                                                    onClick={() => deletePost(post.id)}
+                                                    onClick={() => setDeleteTarget(post.id)}
                                                     className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                                                     title="Delete post"
                                                 >
@@ -279,6 +283,16 @@ export default function PostsPage() {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={deletePost}
+                title="Delete Post?"
+                message="Permanently delete this post? This cannot be undone."
+                confirmLabel="Delete"
+                variant="danger"
+            />
         </div>
     );
 }
