@@ -77,9 +77,9 @@ export default {
 				'3xl': '3rem',
 			},
 			fontFamily: {
-				sans: ['Quicksand', 'sans-serif'],
-				heading: ['Nunito', 'sans-serif'],
-				pacifico: ['Pacifico', 'cursive'],
+				sans: ['var(--font-quicksand)', 'Quicksand', 'sans-serif'],
+				heading: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
+				pacifico: ['var(--font-pacifico)', 'Pacifico', 'cursive'],
 			},
 			boxShadow: {
 				'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',

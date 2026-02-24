@@ -20,7 +20,7 @@ export default function SignupForm() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [authMode, setAuthMode] = useState<'email' | 'phone'>('email');
+  const [authMode, _setAuthMode] = useState<'email' | 'phone'>('email');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
