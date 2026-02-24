@@ -14,6 +14,7 @@ const TiptapRenderer = ({ content }: TiptapRendererProps) => {
         extensions: [
             StarterKit.configure({
                 heading: { levels: [2, 3] },
+                link: false,
             }),
             Image.configure({
                 HTMLAttributes: { class: 'rounded-2xl max-w-full mx-auto my-4' },
@@ -25,6 +26,7 @@ const TiptapRenderer = ({ content }: TiptapRendererProps) => {
         ],
         content,
         editable: false,
+        immediatelyRender: false,
         editorProps: {
             attributes: {
                 class: 'prose prose-lg max-w-none',

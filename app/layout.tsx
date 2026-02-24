@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import Providers from './providers';
 import LayoutShell from '@/components/LayoutShell';
@@ -28,6 +29,20 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <head>
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-FJ0SET7VX9');
+                    `}
+                </Script>
+            </head>
             <body suppressHydrationWarning>
                 <Providers>
                     <LayoutShell>{children}</LayoutShell>
@@ -36,4 +51,3 @@ export default function RootLayout({
         </html>
     );
 }
-

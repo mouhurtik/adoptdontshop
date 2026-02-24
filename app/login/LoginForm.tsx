@@ -21,7 +21,7 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [authMode, setAuthMode] = useState<'email' | 'phone'>('email');
+    const [authMode, _setAuthMode] = useState<'email' | 'phone'>('email');
     const [captchaToken, setCaptchaToken] = useState<string | undefined>();
     const handleCaptcha = useCallback((token: string) => setCaptchaToken(token), []);
 
@@ -116,6 +116,7 @@ export default function LoginForm() {
                             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
                             Continue with Google
                         </button>
+                        {/* Facebook OAuth hidden - requires App Review
                         <button
                             type="button"
                             onClick={() => handleOAuth('facebook')}
@@ -125,6 +126,7 @@ export default function LoginForm() {
                             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg" alt="Facebook" className="w-5 h-5" />
                             Continue with Facebook
                         </button>
+                        */}
                     </div>
 
                     <div className="relative flex items-center gap-4 py-2 mb-6">
@@ -132,6 +134,7 @@ export default function LoginForm() {
                         <span className="text-gray-400 text-sm font-bold">OR</span>
                         <div className="flex-1 h-px bg-gray-200"></div>
                     </div>
+                    {/* Phone auth hidden for now 
                     <div className="flex justify-center p-1 bg-gray-100 rounded-xl mb-6">
                         <button
                             onClick={() => { setAuthMode('email'); setError(null); }}
@@ -146,6 +149,7 @@ export default function LoginForm() {
                             Phone
                         </button>
                     </div>
+                    */}
 
                     <form onSubmit={handleLogin} className="space-y-6">
                         {error && (
@@ -168,6 +172,7 @@ export default function LoginForm() {
                                             required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
+                                            autoComplete="email"
                                             className="block w-full rounded-xl border-2 border-gray-200 bg-gray-50 pl-10 pr-4 py-3 text-sm focus:border-playful-coral focus:ring-playful-coral focus:bg-white transition-colors"
                                             placeholder="you@example.com"
                                         />
@@ -186,6 +191,7 @@ export default function LoginForm() {
                                             required
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
+                                            autoComplete="current-password"
                                             className="block w-full rounded-xl border-2 border-gray-200 bg-gray-50 pl-10 pr-12 py-3 text-sm focus:border-playful-coral focus:ring-playful-coral focus:bg-white transition-colors"
                                             placeholder="••••••••"
                                         />

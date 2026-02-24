@@ -47,6 +47,7 @@ const TiptapEditor = ({ content, onChange, placeholder = 'Start writing your sto
         extensions: [
             StarterKit.configure({
                 heading: { levels: [2, 3] },
+                link: false,
             }),
             Image.configure({
                 HTMLAttributes: { class: 'rounded-2xl max-w-full mx-auto my-4' },

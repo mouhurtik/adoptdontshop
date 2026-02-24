@@ -22,6 +22,7 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
           width={800}
           height={384}
           className="w-full h-full object-cover"
+          unoptimized
           priority
         />
       </div>
@@ -36,6 +37,7 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
               alt={`${petName} thumbnail 1`}
               width={200}
               height={200}
+              unoptimized
               className="w-full h-full object-cover"
             />
           </div>

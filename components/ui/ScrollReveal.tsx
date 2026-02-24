@@ -71,7 +71,7 @@ const ScrollReveal = ({
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             transition={{ duration, delay, ease: "easeOut" }}
-            className={`${className}`}
+            className={`relative ${className}`}
             style={{ width }}
         >
             {children}

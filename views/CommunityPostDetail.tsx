@@ -125,11 +125,11 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                     <article className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden">
                         {/* Featured Image */}
                         {post.featured_image_url && (
-                            <div className="aspect-[21/9] overflow-hidden">
+                            <div className="w-full max-h-[500px] bg-gray-50/50 flex justify-center border-b border-gray-100">
                                 <img
                                     src={post.featured_image_url}
                                     alt={post.title}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-auto max-h-[500px] object-contain"
                                 />
                             </div>
                         )}

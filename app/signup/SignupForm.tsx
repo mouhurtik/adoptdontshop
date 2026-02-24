@@ -242,6 +242,7 @@ export default function SignupForm() {
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
               Sign up with Google
             </button>
+            {/* Facebook OAuth hidden - requires App Review
             <button
               onClick={() => handleOAuth('facebook')}
               disabled={loading}
@@ -251,6 +252,7 @@ export default function SignupForm() {
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/facebook.svg" alt="Facebook" className="w-5 h-5" />
               Sign up with Facebook
             </button>
+            */}
           </div>
 
           <div className="relative flex items-center gap-4 py-2 mb-6">
@@ -258,6 +260,7 @@ export default function SignupForm() {
             <span className="text-gray-400 text-sm font-bold">OR</span>
             <div className="flex-1 h-px bg-gray-200"></div>
           </div>
+          {/* Phone auth hidden for now
           <div className="flex justify-center p-1 bg-gray-100 rounded-xl mb-6">
             <button
               type="button"
@@ -274,6 +277,7 @@ export default function SignupForm() {
               Phone
             </button>
           </div>
+          */}
 
           <form onSubmit={handleSignup} className="space-y-5">
             {error && (
