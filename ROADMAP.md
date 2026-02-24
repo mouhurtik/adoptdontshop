@@ -112,7 +112,7 @@ Move ruleset JSONs and organize:
 
 ### 2.1 Sitemap Hardcodes `pages.dev` URL
 **File:** `app/sitemap.ts`
-**Issue:** `baseUrl` is hardcoded to `https://adoptdontshop.pages.dev` instead of `https://adoptdontshop.website`.
+**Issue:** `baseUrl` is hardcoded to `https://adoptdontshop.pages.dev` instead of `https://adoptdontshop.xyz`.
 **Fix:** Use an env variable `NEXT_PUBLIC_SITE_URL` or hardcode the custom domain.
 
 ### 2.2 `components.json` Points to Wrong CSS Path

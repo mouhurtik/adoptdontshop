@@ -22,9 +22,9 @@ const PrimaryButton = React.forwardRef<HTMLButtonElement, PrimaryButtonProps>(
         };
 
         const sizes = {
-            sm: "px-4 pt-1.5 pb-0.5 text-sm",
-            md: "px-6 pt-2.5 pb-1.5 text-base",
-            lg: "px-8 pt-3.5 pb-2.5 text-lg",
+            sm: "px-4 py-2 text-sm",
+            md: "px-6 py-2.5 text-base",
+            lg: "px-8 py-3.5 text-lg",
             icon: "h-10 w-10 p-2 flex items-center justify-center",
         };
 

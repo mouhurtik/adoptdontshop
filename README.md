@@ -2,11 +2,14 @@
 
 A modern, open-source pet adoption platform and community hub connecting shelters, rescues, and potential pet parents. Built with Next.js for SEO-first rendering and deployed on Cloudflare Pages.
 
+🌐 **Live Site:** [adoptdontshop.xyz](https://adoptdontshop.xyz)
+
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)]()
 [![Cloudflare Pages](https://img.shields.io/badge/deploy-Cloudflare%20Pages-F38020)]()
+[![Live Demo](https://img.shields.io/badge/demo-adoptdontshop.xyz-FF7F50)](https://adoptdontshop.xyz)
 
 ---
 

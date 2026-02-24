@@ -76,7 +76,7 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
                         {/* Powered By Label - Tape Style */}
                         <div className="w-full bg-playful-coral text-white py-1 text-center rounded-b-[2.5rem]">
                             <span className="text-2xl font-bold tracking-wide" style={{ transform: 'translateY(-12px)', display: 'inline-block' }}>
-                                Powered by adoptdontshop.website
+                                Powered by adoptdontshop.xyz
                             </span>
                         </div>
                     </div>

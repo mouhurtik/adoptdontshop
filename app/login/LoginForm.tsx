@@ -87,7 +87,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-playful-cream">
+        <div className="min-h-screen flex items-center justify-center px-4 pt-24 pb-12 bg-playful-cream">
             <div className="max-w-md w-full space-y-8">
                 {/* Header */}
                 <div className="text-center">
@@ -175,14 +175,9 @@ export default function LoginForm() {
                                 </div>
 
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <label htmlFor="password" className="block text-sm font-bold text-playful-text">
-                                            Password
-                                        </label>
-                                        <Link href="/forgot-password" className="text-xs font-bold text-playful-coral hover:underline">
-                                            Forgot password?
-                                        </Link>
-                                    </div>
+                                    <label htmlFor="password" className="block text-sm font-bold text-playful-text mb-2">
+                                        Password
+                                    </label>
                                     <div className="relative">
                                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                                         <input
@@ -201,6 +196,11 @@ export default function LoginForm() {
                                         >
                                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                         </button>
+                                    </div>
+                                    <div className="flex justify-end mt-1.5">
+                                        <Link href="/forgot-password" className="text-xs font-bold text-playful-coral hover:underline">
+                                            Forgot password?
+                                        </Link>
                                     </div>
                                 </div>
                             </>
