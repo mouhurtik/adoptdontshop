@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Mail, MapPin, Phone, Building2, Edit, ListChecks, PawPrint, MessageCircle, FileText, Info, Shield, LogOut, ChevronRight, Bookmark } from 'lucide-react';
+import { User, Mail, MapPin, Phone, Building2, Edit, ListChecks, PawPrint, MessageCircle, FileText, Info, Shield, LogOut, ChevronRight, Bookmark, Settings } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PawprintLoader from '@/components/ui/PawprintLoader';
@@ -68,6 +68,7 @@ export default function ProfilePage() {
     { icon: FileText, label: 'My Posts', href: '/community/my-posts', color: 'text-green-500' },
     { icon: Bookmark, label: 'Saved Posts', href: '/community/saved', color: 'text-purple-500' },
     { icon: PawPrint, label: 'List a Pet', href: '/list-pet', color: 'text-playful-yellow' },
+    { icon: Settings, label: 'Settings', href: '/profile/settings', color: 'text-gray-500' },
   ];
 
   const secondaryMenuItems = [
@@ -232,6 +233,12 @@ export default function ProfilePage() {
               <PrimaryButton className="w-full justify-center">
                 <PawPrint className="h-5 w-5 mr-2" />
                 List a New Pet
+              </PrimaryButton>
+            </Link>
+            <Link href="/profile/settings" className="flex-1">
+              <PrimaryButton variant="outline" className="w-full justify-center">
+                <Settings className="h-5 w-5 mr-2" />
+                Settings
               </PrimaryButton>
             </Link>
           </div>

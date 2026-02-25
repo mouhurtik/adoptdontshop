@@ -83,6 +83,7 @@ export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offse
                     comment_count: post.comment_count || 0,
                     view_count: post.view_count || 0,
                     created_at: post.created_at,
+                    author_id: post.author_id,
                     author: profile ? {
                         display_name: profile.display_name,
                         avatar_url: profile.avatar_url,

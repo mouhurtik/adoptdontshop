@@ -32,6 +32,7 @@ export interface PostCardData {
     comment_count: number;
     view_count: number;
     created_at: string;
+    author_id?: string;
     author?: {
         display_name: string | null;
         avatar_url: string | null;
@@ -91,21 +92,43 @@ const PostCard = ({ post }: { post: PostCardData }) => {
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         {/* Author */}
-                        <div className="flex items-center gap-2">
-                            {post.author?.avatar_url ? (
-                                <img
-                                    src={post.author.avatar_url}
-                                    alt={authorName}
-                                    className="w-7 h-7 rounded-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-7 h-7 rounded-full bg-playful-teal text-white flex items-center justify-center text-xs font-bold">
-                                    {authorInitial}
-                                </div>
-                            )}
-                            <span className="text-sm font-medium text-gray-600">{authorName}</span>
-                            <span className="text-xs text-gray-400">· {timeAgo}</span>
-                        </div>
+                        {post.author_id ? (
+                            <Link
+                                href={`/user/${post.author_id}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                            >
+                                {post.author?.avatar_url ? (
+                                    <img
+                                        src={post.author.avatar_url}
+                                        alt={authorName}
+                                        className="w-7 h-7 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-7 h-7 rounded-full bg-playful-teal text-white flex items-center justify-center text-xs font-bold">
+                                        {authorInitial}
+                                    </div>
+                                )}
+                                <span className="text-sm font-medium text-gray-600 hover:text-playful-coral transition-colors">{authorName}</span>
+                                <span className="text-xs text-gray-400">· {timeAgo}</span>
+                            </Link>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                {post.author?.avatar_url ? (
+                                    <img
+                                        src={post.author.avatar_url}
+                                        alt={authorName}
+                                        className="w-7 h-7 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-7 h-7 rounded-full bg-playful-teal text-white flex items-center justify-center text-xs font-bold">
+                                        {authorInitial}
+                                    </div>
+                                )}
+                                <span className="text-sm font-medium text-gray-600">{authorName}</span>
+                                <span className="text-xs text-gray-400">· {timeAgo}</span>
+                            </div>
+                        )}
 
                         {/* Stats */}
                         <div className="flex items-center gap-3 text-gray-400">

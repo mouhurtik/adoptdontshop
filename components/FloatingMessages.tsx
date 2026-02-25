@@ -24,6 +24,8 @@ export default function FloatingMessages() {
 
     // Don't render if we aren't fully authed or if we are on pages where this shouldn't show
     if (authLoading || !isAuthenticated) return null;
+    // Only show on community routes on desktop
+    if (!pathname.startsWith('/community')) return null;
     if (pathname.startsWith('/admin') || pathname.startsWith('/messages')) return null;
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId) ?? null;
@@ -60,7 +62,7 @@ export default function FloatingMessages() {
                     <div className="flex-1 overflow-hidden flex flex-col bg-playful-cream">
                         {!selectedConversationId ? (
                             <div className="flex-1 overflow-y-auto">
-                                <ConversationList 
+                                <ConversationList
                                     conversations={conversations}
                                     selectedId={selectedConversationId}
                                     onSelect={setSelectedConversationId}

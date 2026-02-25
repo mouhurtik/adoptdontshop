@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2, Mail } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
@@ -157,21 +157,35 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
 
                             {/* Author & Date */}
                             <div className="flex items-center gap-3 mb-8 pb-8 border-b border-gray-100">
-                                {post.profiles?.avatar_url ? (
-                                    <img
-                                        src={post.profiles.avatar_url}
-                                        alt={authorName}
-                                        className="w-12 h-12 rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-12 h-12 rounded-full bg-playful-teal text-white flex items-center justify-center font-bold text-lg">
-                                        {authorInitial}
+                                <Link
+                                    href={`/user/${post.author_id}`}
+                                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                                >
+                                    {post.profiles?.avatar_url ? (
+                                        <img
+                                            src={post.profiles.avatar_url}
+                                            alt={authorName}
+                                            className="w-12 h-12 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full bg-playful-teal text-white flex items-center justify-center font-bold text-lg">
+                                            {authorInitial}
+                                        </div>
+                                    )}
+                                    <div>
+                                        <p className="font-bold text-playful-text hover:text-playful-coral transition-colors">{authorName}</p>
+                                        <p className="text-sm text-gray-400">{postDate}</p>
                                     </div>
+                                </Link>
+                                {isAuthenticated && post.author_id !== user?.id && (
+                                    <Link
+                                        href={`/messages?to=${post.author_id}`}
+                                        className="ml-auto flex items-center gap-2 px-4 py-2 rounded-full bg-playful-coral/10 text-playful-coral font-bold text-sm hover:bg-playful-coral/20 transition-colors"
+                                    >
+                                        <Mail className="h-4 w-4" />
+                                        Message
+                                    </Link>
                                 )}
-                                <div>
-                                    <p className="font-bold text-playful-text">{authorName}</p>
-                                    <p className="text-sm text-gray-400">{postDate}</p>
-                                </div>
                             </div>
 
                             {/* Content */}
