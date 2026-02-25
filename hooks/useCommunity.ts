@@ -218,9 +218,10 @@ export function useLikePost() {
                 if (error) throw error;
             }
         },
-        onSuccess: () => {
+        onSuccess: (_, { postId }) => {
             queryClient.invalidateQueries({ queryKey: ['community-posts'] });
             queryClient.invalidateQueries({ queryKey: ['community-post'] });
+            queryClient.invalidateQueries({ queryKey: ['user-liked', postId] });
         },
     });
 }
