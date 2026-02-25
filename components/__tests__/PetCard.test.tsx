@@ -36,9 +36,12 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-// Mock next/image
+// Mock next/image — strip non-DOM props
 vi.mock('next/image', () => ({
-  default: (props: Record<string, unknown>) => <img {...props} />,
+  default: (props: Record<string, unknown>) => {
+    const { unoptimized: _, fill: _f, priority: _p, ...rest } = props;
+    return <img {...rest} />;
+  },
 }));
 
 // Mock next/link
@@ -49,9 +52,18 @@ vi.mock('next/link', () => ({
 }));
 
 // Mock framer-motion to avoid animation issues in tests
+const stripMotionProps = (props: Record<string, unknown>) => {
+  const motionKeys = ['whileHover', 'whileTap', 'initial', 'animate', 'exit', 'transition', 'variants', 'layout', 'layoutId', 'drag', 'dragConstraints', 'onDragEnd'];
+  const cleaned: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(props)) {
+    if (!motionKeys.includes(k)) cleaned[k] = v;
+  }
+  return cleaned;
+};
+
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: Record<string, unknown>) => <div {...props}>{children as React.ReactNode}</div>,
+    div: ({ children, ...props }: Record<string, unknown>) => <div {...stripMotionProps(props)}>{children as React.ReactNode}</div>,
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
