@@ -1,4 +1,4 @@
-import { ShoppingBag, ExternalLink, Dog, Cat, Fish } from "lucide-react";
+import { ShoppingBag, ExternalLink, Dog, Cat } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,20 +19,17 @@ const ProductsSection = ({ products, activeTab, onTabChange }: ProductsSectionPr
             <div className="container mx-auto px-4">
                 <Tabs defaultValue="dog" className="w-full" onValueChange={onTabChange}>
                     <div className="flex justify-center mb-6 lg:mb-12">
-                        <TabsList className="bg-playful-cream/50 p-1 rounded-full border border-gray-100">
+                        <TabsList className="bg-playful-cream/50 p-1 rounded-full border border-gray-100 flex justify-center w-max">
                             <TabsTrigger value="dog" className="rounded-full px-6 py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-playful-coral font-bold flex items-center gap-2">
                                 <Dog className="w-4 h-4" /> Dogs
                             </TabsTrigger>
                             <TabsTrigger value="cat" className="rounded-full px-6 py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-playful-coral font-bold flex items-center gap-2">
                                 <Cat className="w-4 h-4" /> Cats
                             </TabsTrigger>
-                            <TabsTrigger value="other" className="rounded-full px-6 py-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-playful-coral font-bold flex items-center gap-2">
-                                <Fish className="w-4 h-4" /> Others
-                            </TabsTrigger>
                         </TabsList>
                     </div>
 
-                    {["dog", "cat", "other"].map((type) => (
+                    {["dog", "cat"].map((type) => (
                         <TabsContent key={type} value={type} className="mt-0">
                             <ScrollReveal
                                 mode="fade-in"
@@ -71,7 +68,10 @@ const ProductsSection = ({ products, activeTab, onTabChange }: ProductsSectionPr
                                                 </div>
                                             </CardContent>
                                             <CardFooter>
-                                                <PrimaryButton className="w-full justify-center group/btn">
+                                                <PrimaryButton
+                                                    className="w-full justify-center group/btn"
+                                                    onClick={() => product.affiliateLink && window.open(product.affiliateLink, '_blank')}
+                                                >
                                                     <ShoppingBag className="w-4 h-4 mr-2" />
                                                     View Details
                                                     <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover/btn:opacity-100 transition-opacity" />

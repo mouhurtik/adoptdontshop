@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Phone, MapPin, Clock, User, MessageCircle, Loader2 } from 'lucide-react';
+import { Phone, MapPin, Clock, User, MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';

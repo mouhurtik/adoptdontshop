@@ -7,6 +7,7 @@ export interface Product {
     image: string;
     description: string;
     badge?: string;
+    affiliateLink?: string;
 }
 
 export const PRODUCTS: Product[] = [
@@ -15,74 +16,62 @@ export const PRODUCTS: Product[] = [
         name: "Premium Dog Food",
         category: "Food",
         petType: "dog",
-        price: "$45.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?q=80&w=2070&auto=format&fit=crop",
         description: "High-protein, grain-free formula for active dogs.",
-        badge: "Best Seller"
+        badge: "Best Seller",
+        affiliateLink: "https://amzn.to/44VAWBs"
     },
     {
         id: 2,
-        name: "Indestructible Chew Toy",
+        name: "Indestructible Chew Toys",
         category: "Toys",
         petType: "dog",
-        price: "$15.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2070&auto=format&fit=crop",
-        description: "Durable rubber toy for aggressive chewers.",
-        badge: "New"
+        description: "Durable rubber toys for aggressive chewers.",
+        badge: "New",
+        affiliateLink: "https://amzn.to/4rGdwtx"
     },
     {
         id: 3,
-        name: "Orthopedic Dog Bed",
+        name: "Essential Dog Accessories",
         category: "Accessories",
         petType: "dog",
-        price: "$89.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=2574&auto=format&fit=crop",
-        description: "Memory foam bed for joint support and comfort.",
+        description: "Beds, leashes, and accessories for joint support and comfort.",
+        affiliateLink: "https://amzn.to/4pV8QP4"
     },
     {
         id: 4,
-        name: "Gourmet Cat Treats",
+        name: "Gourmet Cat Food",
         category: "Food",
         petType: "cat",
-        price: "$12.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=2688&auto=format&fit=crop",
-        description: "Salmon infused treats that cats love.",
-        badge: "Staff Pick"
+        description: "Nutritious and delicious food that cats love.",
+        badge: "Staff Pick",
+        affiliateLink: "https://amzn.to/4pXFpvN"
     },
     {
         id: 5,
-        name: "Interactive Laser Toy",
+        name: "Interactive Cat Toys",
         category: "Toys",
         petType: "cat",
-        price: "$24.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=2070&auto=format&fit=crop",
-        description: "Automatic laser toy to keep your cat entertained.",
+        description: "Automatic toys to keep your cat entertained.",
+        affiliateLink: "https://amzn.to/48JvNxz"
     },
     {
         id: 6,
-        name: "Modern Cat Tower",
+        name: "Modern Cat Accessories",
         category: "Accessories",
         petType: "cat",
-        price: "$129.99",
+        price: "View on Amazon",
         image: "https://images.unsplash.com/photo-1545249390-6bdfa286032f?q=80&w=2588&auto=format&fit=crop",
-        description: "Stylish condensed wood cat tree.",
-    },
-    {
-        id: 7,
-        name: "Tropical Fish Flakes",
-        category: "Food",
-        petType: "other",
-        price: "$9.99",
-        image: "https://images.unsplash.com/photo-1524704654690-b56c05c78a00?q=80&w=2069&auto=format&fit=crop",
-        description: "Nutrient-rich food for vibrant community fish.",
-    },
-    {
-        id: 8,
-        name: "Hamster Wheel",
-        category: "Toys",
-        petType: "other",
-        price: "$18.50",
-        image: "https://images.unsplash.com/photo-1548767797-d8c844163c4c?q=80&w=2071&auto=format&fit=crop",
-        description: "Silent spinner for small pets.",
-    },
+        description: "Stylish condensed wood cat trees and accessories.",
+        affiliateLink: "https://amzn.to/4iIxfER"
+    }
 ];
