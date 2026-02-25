@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, Maximize2, Minus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useConversations, useConversationMessages, useSendMessage, useMessageRealtime } from '@/hooks/useMessages';
+import { useConversations, useConversationMessages, useSendMessage, useStartConversation, useMessageRealtime } from '@/hooks/useMessages';
 import ConversationList from '@/components/messaging/ConversationList';
 import MessageThread from '@/components/messaging/MessageThread';
 import Link from 'next/link';
@@ -18,12 +18,13 @@ export default function FloatingMessages() {
     const { data: conversations = [], isLoading: convosLoading } = useConversations();
     const { data: messages = [], isLoading: messagesLoading } = useConversationMessages(selectedConversationId);
     const sendMessage = useSendMessage();
+    const startConversation = useStartConversation();
 
     // Set up realtime subscriptions for messages and conversations
     useMessageRealtime(selectedConversationId);
 
     // Listen for 'open-floating-chat' custom events from other components
-    const handleOpenChat = useCallback((e: Event) => {
+    const handleOpenChat = useCallback(async (e: Event) => {
         const detail = (e as CustomEvent).detail;
         if (!detail?.recipientId) return;
 
@@ -37,9 +38,19 @@ export default function FloatingMessages() {
 
         if (existing) {
             setSelectedConversationId(existing.id);
+        } else {
+            // Create a new conversation with a greeting
+            try {
+                const convId = await startConversation.mutateAsync({
+                    recipientId: detail.recipientId,
+                    initialMessage: 'Hi! 👋',
+                });
+                setSelectedConversationId(convId);
+            } catch (err) {
+                console.error('Failed to start conversation:', err);
+            }
         }
-        // If no existing conversation, the user can type a first message from the conversation list
-    }, [conversations]);
+    }, [conversations, startConversation]);
 
     useEffect(() => {
         window.addEventListener('open-floating-chat', handleOpenChat);
