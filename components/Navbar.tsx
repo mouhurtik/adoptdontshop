@@ -83,6 +83,9 @@ const NavbarInner = () => {
 
     const mobileTitle = getPageTitle();
 
+    // Hide navbar entirely on messages page for fullscreen messaging
+    if (pathname.startsWith('/messages')) return null;
+
     return (
         <>
             {/* ===== MOBILE APP BAR (< lg) ===== */}
@@ -215,7 +218,7 @@ const NavbarInner = () => {
                                                     My Posts
                                                 </Link>
                                                 <Link
-                                                    href="/settings"
+                                                    href="/profile/settings"
                                                     prefetch={false}
                                                     className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
                                                 >

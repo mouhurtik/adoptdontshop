@@ -195,12 +195,11 @@ export function useStartConversation() {
             if (!user) throw new Error('Must be logged in');
             if (recipientId === user.id) throw new Error('Cannot message yourself');
 
-            // Check if conversation already exists between these users about this pet
+            // Check if conversation already exists between these users
             const { data: existing } = await supabase
                 .from('conversations')
                 .select('id')
-                .contains('participant_ids', [user.id, recipientId])
-                .eq('pet_listing_id', petListingId ?? '');
+                .contains('participant_ids', [user.id, recipientId]);
 
             if (existing && existing.length > 0) {
                 // Send message in existing conversation
