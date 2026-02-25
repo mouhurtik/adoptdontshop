@@ -18,12 +18,13 @@ const Home = () => {
 
   const { data: petCount = 0 } = usePetCount();
 
-  // Redirect mobile users to community feed
+  // Redirect mobile users to community feed (mobile-first experience)
   useEffect(() => {
-    if (window.innerWidth < 1024) {
-      router.replace('/community');
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    if (isMobile) {
+      router.push('/community');
     }
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (animalType?: string) => {
     if (animalType) {
