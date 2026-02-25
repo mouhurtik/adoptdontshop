@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, Maximize2, Minus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,6 +21,30 @@ export default function FloatingMessages() {
 
     // Set up realtime subscriptions for messages and conversations
     useMessageRealtime(selectedConversationId);
+
+    // Listen for 'open-floating-chat' custom events from other components
+    const handleOpenChat = useCallback((e: Event) => {
+        const detail = (e as CustomEvent).detail;
+        if (!detail?.recipientId) return;
+
+        // Open the widget
+        setIsOpen(true);
+
+        // Check if we already have a conversation with this user
+        const existing = conversations.find(
+            (c) => (c.participant_ids as string[])?.includes(detail.recipientId)
+        );
+
+        if (existing) {
+            setSelectedConversationId(existing.id);
+        }
+        // If no existing conversation, the user can type a first message from the conversation list
+    }, [conversations]);
+
+    useEffect(() => {
+        window.addEventListener('open-floating-chat', handleOpenChat);
+        return () => window.removeEventListener('open-floating-chat', handleOpenChat);
+    }, [handleOpenChat]);
 
     // Don't render if we aren't fully authed or if we are on pages where this shouldn't show
     if (authLoading || !isAuthenticated) return null;

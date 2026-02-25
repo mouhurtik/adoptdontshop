@@ -178,13 +178,19 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                                     </div>
                                 </Link>
                                 {isAuthenticated && post.author_id !== user?.id && (
-                                    <Link
-                                        href={`/messages?to=${post.author_id}`}
+                                    <button
+                                        onClick={() => {
+                                            window.dispatchEvent(
+                                                new CustomEvent('open-floating-chat', {
+                                                    detail: { recipientId: post.author_id },
+                                                })
+                                            );
+                                        }}
                                         className="ml-auto flex items-center gap-2 px-4 py-2 rounded-full bg-playful-coral/10 text-playful-coral font-bold text-sm hover:bg-playful-coral/20 transition-colors"
                                     >
                                         <Mail className="h-4 w-4" />
                                         Message
-                                    </Link>
+                                    </button>
                                 )}
                             </div>
 
