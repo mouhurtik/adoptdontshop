@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { MessageCircle, PawPrint, ChevronLeft } from 'lucide-react';
 import {
     useConversations,
     useConversationMessages,
@@ -89,11 +90,35 @@ const Messages = () => {
                             className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 min-h-0 ${showThread ? 'hidden lg:flex' : 'flex'
                                 }`}
                         >
-                            <div className="p-4 border-b border-gray-100">
-                                <h1 className="text-xl font-heading font-bold text-playful-text flex items-center gap-2">
-                                    <MessageCircle className="w-5 h-5 text-playful-coral" />
-                                    Messages
-                                </h1>
+                            {/* Branding header */}
+                            <div className="border-b border-gray-100">
+                                <div className="flex items-center gap-2 px-5 pt-4 pb-2">
+                                    <Link href="/" className="flex items-center gap-2 group">
+                                        <div className="bg-playful-coral text-white p-1.5 rounded-lg rotate-3 group-hover:rotate-6 transition-transform duration-300 shadow-sm flex-shrink-0">
+                                            <PawPrint className="h-4 w-4 fill-current" />
+                                        </div>
+                                        <span className="text-lg font-heading font-black tracking-tight text-playful-text">
+                                            Adopt<span className="text-playful-coral">Dont</span>Shop
+                                        </span>
+                                    </Link>
+                                </div>
+                                <div className="flex items-center justify-between px-5 py-2">
+                                    <h1 className="text-xl font-heading font-bold text-playful-text flex items-center gap-2">
+                                        <MessageCircle className="w-5 h-5 text-playful-coral" />
+                                        Messages
+                                    </h1>
+                                </div>
+                            </div>
+
+                            {/* Back to site */}
+                            <div className="px-4 py-2 border-b border-gray-50">
+                                <Link
+                                    href="/"
+                                    className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-playful-text transition-colors"
+                                >
+                                    <ChevronLeft className="w-3.5 h-3.5" />
+                                    Back to site
+                                </Link>
                             </div>
                             <ConversationList
                                 conversations={conversations}

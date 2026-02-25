@@ -6,10 +6,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText, Settings } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUnreadCount } from "@/hooks/useMessages";
 
 const NavbarInner = () => {
     const [scrolled, setScrolled] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const { data: unreadCount = 0 } = useUnreadCount();
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -208,6 +210,11 @@ const NavbarInner = () => {
                                                 >
                                                     <MessageCircle className="h-4 w-4" />
                                                     Messages
+                                                    {unreadCount > 0 && (
+                                                        <span className="ml-auto bg-playful-coral text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                                                            {unreadCount > 99 ? '99+' : unreadCount}
+                                                        </span>
+                                                    )}
                                                 </Link>
                                                 <Link
                                                     href="/community/my-posts"
