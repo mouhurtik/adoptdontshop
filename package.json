@@ -80,5 +80,9 @@
     "*.{ts,tsx}": [
       "eslint --max-warnings 0"
     ]
+  },
+  "overrides": {
+    "picomatch": "4.0.2",
+    "zod-validation-error": "4.0.1"
   }
 }
