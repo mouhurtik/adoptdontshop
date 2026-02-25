@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Mail, PawPrint, Heart, Coffee } from 'lucide-react';
+import { Github, Mail, PawPrint, Heart, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -13,7 +13,7 @@ const Footer = () => {
 
             <div className="container mx-auto px-6 pt-12 pb-8 relative z-20">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-                    {/* Brand Section - Desktop: col-span-4 */}
+                    {/* Brand Section */}
                     <div className="md:col-span-5 lg:col-span-4 space-y-6">
                         <Link href="/" className="inline-flex items-center gap-3 group">
                             <div className="bg-white/10 p-2.5 rounded-2xl group-hover:rotate-6 transition-transform duration-300 border-2 border-white/20 backdrop-blur-sm">
@@ -29,15 +29,26 @@ const Footer = () => {
                         <p className="text-lg opacity-90 leading-relaxed max-w-sm font-medium">
                             Connecting loving families with pets in need. Every adoption creates a new story of unconditional love and friendship.
                         </p>
-                        <div className="flex gap-4 pt-2">
+
+                        {/* Social Icons */}
+                        <div className="flex items-center gap-4 pt-2">
                             <a
-                                href="https://ko-fi.com/mouhurtik"
+                                href="https://x.com/mouhurtik"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-white/10 p-3 rounded-full hover:bg-[#FF5E5B] hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
-                                title="Support us on Ko-fi"
+                                className="bg-white/10 p-3 rounded-full hover:bg-black hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Follow us on X"
                             >
-                                <Coffee className="h-5 w-5" />
+                                <Twitter className="h-5 w-5" />
+                            </a>
+                            <a
+                                href="https://instagram.com/adoptdontshop.xyz"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/10 p-3 rounded-full hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Follow us on Instagram"
+                            >
+                                <Instagram className="h-5 w-5" />
                             </a>
                             <a
                                 href="https://github.com/mouhurtik/adoptdontshop"
@@ -49,11 +60,24 @@ const Footer = () => {
                                 <Github className="h-5 w-5" />
                             </a>
                             <a
-                                href="mailto:contact@adoptdontshop.xyz"
+                                href="mailto:mouhurtikr@gmail.com"
                                 className="bg-white/10 p-3 rounded-full hover:bg-playful-yellow hover:text-playful-teal transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
                                 title="Contact us"
                             >
                                 <Mail className="h-5 w-5" />
+                            </a>
+                        </div>
+
+                        {/* Ko-fi Button */}
+                        <div className="pt-1">
+                            <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer">
+                                <img
+                                    height="36"
+                                    style={{ border: 0, height: 36 }}
+                                    src="https://storage.ko-fi.com/cdn/kofi1.png?v=6"
+                                    alt="Buy Me a Coffee at ko-fi.com"
+                                    className="hover:opacity-90 transition-opacity hover:-translate-y-0.5 transform duration-200"
+                                />
                             </a>
                         </div>
                     </div>
@@ -135,15 +159,7 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
                     <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
-                    <div className="flex items-center gap-6">
-                        <a
-                            href="https://ko-fi.com/mouhurtik"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 hover:text-playful-yellow transition-colors"
-                        >
-                            <Coffee className="h-4 w-4" /> Buy us a coffee ☕
-                        </a>
+                    <div className="flex items-center gap-6 flex-wrap justify-center">
                         <a
                             href="https://github.com/mouhurtik/adoptdontshop"
                             target="_blank"
