@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, ArrowLeft, Loader2 } from 'lucide-react';
+import { Send, ArrowLeft, Loader2, Check, CheckCheck } from 'lucide-react';
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import type { Message, Conversation } from '@/hooks/useMessages';
 
@@ -160,11 +160,10 @@ const MessageThread = ({
                                             className={`flex ${msg.is_mine ? 'justify-end' : 'justify-start'}`}
                                         >
                                             <div
-                                                className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm ${
-                                                    msg.is_mine
-                                                        ? 'bg-playful-coral text-white rounded-br-md'
-                                                        : 'bg-white text-gray-800 rounded-bl-md border border-gray-100'
-                                                }`}
+                                                className={`max-w-[75%] rounded-2xl px-4 py-2.5 shadow-sm ${msg.is_mine
+                                                    ? 'bg-playful-coral text-white rounded-br-md'
+                                                    : 'bg-white text-gray-800 rounded-bl-md border border-gray-100'
+                                                    }`}
                                             >
                                                 {!msg.is_mine && (
                                                     <p className="text-xs font-bold text-playful-teal mb-1">
@@ -175,13 +174,21 @@ const MessageThread = ({
                                                     {msg.content}
                                                 </p>
                                                 <p
-                                                    className={`text-[10px] mt-1.5 ${
-                                                        msg.is_mine ? 'text-white/80 text-right' : 'text-gray-400 text-left'
-                                                    }`}
+                                                    className={`text-[10px] mt-1.5 ${msg.is_mine ? 'text-white/80 text-right' : 'text-gray-400 text-left'
+                                                        }`}
                                                 >
                                                     {formatDistanceToNow(new Date(msg.created_at), {
                                                         addSuffix: true,
                                                     })}
+                                                    {msg.is_mine && (
+                                                        <span className="ml-1 inline-flex align-middle">
+                                                            {msg.read_by && msg.read_by.length > 1 ? (
+                                                                <CheckCheck className="w-3 h-3 text-blue-300" />
+                                                            ) : (
+                                                                <Check className="w-3 h-3 text-white/60" />
+                                                            )}
+                                                        </span>
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>

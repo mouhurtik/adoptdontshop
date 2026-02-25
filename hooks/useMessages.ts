@@ -19,6 +19,7 @@ export interface Conversation extends ConversationRow {
 
 export interface Message extends MessageRow {
     is_mine: boolean;
+    read_by: string[] | null;
 }
 
 // ─── Fetch Helpers ─────────────────────────────────────────
@@ -94,6 +95,7 @@ async function fetchMessages(conversationId: string, userId: string): Promise<Me
     return (data ?? []).map(m => ({
         ...m,
         is_mine: m.sender_id === userId,
+        read_by: (m.read_by as unknown as string[]) || null,
     }));
 }
 
@@ -270,6 +272,42 @@ export function useStartConversation() {
             queryClient.invalidateQueries({ queryKey: ['conversations'] });
         },
     });
+}
+
+/** Mark all unread messages in a conversation as read by the current user */
+export function useMarkAsRead() {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    return useCallback(async (conversationId: string) => {
+        if (!user) return;
+
+        // Get messages not read by user
+        const { data: unread } = await supabase
+            .from('messages')
+            .select('id, read_by')
+            .eq('conversation_id', conversationId)
+            .not('sender_id', 'eq', user.id)
+            .not('read_by', 'cs', JSON.stringify([user.id]));
+
+        if (!unread || unread.length === 0) return;
+
+        // Update each to add user to read_by
+        for (const msg of unread) {
+            const currentReadBy = (msg.read_by as string[]) || [];
+            if (!currentReadBy.includes(user.id)) {
+                await supabase
+                    .from('messages')
+                    .update({ read_by: [...currentReadBy, user.id] })
+                    .eq('id', msg.id);
+            }
+        }
+
+        // Refresh queries
+        queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
+        queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
+        queryClient.invalidateQueries({ queryKey: ['conversations'] });
+    }, [user, queryClient]);
 }
 
 /** Hook to get unread message count for navbar badge */
