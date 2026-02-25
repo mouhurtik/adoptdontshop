@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2, Mail } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2, Mail, Bookmark } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
 import { TAG_LABELS, TAG_COLORS } from '@/components/community/PostCard';
-import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment } from '@/hooks/useCommunity';
+import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment, useSavePost, useUserSavedPost } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CommunityPostDetailProps {
@@ -20,7 +20,9 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
     const { data: post, isLoading, error } = useCommunityPost(slug);
     const { data: comments = [] } = usePostComments(post?.id);
     const { data: userHasLiked = false } = useUserLiked(post?.id);
+    const { data: userHasSaved = false } = useUserSavedPost(post?.id);
     const likePost = useLikePost();
+    const savePost = useSavePost();
     const addComment = useAddComment();
 
     const [commentText, setCommentText] = useState('');
@@ -30,6 +32,11 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
     const handleLike = () => {
         if (!isAuthenticated || !post) return;
         likePost.mutate({ postId: post.id, liked: userHasLiked });
+    };
+
+    const handleSave = () => {
+        if (!isAuthenticated || !post) return;
+        savePost.mutate({ postId: post.id, saved: userHasSaved });
     };
 
     const handleComment = async () => {
@@ -200,31 +207,49 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                                <button
-                                    onClick={handleLike}
-                                    disabled={!isAuthenticated}
-                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all duration-200 ${userHasLiked
-                                        ? 'bg-red-50 text-red-500'
-                                        : 'bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-500'
-                                        } ${!isAuthenticated ? 'opacity-50 cursor-default' : 'hover:scale-105'}`}
-                                >
-                                    <Heart className={`h-5 w-5 ${userHasLiked ? 'fill-current' : ''}`} />
-                                    {post.like_count || 0}
-                                </button>
-                                <button
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gray-50 text-gray-500"
-                                >
-                                    <MessageCircle className="h-5 w-5" />
-                                    {post.comment_count || 0}
-                                </button>
-                                <button
-                                    onClick={handleShare}
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gray-50 text-gray-500 hover:bg-playful-cream hover:text-playful-teal transition-all hover:scale-105"
-                                >
-                                    <Share2 className="h-5 w-5" />
-                                    Share
-                                </button>
+                            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                                {/* Left: Like + Comment count */}
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={handleLike}
+                                        disabled={!isAuthenticated}
+                                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all duration-200 ${userHasLiked
+                                            ? 'bg-red-50 text-red-500'
+                                            : 'bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-500'
+                                            } ${!isAuthenticated ? 'opacity-50 cursor-default' : 'hover:scale-105'}`}
+                                    >
+                                        <Heart className={`h-5 w-5 ${userHasLiked ? 'fill-current' : ''}`} />
+                                        {post.like_count || 0}
+                                    </button>
+                                    <button
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gray-50 text-gray-500"
+                                    >
+                                        <MessageCircle className="h-5 w-5" />
+                                        {post.comment_count || 0}
+                                    </button>
+                                </div>
+
+                                {/* Right: Save + Share */}
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={!isAuthenticated}
+                                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all duration-200 ${userHasSaved
+                                            ? 'bg-playful-coral/10 text-playful-coral'
+                                            : 'bg-gray-50 text-gray-500 hover:bg-playful-coral/10 hover:text-playful-coral'
+                                            } ${!isAuthenticated ? 'opacity-50 cursor-default' : 'hover:scale-105'}`}
+                                    >
+                                        <Bookmark className={`h-5 w-5 ${userHasSaved ? 'fill-current' : ''}`} />
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={handleShare}
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gray-50 text-gray-500 hover:bg-playful-cream hover:text-playful-teal transition-all hover:scale-105"
+                                    >
+                                        <Share2 className="h-5 w-5" />
+                                        Share
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </article>

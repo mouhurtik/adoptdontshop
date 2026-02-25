@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Mail, PawPrint, Heart } from 'lucide-react';
+import { Github, Mail, PawPrint, Heart, Coffee } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -30,15 +30,31 @@ const Footer = () => {
                             Connecting loving families with pets in need. Every adoption creates a new story of unconditional love and friendship.
                         </p>
                         <div className="flex gap-4 pt-2">
-                            {[Facebook, Twitter, Instagram, Mail].map((Icon, i) => (
-                                <a
-                                    key={i}
-                                    href="#"
-                                    className="bg-white/10 p-3 rounded-full hover:bg-playful-yellow hover:text-playful-teal transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
-                                >
-                                    <Icon className="h-5 w-5" />
-                                </a>
-                            ))}
+                            <a
+                                href="https://ko-fi.com/mouhurtik"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/10 p-3 rounded-full hover:bg-[#FF5E5B] hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Support us on Ko-fi"
+                            >
+                                <Coffee className="h-5 w-5" />
+                            </a>
+                            <a
+                                href="https://github.com/mouhurtik/adoptdontshop"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/10 p-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="View on GitHub"
+                            >
+                                <Github className="h-5 w-5" />
+                            </a>
+                            <a
+                                href="mailto:contact@adoptdontshop.xyz"
+                                className="bg-white/10 p-3 rounded-full hover:bg-playful-yellow hover:text-playful-teal transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Contact us"
+                            >
+                                <Mail className="h-5 w-5" />
+                            </a>
                         </div>
                     </div>
 
@@ -119,7 +135,23 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
                     <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
-                    <div className="flex gap-6">
+                    <div className="flex items-center gap-6">
+                        <a
+                            href="https://ko-fi.com/mouhurtik"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 hover:text-playful-yellow transition-colors"
+                        >
+                            <Coffee className="h-4 w-4" /> Buy us a coffee ☕
+                        </a>
+                        <a
+                            href="https://github.com/mouhurtik/adoptdontshop"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 hover:text-playful-yellow transition-colors"
+                        >
+                            <Github className="h-4 w-4" /> Open Source 🐾
+                        </a>
                         <Link href="/privacy-policy" className="hover:text-playful-yellow transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-playful-yellow transition-colors">Terms of Service</Link>
                     </div>

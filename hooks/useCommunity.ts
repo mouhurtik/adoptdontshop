@@ -277,3 +277,54 @@ export function useAddComment() {
         },
     });
 }
+
+// Save / unsave a post (bookmark)
+export function useSavePost() {
+    const queryClient = useQueryClient();
+    const { user } = useAuth();
+
+    return useMutation({
+        mutationFn: async ({ postId, saved }: { postId: string; saved: boolean }) => {
+            if (!user) throw new Error('Must be logged in');
+            if (saved) {
+                // Unsave
+                const { error } = await supabase
+                    .from('saved_posts')
+                    .delete()
+                    .eq('post_id', postId)
+                    .eq('user_id', user.id);
+                if (error) throw error;
+            } else {
+                // Save
+                const { error } = await supabase
+                    .from('saved_posts')
+                    .insert({ post_id: postId, user_id: user.id });
+                if (error) throw error;
+            }
+        },
+        onSuccess: (_, { postId }) => {
+            queryClient.invalidateQueries({ queryKey: ['user-saved-post', postId] });
+            queryClient.invalidateQueries({ queryKey: ['saved-posts'] });
+        },
+    });
+}
+
+// Check if user saved a post
+export function useUserSavedPost(postId: string | undefined) {
+    const { user } = useAuth();
+
+    return useQuery({
+        queryKey: ['user-saved-post', postId, user?.id],
+        queryFn: async () => {
+            if (!user) return false;
+            const { data } = await supabase
+                .from('saved_posts')
+                .select('id')
+                .eq('post_id', postId!)
+                .eq('user_id', user.id)
+                .maybeSingle();
+            return !!data;
+        },
+        enabled: !!postId && !!user,
+    });
+}
