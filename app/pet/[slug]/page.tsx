@@ -16,11 +16,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     try {
         const supabase = await createServerSupabaseClient();
-        const { data: pet } = await supabase
+        const { data: pets } = await supabase
             .from('pet_listings')
-            .select('pet_name, breed, location, animal_type, description, image_url')
-            .ilike('id', `${idPrefix}%`)
-            .single();
+            .select('pet_name, breed, location, animal_type, description, image_url, id');
+
+        const pet = (pets ?? []).find(p => p.id.startsWith(idPrefix));
 
         if (pet) {
             const title = `Adopt ${pet.pet_name} — ${pet.breed} in ${pet.location}`;

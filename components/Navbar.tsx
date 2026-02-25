@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText } from "lucide-react";
+import { PawPrint, LogIn, LogOut, User, ListChecks, Shield, MessageCircle, FileText, Settings } from "lucide-react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -101,15 +101,15 @@ const NavbarInner = () => {
                         <div className="flex items-center min-w-0 pr-2">
                             <span className="mx-2 text-gray-300 font-bold shrink-0">|</span>
                             <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full truncate shadow-sm ${pathname.startsWith('/browse') ? 'bg-playful-teal/15 text-teal-700' :
-                                    pathname.startsWith('/community') ? 'bg-playful-lavender text-purple-700' :
-                                        pathname.startsWith('/resources') || pathname.startsWith('/pet-essentials') ? 'bg-playful-yellow text-yellow-700' :
-                                            pathname.startsWith('/messages') ? 'bg-blue-100 text-blue-700' :
-                                                pathname.startsWith('/user') || pathname.startsWith('/profile') ? 'bg-playful-coral/15 text-playful-coral' :
-                                                    pathname.startsWith('/list-pet') ? 'bg-green-100 text-green-700' :
-                                                        pathname.startsWith('/about') ? 'bg-teal-100 text-teal-700' :
-                                                            pathname.startsWith('/login') || pathname.startsWith('/signup') ? 'bg-playful-coral/15 text-playful-coral' :
-                                                                pathname.startsWith('/pet/') ? 'bg-playful-coral text-white' :
-                                                                    'bg-playful-yellow text-playful-text'
+                                pathname.startsWith('/community') ? 'bg-playful-lavender text-purple-700' :
+                                    pathname.startsWith('/resources') || pathname.startsWith('/pet-essentials') ? 'bg-playful-yellow text-yellow-700' :
+                                        pathname.startsWith('/messages') ? 'bg-blue-100 text-blue-700' :
+                                            pathname.startsWith('/user') || pathname.startsWith('/profile') ? 'bg-playful-coral/15 text-playful-coral' :
+                                                pathname.startsWith('/list-pet') ? 'bg-green-100 text-green-700' :
+                                                    pathname.startsWith('/about') ? 'bg-teal-100 text-teal-700' :
+                                                        pathname.startsWith('/login') || pathname.startsWith('/signup') ? 'bg-playful-coral/15 text-playful-coral' :
+                                                            pathname.startsWith('/pet/') ? 'bg-playful-coral text-white' :
+                                                                'bg-playful-yellow text-playful-text'
                                 }`}>
                                 {mobileTitle}
                             </span>
@@ -213,6 +213,14 @@ const NavbarInner = () => {
                                                 >
                                                     <FileText className="h-4 w-4" />
                                                     My Posts
+                                                </Link>
+                                                <Link
+                                                    href="/settings"
+                                                    prefetch={false}
+                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-playful-cream transition-colors"
+                                                >
+                                                    <Settings className="h-4 w-4" />
+                                                    Settings
                                                 </Link>
                                                 {isAdmin && (
                                                     <Link

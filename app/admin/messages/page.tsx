@@ -166,8 +166,8 @@ export default function AdminMessagesPage() {
     };
 
     return (
-        <div className="-mx-4 lg:-mx-8 -mt-4 lg:-mt-6 -mb-4 lg:-mb-8">
-            <div className="flex h-[calc(100vh-8rem)] bg-white rounded-[2rem] shadow-soft border border-gray-100 overflow-hidden">
+        <div className="-mt-2 -mb-4 lg:-mb-8">
+            <div className="flex h-[calc(100vh-10rem)] bg-white rounded-[2rem] shadow-soft border border-gray-100 overflow-hidden">
                 {/* ── Left: Conversation List ── */}
                 <div className={`w-full lg:w-[360px] border-r border-gray-100 flex flex-col shrink-0 ${showMobileThread ? 'hidden lg:flex' : 'flex'}`}>
                     {/* Header */}
