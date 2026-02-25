@@ -83,6 +83,7 @@
   },
   "overrides": {
     "picomatch": "4.0.2",
-    "zod-validation-error": "4.0.1"
+    "zod-validation-error": "4.0.1",
+    "ws": "8.18.3"
   }
 }
