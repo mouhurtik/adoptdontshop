@@ -56,7 +56,7 @@ const InsuranceSection = () => {
                         >
                             <Card className="bg-white border-gray-100 shadow-2xl p-2 overflow-hidden rotate-2 hover:rotate-0 transition-all duration-500">
                                 <img
-                                    src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2070&auto=format&fit=crop"
+                                    src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=75&w=800&auto=format&fit=crop"
                                     alt="Happy Dog"
                                     className="rounded-xl w-full h-auto object-cover"
                                 />

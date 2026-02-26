@@ -65,7 +65,7 @@ const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
                     <ScrollReveal mode="pop" delay={0.4} duration={0.8}>
                         <div className="relative z-10 blob-shape overflow-hidden border-8 border-white shadow-2xl bg-playful-coral/10 aspect-square max-w-lg mx-auto transform hover:rotate-1 transition-transform duration-500">
                             <img
-                                src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                                src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=75"
                                 alt="Happy Dog Running"
                                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000"
                             />
