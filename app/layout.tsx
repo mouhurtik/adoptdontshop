@@ -28,11 +28,11 @@ const pacifico = Pacifico({
 
 export const metadata: Metadata = {
     title: {
-        default: 'AdoptDontShop — Largest Pet Adoption Community',
+        default: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
         template: '%s | AdoptDontShop',
     },
     description:
-        'India\'s largest pet adoption community. Browse dogs, cats, and other rescue animals looking for their forever homes. AdoptDontShop connects you with pets that need loving families.',
+        'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     keywords: ['pet adoption', 'adopt a pet', 'rescue animals', 'dogs', 'cats', 'adopt dont shop', 'pet adoption india', 'rescue dogs', 'rescue cats'],
     metadataBase: new URL('https://adoptdontshop.xyz'),
     alternates: {
@@ -43,14 +43,14 @@ export const metadata: Metadata = {
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
-        title: 'AdoptDontShop — Largest Pet Adoption Community',
+        title: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
         description:
-            'India\'s largest pet adoption community. Browse dogs, cats, and rescue animals looking for their forever homes.',
+            'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AdoptDontShop — Largest Pet Adoption Community',
-        description: 'India\'s largest pet adoption community. Find your perfect furry companion today!',
+        title: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
+        description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     robots: {
         index: true,
