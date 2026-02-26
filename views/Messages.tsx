@@ -102,30 +102,32 @@ const Messages = () => {
                                         </span>
                                     </Link>
                                 </div>
-                                <div className="flex items-center justify-between px-5 py-2">
-                                    <h1 className="text-xl font-heading font-bold text-playful-text flex items-center gap-2">
-                                        <MessageCircle className="w-5 h-5 text-playful-coral" />
+                                <div className="flex items-center justify-between px-5 py-3">
+                                    <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
                                         Messages
-                                    </h1>
+                                    </h2>
                                 </div>
                             </div>
 
+                            <div className="flex-1 overflow-y-auto">
+                                <ConversationList
+                                    conversations={conversations}
+                                    selectedId={selectedConversationId}
+                                    onSelect={handleSelectConversation}
+                                    isLoading={convosLoading}
+                                />
+                            </div>
+
                             {/* Back to site */}
-                            <div className="px-4 py-2 border-b border-gray-50">
+                            <div className="mt-auto px-4 py-2 border-t border-gray-100">
                                 <Link
                                     href="/"
-                                    className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-playful-text transition-colors"
+                                    className="flex items-center gap-2 py-3 text-sm text-gray-500 hover:text-playful-text transition-colors"
                                 >
-                                    <ChevronLeft className="w-3.5 h-3.5" />
+                                    <ChevronLeft className="w-4 h-4 flex-shrink-0" />
                                     Back to site
                                 </Link>
                             </div>
-                            <ConversationList
-                                conversations={conversations}
-                                selectedId={selectedConversationId}
-                                onSelect={handleSelectConversation}
-                                isLoading={convosLoading}
-                            />
                         </div>
 
                         {/* Message Thread — hidden on mobile when list is shown */}
