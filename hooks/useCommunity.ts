@@ -65,7 +65,7 @@ export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offse
             // Batch-fetch author profiles
             const authorIds = [...new Set((data || []).map(p => p.author_id))];
             const { data: profiles } = authorIds.length > 0
-                ? await supabase.from('profiles').select('id, display_name, avatar_url').in('id', authorIds)
+                ? await supabase.from('profiles').select('id, display_name, avatar_url, username').in('id', authorIds)
                 : { data: [] };
 
             const profileMap = new Map((profiles || []).map(p => [p.id, p]));
@@ -87,6 +87,7 @@ export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offse
                     author: profile ? {
                         display_name: profile.display_name,
                         avatar_url: profile.avatar_url,
+                        username: profile.username,
                     } : undefined,
                 };
             });
@@ -111,7 +112,7 @@ export function useCommunityPost(slug: string) {
             // Fetch author profile separately
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('display_name, avatar_url')
+                .select('display_name, avatar_url, username')
                 .eq('id', post.author_id)
                 .single();
 

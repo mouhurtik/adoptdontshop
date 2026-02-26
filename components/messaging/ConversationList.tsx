@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, User } from 'lucide-react';
 import type { Conversation } from '@/hooks/useMessages';
 
 interface ConversationListProps {
@@ -54,21 +54,20 @@ const ConversationList = ({ conversations, selectedId, onSelect, isLoading }: Co
                     <button
                         key={convo.id}
                         onClick={() => onSelect(convo.id)}
-                        className={`w-full flex items-start gap-3 p-4 text-left transition-colors border-b border-gray-50 hover:bg-playful-cream/50 ${
-                            isSelected ? 'bg-playful-cream/70 border-l-4 border-l-playful-coral' : ''
-                        }`}
+                        className={`w-full flex items-start gap-3 p-4 text-left transition-colors border-b border-gray-50 hover:bg-playful-cream/50 ${isSelected ? 'bg-playful-cream/70 border-l-4 border-l-playful-coral' : ''
+                            }`}
                     >
-                        {/* Pet avatar or placeholder */}
+                        {/* User avatar or placeholder */}
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-playful-cream shrink-0 border-2 border-white shadow-sm">
-                            {convo.pet_image ? (
+                            {convo.other_participant_avatar ? (
                                 <img
-                                    src={convo.pet_image}
-                                    alt={convo.pet_name || 'Pet'}
+                                    src={convo.other_participant_avatar}
+                                    alt={convo.other_participant_name || 'User'}
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-playful-coral">
-                                    <MessageCircle className="w-5 h-5" />
+                                <div className="w-full h-full flex items-center justify-center text-playful-teal">
+                                    <User className="w-5 h-5" />
                                 </div>
                             )}
                         </div>
@@ -76,18 +75,12 @@ const ConversationList = ({ conversations, selectedId, onSelect, isLoading }: Co
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
-                                <p className={`font-bold text-sm truncate ${
-                                    convo.unread_count > 0 ? 'text-playful-text' : 'text-gray-700'
-                                }`}>
+                                <p className={`font-bold text-sm truncate ${convo.unread_count > 0 ? 'text-playful-text' : 'text-gray-700'
+                                    }`}>
                                     {convo.other_participant_name || 'User'}
                                 </p>
                                 <span className="text-xs text-gray-400 shrink-0">{timeAgo}</span>
                             </div>
-                            {convo.pet_name && (
-                                <p className="text-xs text-playful-coral font-medium truncate">
-                                    Re: {convo.pet_name}
-                                </p>
-                            )}
                             <p className="text-sm text-gray-500 truncate mt-0.5">
                                 {convo.last_message || 'No messages yet'}
                             </p>

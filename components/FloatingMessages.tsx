@@ -39,11 +39,14 @@ export default function FloatingMessages() {
         if (existing) {
             setSelectedConversationId(existing.id);
         } else {
-            // Create a new conversation with a greeting
+            // Create a new conversation with a greeting (include pet name if available)
+            const greeting = detail.petName
+                ? `Hi! 🐾 Asking about ${detail.petName}`
+                : 'Hi! 👋';
             try {
                 const convId = await startConversation.mutateAsync({
                     recipientId: detail.recipientId,
-                    initialMessage: 'Hi! 👋',
+                    initialMessage: greeting,
                 });
                 setSelectedConversationId(convId);
             } catch (err) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
-import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark } from 'lucide-react';
+import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark, Share2, Check } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import PawprintLoader from '@/components/ui/PawprintLoader';
@@ -58,9 +58,23 @@ export default function PublicProfilePage() {
     const [likedPosts, setLikedPosts] = useState<CommunityPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'pets' | 'posts' | 'favorites' | 'liked_posts'>('pets');
+    const [copied, setCopied] = useState(false);
 
     // Privacy: which tabs to show for this user
     const _privacy = profile?.privacy_settings ?? { show_favorites: false, show_posts: true, show_likes: true };
+
+    const handleShare = async () => {
+        const shareUrl = `https://adoptdontshop.xyz/${profile?.username || userId}`;
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: profile?.display_name || 'User Profile', url: shareUrl });
+            } catch { /* user cancelled */ }
+        } else {
+            await navigator.clipboard.writeText(shareUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
 
     useEffect(() => {
         if (!userId) return;
@@ -180,6 +194,25 @@ export default function PublicProfilePage() {
                     <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-soft border-2 border-gray-100 mb-8 relative overflow-hidden">
                         {/* Decorative background */}
                         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-playful-teal to-playful-coral opacity-10 rounded-t-[2.5rem]" />
+
+                        {/* Share button */}
+                        <button
+                            onClick={handleShare}
+                            className="absolute top-5 right-5 z-10 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-500 hover:text-playful-coral hover:border-playful-coral/30 transition-all duration-200 shadow-sm hover:shadow-md text-sm font-bold"
+                            title="Share profile"
+                        >
+                            {copied ? (
+                                <>
+                                    <Check className="w-4 h-4 text-green-500" />
+                                    <span className="text-green-500 text-xs">Copied!</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Share2 className="w-4 h-4" />
+                                    <span className="hidden sm:inline text-xs">Share</span>
+                                </>
+                            )}
+                        </button>
 
                         <div className="relative flex flex-col sm:flex-row items-center gap-6">
                             {/* Avatar */}

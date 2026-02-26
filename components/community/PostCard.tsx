@@ -37,6 +37,7 @@ export interface PostCardData {
     author?: {
         display_name: string | null;
         avatar_url: string | null;
+        username?: string | null;
     };
 }
 
@@ -103,7 +104,7 @@ const PostCard = ({ post }: { post: PostCardData }) => {
                     {/* Author */}
                     {post.author_id ? (
                         <Link
-                            href={`/user/${post.author_id}`}
+                            href={`/user/${post.author?.username || post.author_id}`}
                             onClick={(e) => e.stopPropagation()}
                             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                         >

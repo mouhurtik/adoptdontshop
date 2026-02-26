@@ -11,9 +11,8 @@ type MessageRow = Tables<'messages'>;
 type ConversationRow = Tables<'conversations'>;
 
 export interface Conversation extends ConversationRow {
-    pet_name?: string;
-    pet_image?: string;
     other_participant_name?: string;
+    other_participant_avatar?: string;
     unread_count: number;
 }
 
@@ -34,50 +33,36 @@ async function fetchConversations(userId: string): Promise<Conversation[]> {
     if (error) throw error;
     if (!convos || convos.length === 0) return [];
 
-    // Collect pet IDs and other user IDs for batch lookup
-    const petIds = convos
-        .map(c => c.pet_listing_id)
-        .filter((id): id is string => !!id);
+    // Collect other user IDs for batch profile lookup
     const otherUserIds = convos
         .flatMap(c => (c.participant_ids as string[]).filter(id => id !== userId));
 
-    // Batch fetch pet info
-    let petMap: Record<string, { pet_name: string; image_url: string | null }> = {};
-    if (petIds.length > 0) {
-        const { data: pets } = await supabase
-            .from('pet_listings')
-            .select('id, pet_name, image_url')
-            .in('id', petIds);
-        if (pets) {
-            petMap = Object.fromEntries(pets.map(p => [p.id, p]));
-        }
-    }
+
 
     // Batch fetch profile names
-    let profileMap: Record<string, string> = {};
+    let profileMap: Record<string, { name: string; avatar: string | null }> = {};
     if (otherUserIds.length > 0) {
         const { data: profiles } = await supabase
             .from('profiles')
-            .select('id, display_name')
+            .select('id, display_name, avatar_url')
             .in('id', [...new Set(otherUserIds)]);
         if (profiles) {
             profileMap = Object.fromEntries(
-                profiles.map(p => [p.id, p.display_name || 'User'])
+                profiles.map(p => [p.id, { name: p.display_name || 'User', avatar: p.avatar_url }])
             );
         }
     }
 
     return convos.map(c => {
-        const pet = c.pet_listing_id ? petMap[c.pet_listing_id] : undefined;
         const otherId = (c.participant_ids as string[]).find(id => id !== userId);
+        const otherProfile = otherId ? profileMap[otherId] : undefined;
         const readBy = (c as unknown as { read_by?: string[] }).read_by;
 
         return {
             ...c,
             participant_ids: c.participant_ids as string[],
-            pet_name: pet?.pet_name,
-            pet_image: pet?.image_url ?? undefined,
-            other_participant_name: otherId ? profileMap[otherId] || 'User' : 'User',
+            other_participant_name: otherProfile?.name || 'User',
+            other_participant_avatar: otherProfile?.avatar ?? undefined,
             unread_count: readBy && !readBy.includes(userId) ? 1 : 0,
         };
     });
@@ -185,11 +170,9 @@ export function useStartConversation() {
     return useMutation({
         mutationFn: async ({
             recipientId,
-            petListingId,
             initialMessage,
         }: {
             recipientId: string;
-            petListingId?: string;
             initialMessage: string;
         }) => {
             if (!user) throw new Error('Must be logged in');
@@ -236,7 +219,6 @@ export function useStartConversation() {
             const { data: newConvo, error: convError } = await supabase
                 .from('conversations')
                 .insert({
-                    pet_listing_id: petListingId || null,
                     participant_ids: [user.id, recipientId],
                     last_message: initialMessage.substring(0, 100),
                     last_message_at: new Date().toISOString(),

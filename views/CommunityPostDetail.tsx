@@ -165,7 +165,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                             {/* Author & Date */}
                             <div className="flex items-center gap-3 mb-8 pb-8 border-b border-gray-100">
                                 <Link
-                                    href={`/user/${post.author_id}`}
+                                    href={`/user/${post.profiles?.username || post.author_id}`}
                                     className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                                 >
                                     {post.profiles?.avatar_url ? (

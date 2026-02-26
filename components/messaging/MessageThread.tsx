@@ -97,25 +97,20 @@ const MessageThread = ({
                     </button>
                 )}
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-playful-cream shrink-0 border-2 border-white shadow-sm">
-                    {conversation.pet_image ? (
+                    {conversation.other_participant_avatar ? (
                         <img
-                            src={conversation.pet_image}
-                            alt={conversation.pet_name || 'Pet'}
+                            src={conversation.other_participant_avatar}
+                            alt={conversation.other_participant_name || 'User'}
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xl">🐾</div>
+                        <div className="w-full h-full flex items-center justify-center text-xl">👤</div>
                     )}
                 </div>
                 <div className="min-w-0">
                     <p className="font-bold text-gray-800 text-sm truncate">
                         {conversation.other_participant_name || 'User'}
                     </p>
-                    {conversation.pet_name && (
-                        <p className="text-xs text-playful-coral font-medium truncate">
-                            About: {conversation.pet_name}
-                        </p>
-                    )}
                 </div>
             </div>
 

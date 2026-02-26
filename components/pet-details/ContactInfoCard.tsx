@@ -18,6 +18,7 @@ type CaregiverInfo = {
   mobile: string;
   location: string;
   user_id: string | null;
+  pet_name: string;
 };
 
 const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
@@ -33,7 +34,7 @@ const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
       try {
         const { data, error } = await supabase
           .from('pet_listings')
-          .select('caregiver_name, mobile, location, user_id')
+          .select('caregiver_name, mobile, location, user_id, pet_name')
           .eq('id', petId)
           .single();
         if (error) return;
@@ -57,7 +58,7 @@ const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
     // Dispatch custom event to open the FloatingMessages chat popout
     window.dispatchEvent(
       new CustomEvent('open-floating-chat', {
-        detail: { recipientId: caregiverInfo.user_id },
+        detail: { recipientId: caregiverInfo.user_id, petName: caregiverInfo.pet_name },
       })
     );
   };
