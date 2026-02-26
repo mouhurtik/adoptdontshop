@@ -28,7 +28,7 @@ const pacifico = Pacifico({
 
 export const metadata: Metadata = {
     title: {
-        default: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
+        default: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
         template: '%s | AdoptDontShop',
     },
     description:
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
-        title: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
+        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
         description:
             'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AdoptDontShop: Find & Adopt Rescue Pets Near You',
+        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
         description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     robots: {
@@ -90,6 +90,7 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${quicksand.variable} ${nunito.variable} ${pacifico.variable}`} suppressHydrationWarning>
             <head>
+                <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
                     strategy="afterInteractive"

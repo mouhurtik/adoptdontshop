@@ -128,6 +128,35 @@ export function useCommunityPost(slug: string) {
     });
 }
 
+// Fetch related posts by matching tags (for internal linking / SEO)
+export function useRelatedPosts(postId: string | undefined, tags: string[] | undefined) {
+    return useQuery({
+        queryKey: ['related-posts', postId, tags],
+        queryFn: async (): Promise<PostCardData[]> => {
+            if (!tags || tags.length === 0) return [];
+
+            const { data, error } = await supabase
+                .from('community_posts')
+                .select('id, title, slug, featured_image_url, tags, created_at, author_id')
+                .eq('status', 'published')
+                .neq('id', postId!)
+                .overlaps('tags', tags)
+                .order('created_at', { ascending: false })
+                .limit(3);
+
+            if (error) throw error;
+            return (data || []).map(p => ({
+                ...p,
+                content_text: '',
+                like_count: 0,
+                comment_count: 0,
+                view_count: 0,
+            }));
+        },
+        enabled: !!postId && !!tags && tags.length > 0,
+    });
+}
+
 // Fetch comments for a post
 export function usePostComments(postId: string | undefined) {
     return useQuery({

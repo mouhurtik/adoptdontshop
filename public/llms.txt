@@ -5,8 +5,9 @@
 ## Key Features
 - **Advanced Pet Search:** Filter by type, breed, age, location, and urgency.
 - **Shelter CRM & Listings:** Shelters and caregivers can securely log in to list pets.
+- **Community Blog:** Users write and share adoption stories, care tips, and rescue experiences.
 - **Pet Essentials Store:** Users can browse products for dogs and cats with direct affiliate links.
-- **Direct Messaging:** Secure real-time chat between adopters and caregivers using a floating UI.
+- **Direct Messaging:** Secure real-time person-to-person chat using a floating UI.
 
 ## Technology Stack
 - **Framework:** Next.js 16 (App Router)
@@ -17,14 +18,14 @@
 - **Deployment:** Cloudflare Pages (via `@opennextjs/cloudflare`)
 
 ## Directory Structure
-- `app/` - Next.js App Router (pages: `/browse`, `/pet/[slug]`, `/pet-essentials`, etc.)
-- `components/` - Reusable UI widgets, grouped by feature (`home/`, `pet-details/`, `browse/`, `ui/`)
+- `app/` - Next.js App Router (pages: `/browse`, `/pet/[slug]`, `/community/[slug]`, `/pet-essentials`, etc.)
+- `components/` - Reusable UI widgets, grouped by feature (`home/`, `pet-details/`, `browse/`, `community/`, `ui/`)
 - `views/` - High-level page sections and orchestrators
 - `lib/supabase/` - Database client wrappers for SSR and Browser contexts
-- `hooks/` - Custom React hooks (e.g. `useMessages`, `useFavorites`)
+- `hooks/` - Custom React hooks (e.g. `useMessages`, `useFavorites`, `useCommunity`)
 - `contexts/` - Providers (e.g. `AuthContext`)
 
 ## Design Principles
-- **SEO First:** Next.js Server Components are heavily used alongside dynamic `generateMetadata` routes for optimal social sharing.
+- **SEO First:** Server Components with dynamic `generateMetadata` for pet and community post pages. RSS feed at `/feed.xml`. BlogPosting structured data on community posts.
 - **Mobile Responsive:** All views use standard Tailwind breakpoints prioritizing mobile usability.
 - **Playful Theme:** The UI leverages vibrant, custom colors defined in `tailwind.config.ts` (e.g. `playful-coral`, `playful-teal`).

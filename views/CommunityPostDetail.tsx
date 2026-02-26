@@ -8,7 +8,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
 import { TAG_LABELS, TAG_COLORS } from '@/components/community/PostCard';
-import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment, useSavePost, useUserSavedPost } from '@/hooks/useCommunity';
+import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment, useSavePost, useUserSavedPost, useRelatedPosts } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CommunityPostDetailProps {
@@ -24,6 +24,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
     const likePost = useLikePost();
     const savePost = useSavePost();
     const addComment = useAddComment();
+    const { data: relatedPosts = [] } = useRelatedPosts(post?.id, post?.tags as string[] | undefined);
 
     const [commentText, setCommentText] = useState('');
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -114,6 +115,35 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
 
     return (
         <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
+            {/* BlogPosting structured data for Google rich results */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'BlogPosting',
+                        headline: post.title,
+                        description: post.content_text?.substring(0, 160),
+                        image: post.featured_image_url || undefined,
+                        datePublished: post.created_at,
+                        dateModified: post.updated_at || post.created_at,
+                        author: {
+                            '@type': 'Person',
+                            name: authorName,
+                            url: `https://adoptdontshop.xyz/user/${post.profiles?.username || post.author_id}`,
+                        },
+                        publisher: {
+                            '@type': 'Organization',
+                            name: 'AdoptDontShop',
+                            url: 'https://adoptdontshop.xyz',
+                        },
+                        mainEntityOfPage: {
+                            '@type': 'WebPage',
+                            '@id': `https://adoptdontshop.xyz/community/${slug}`,
+                        },
+                    }),
+                }}
+            />
             <div className="container mx-auto px-6 max-w-4xl">
                 {/* Back */}
                 <ScrollReveal mode="fade-up" width="100%">
@@ -409,8 +439,40 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                         </div>
                     </div>
                 </ScrollReveal>
+
+                {/* Related Posts — Internal Linking for SEO */}
+                {relatedPosts.length > 0 && (
+                    <ScrollReveal mode="fade-up" delay={0.1} width="100%">
+                        <div className="mt-12">
+                            <h2 className="text-2xl font-heading font-black text-playful-text mb-6">Related Posts</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {relatedPosts.map((rp) => (
+                                    <Link
+                                        key={rp.id}
+                                        href={`/community/${rp.slug}`}
+                                        prefetch={false}
+                                        className="group bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                                    >
+                                        {rp.featured_image_url && (
+                                            <img
+                                                src={rp.featured_image_url}
+                                                alt={rp.title}
+                                                className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        )}
+                                        <div className="p-4">
+                                            <h3 className="font-bold text-sm text-playful-text line-clamp-2 group-hover:text-playful-coral transition-colors">
+                                                {rp.title}
+                                            </h3>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </ScrollReveal>
+                )}
             </div>
-        </div>
+        </div >
     );
 };
 
