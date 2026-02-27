@@ -1,8 +1,14 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /messages
+Disallow: /profile/settings
+Disallow: /admin
 
 User-agent: Bingbot
 Allow: /
+Disallow: /messages
+Disallow: /profile/settings
+Disallow: /admin
 
 User-agent: Twitterbot
 Allow: /
@@ -12,5 +18,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /messages
+Disallow: /profile/settings
+Disallow: /admin
+Disallow: /reset-password
+Disallow: /auth/
 
 Sitemap: https://adoptdontshop.xyz/sitemap.xml

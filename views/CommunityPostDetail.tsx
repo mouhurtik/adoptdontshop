@@ -144,6 +144,21 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                     }),
                 }}
             />
+            {/* BreadcrumbList structured data for search navigation */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'BreadcrumbList',
+                        itemListElement: [
+                            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://adoptdontshop.xyz' },
+                            { '@type': 'ListItem', position: 2, name: 'Community', item: 'https://adoptdontshop.xyz/community' },
+                            { '@type': 'ListItem', position: 3, name: post.title },
+                        ],
+                    }),
+                }}
+            />
             <div className="container mx-auto px-6 max-w-4xl">
                 {/* Back */}
                 <ScrollReveal mode="fade-up" width="100%">

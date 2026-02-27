@@ -18,6 +18,7 @@ export const APP_CONFIG = {
     FACEBOOK: 'https://facebook.com/adoptdontshop',
     TWITTER: 'https://twitter.com/adoptdontshop',
     INSTAGRAM: 'https://instagram.com/adoptdontshop',
+    LINKEDIN: 'https://www.linkedin.com/company/adoptdontshop-xyz/',
   },
 } as const;
 

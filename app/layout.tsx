@@ -28,7 +28,7 @@ const pacifico = Pacifico({
 
 export const metadata: Metadata = {
     title: {
-        default: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
+        default: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
         template: '%s | AdoptDontShop',
     },
     description:
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
-        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
+        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
         description:
             'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You',
+        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
         description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     robots: {
@@ -79,7 +79,7 @@ const organizationSchema = {
     url: 'https://adoptdontshop.xyz',
     logo: 'https://adoptdontshop.xyz/logo.png',
     description: 'India\'s largest pet adoption community connecting rescue animals with loving families.',
-    sameAs: [],
+    sameAs: ['https://www.linkedin.com/company/adoptdontshop-xyz/'],
 };
 
 export default function RootLayout({
