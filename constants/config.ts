@@ -4,7 +4,7 @@
 
 export const APP_CONFIG = {
   NAME: 'Adopt Don\'t Shop',
-  DESCRIPTION: 'Find your perfect pet companion',
+  DESCRIPTION: 'Adopt rescue dogs & cats near you',
   CONTACT: {
     PHONE: '(555) 123-4567',
     EMAIL: 'adopt@adoptdontshop.com',
