@@ -45,3 +45,6 @@ lerna-debug.log*
 # Vercel
 .vercel
 NEXT_TODO.md
+
+# Supabase (keep migrations private)
+supabase/migrations/

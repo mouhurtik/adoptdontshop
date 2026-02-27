@@ -28,7 +28,7 @@ const pacifico = Pacifico({
 
 export const metadata: Metadata = {
     title: {
-        default: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
+        default: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         template: '%s | AdoptDontShop',
     },
     description:
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
-        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
+        title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         description:
             'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AdoptDontShop: Adopt Rescue Dogs & Cats Near You | India',
+        title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
     },
     robots: {

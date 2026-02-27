@@ -1,4 +1,4 @@
- 
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
@@ -56,6 +56,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 .select('*')
                 .eq('id', userId)
                 .single();
+
+            // Auto-generate username if missing (OAuth users)
+            if (profile && !profile.username) {
+                const baseName = (profile.display_name || 'user')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, '')
+                    .substring(0, 14);
+                const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+                const generatedUsername = `${baseName || 'user'}${randomSuffix}`;
+
+                const { error: updateErr } = await supabase
+                    .from('profiles')
+                    .update({ username: generatedUsername })
+                    .eq('id', userId);
+
+                if (!updateErr) {
+                    profile.username = generatedUsername;
+                }
+            }
 
             // Fetch roles
             const { data: roleRows, error: rolesError } = await supabase
