@@ -62,9 +62,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const baseName = (profile.display_name || 'user')
                     .toLowerCase()
                     .replace(/[^a-z0-9]/g, '')
-                    .substring(0, 14);
-                const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-                const generatedUsername = `${baseName || 'user'}${randomSuffix}`;
+                    .substring(0, 20) || 'user';
+
+                // Try clean name first, only add numbers if taken
+                let generatedUsername = baseName;
+                const { data: existing } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('username', baseName)
+                    .maybeSingle();
+
+                if (existing) {
+                    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+                    generatedUsername = `${baseName.substring(0, 16)}${randomSuffix}`;
+                }
 
                 const { error: updateErr } = await supabase
                     .from('profiles')
