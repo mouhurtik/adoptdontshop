@@ -46,11 +46,20 @@ export const metadata: Metadata = {
         title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         description:
             'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
+        images: [
+            {
+                url: 'https://adoptdontshop.xyz/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'AdoptDontShop - Rescue Pet Adoption & Care Community',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
+        images: ['https://adoptdontshop.xyz/og-image.png'],
     },
     robots: {
         index: true,
@@ -93,9 +102,9 @@ export default function RootLayout({
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                 />
-                <Script id="google-analytics" strategy="afterInteractive">
+                <Script id="google-analytics" strategy="lazyOnload">
                     {`
                         window.dataLayer = window.dataLayer || [];
                         function gtag(){dataLayer.push(arguments);}

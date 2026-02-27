@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePetCount } from '@/hooks/usePets';
 import HeroSection from '@/components/home/HeroSection';
@@ -17,14 +17,6 @@ const Home = () => {
   const router = useRouter();
 
   const { data: petCount = 0 } = usePetCount();
-
-  // Redirect mobile users to community feed (mobile-first experience)
-  useEffect(() => {
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-    if (isMobile) {
-      router.push('/community');
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (animalType?: string) => {
     if (animalType) {
