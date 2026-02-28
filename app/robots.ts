@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/', '/profile/', '/admin/'],
         },
-        sitemap: 'https://adoptdontshop.pages.dev/sitemap.xml',
+        sitemap: 'https://adoptdontshop.xyz/sitemap.xml',
     };
 }

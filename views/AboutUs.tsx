@@ -149,7 +149,7 @@ function OurStoryTab() {
                         <div className="bg-playful-yellow/10 rounded-[2rem] p-4 shadow-inner">
                             <div className="aspect-[3/4] bg-white rounded-[1.5rem] overflow-hidden shadow-md">
                                 <img
-                                    src="https://lh3.googleusercontent.com/pw/AP1GczPP3ut83cBmFXmNL9D5I76DmwBvAYi8spjCclhrpwDDXXK51LZ8qIgojWYJNXPqznl0Go7jeWg-5vDIu3rtfHgbKXRkMogYq9mOo4Dkoce3lGFJXpOlZIxXzfpdO1w4ETX6KlxqqFhFOmZmk66u6Cq-wA=w711-h949-s-no-gm"
+                                    src="https://uibsmaizlrekfooryrwq.supabase.co/storage/v1/object/public/pet-images/founder/mouhurtik-ray.webp"
                                     alt="Mouhurtik Ray"
                                     className="w-full h-full object-cover object-top"
                                 />

@@ -12,6 +12,7 @@ import { TAG_LABELS } from '@/components/community/PostCard';
 import { useCreatePost } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
+import { resizeAndConvertToWebP } from '@/lib/imageUtils';
 
 const ALL_TAGS = ['success_story', 'fundraiser', 'virtual_adoption', 'tips', 'discussion', 'lost_found'];
 
@@ -59,12 +60,15 @@ const CommunityWrite = () => {
 
         setUploading(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+            // Convert to WebP (max 1600px wide, 85% quality)
+            const webpBlob = await resizeAndConvertToWebP(file, 1600, 0.85);
+            const fileName = `${user.id}/${Date.now()}.webp`;
 
             const { error: uploadError } = await supabase.storage
                 .from('community-images')
-                .upload(fileName, file);
+                .upload(fileName, webpBlob, {
+                    contentType: 'image/webp',
+                });
 
             if (uploadError) throw uploadError;
 

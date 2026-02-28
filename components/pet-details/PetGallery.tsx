@@ -17,7 +17,7 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
     <div className="bg-white rounded-xl overflow-hidden shadow-soft mb-8">
       <div className="h-80 sm:h-96 bg-gray-100">
         <Image
-          src={petImage || '/placeholder-pet.jpg'}
+          src={petImage || '/placeholder.svg'}
           alt={petName}
           width={800}
           height={384}
@@ -33,7 +33,7 @@ const PetGallery = ({ pet }: PetGalleryProps) => {
           {/* We would map through additional images here */}
           <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden">
             <Image
-              src={petImage || '/placeholder-pet.jpg'}
+              src={petImage || '/placeholder.svg'}
               alt={`${petName} thumbnail 1`}
               width={200}
               height={200}

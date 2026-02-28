@@ -16,7 +16,7 @@ const OurStoryWidget = () => {
                         <div className="w-full lg:w-2/5 p-6 md:p-8 shrink-0">
                             <div className="relative w-full h-[300px] lg:h-full min-h-[400px] rounded-[2rem] overflow-hidden group">
                                 <img
-                                    src="https://lh3.googleusercontent.com/pw/AP1GczPP3ut83cBmFXmNL9D5I76DmwBvAYi8spjCclhrpwDDXXK51LZ8qIgojWYJNXPqznl0Go7jeWg-5vDIu3rtfHgbKXRkMogYq9mOo4Dkoce3lGFJXpOlZIxXzfpdO1w4ETX6KlxqqFhFOmZmk66u6Cq-wA=w711-h949-s-no-gm"
+                                    src="https://uibsmaizlrekfooryrwq.supabase.co/storage/v1/object/public/pet-images/founder/mouhurtik-ray.webp"
                                     alt="Mouhurtik Ray — Founder"
                                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                                 />

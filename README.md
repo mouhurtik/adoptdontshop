@@ -6,7 +6,7 @@ A modern, open-source pet adoption platform and community hub connecting shelter
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)]()
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)]()
 [![Cloudflare Pages](https://img.shields.io/badge/deploy-Cloudflare%20Pages-F38020)]()
 [![Live Demo](https://img.shields.io/badge/demo-adoptdontshop.xyz-FF7F50)](https://adoptdontshop.xyz)
@@ -201,7 +201,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+Apache License 2.0 — see [LICENSE](LICENSE) for details.
 
 ---
 

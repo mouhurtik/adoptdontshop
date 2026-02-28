@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { generatePetSlug } from "@/utils/slugUtils";
+import { resizeAndConvertToWebP } from "@/lib/imageUtils";
 import SuccessDialog from "./form-sections/SuccessDialog";
 import CaregiverInfoSection from "./form-sections/CaregiverInfoSection";
 import PetInfoSection from "./form-sections/PetInfoSection";
@@ -95,12 +96,15 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
 
             let imageUrl = null;
             if (image) {
-                const fileExt = image.name.split('.').pop();
-                const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+                // Convert to WebP (max 1200px wide, 85% quality)
+                const webpBlob = await resizeAndConvertToWebP(image, 1200, 0.85);
+                const fileName = `${Math.random().toString(36).substring(2, 15)}.webp`;
 
                 const { error: uploadError, data } = await supabase.storage
                     .from('pet-images')
-                    .upload(fileName, image);
+                    .upload(fileName, webpBlob, {
+                        contentType: 'image/webp',
+                    });
 
                 if (uploadError) {
                     throw uploadError;

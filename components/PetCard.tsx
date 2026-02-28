@@ -46,7 +46,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
         {/* Image Container */}
         <div className="relative h-[360px] sm:h-64 overflow-hidden bg-gray-100">
           <Image
-            src={image || '/placeholder-pet.jpg'}
+            src={image || '/placeholder.svg'}
             alt={name}
             width={400}
             height={400}
