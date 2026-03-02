@@ -16,7 +16,7 @@ const OurStoryWidget = () => {
                         <div className="w-full lg:w-2/5 p-6 md:p-8 shrink-0">
                             <div className="relative w-full h-[300px] lg:h-full min-h-[400px] rounded-[2rem] overflow-hidden group">
                                 <img
-                                    src="https://uibsmaizlrekfooryrwq.supabase.co/storage/v1/object/public/pet-images/founder/mouhurtik-ray.webp"
+                                    src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/pet-images/founder/mouhurtik-ray.webp`}
                                     alt="Mouhurtik Ray — Founder"
                                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                                 />
