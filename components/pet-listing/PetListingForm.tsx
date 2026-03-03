@@ -98,7 +98,13 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
             if (image) {
                 // Convert to WebP (max 1200px wide, 85% quality)
                 const webpBlob = await resizeAndConvertToWebP(image, 1200, 0.85);
-                const fileName = `${Math.random().toString(36).substring(2, 15)}.webp`;
+                const safeName = formData.petName
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '')
+                    .substring(0, 30) || 'pet';
+                const fileName = `${safeName}-${petId.substring(0, 8)}.webp`;
 
                 const { error: uploadError, data } = await supabase.storage
                     .from('pet-images')
