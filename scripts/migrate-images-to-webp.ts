@@ -121,7 +121,7 @@ async function migratePetImages() {
 
     const { data: pets, error } = await supabase
         .from('pet_listings')
-        .select('id, pet_name, image_url')
+        .select('id, pet_name, slug, image_url')
         .not('image_url', 'is', null);
 
     if (error) {
@@ -165,15 +165,22 @@ async function migratePetImages() {
                 `     Result: ${(webpBuffer.length / 1024).toFixed(0)} KB (${savings}% smaller)`
             );
 
-            // Generate new filename
-            const newFileName = `${Math.random().toString(36).substring(2, 15)}.webp`;
+            // Generate organized filename from pet slug (e.g. buddy-a3f2c1d8.webp)
+            const safeName = (pet.pet_name as string)
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '')
+                .substring(0, 30) || 'pet';
+            const shortId = (pet.id as string).substring(0, 8);
+            const newFileName = `${safeName}-${shortId}.webp`;
 
             console.log(`     Uploading as ${newFileName}...`);
             const { error: uploadError } = await supabase.storage
                 .from('pet-images')
                 .upload(newFileName, webpBuffer, {
                     contentType: 'image/webp',
-                    upsert: false,
+                    upsert: true,
                 });
 
             if (uploadError) throw uploadError;
@@ -266,14 +273,21 @@ async function migrateCommunityImages() {
                 `     Result: ${(webpBuffer.length / 1024).toFixed(0)} KB (${savings}% smaller)`
             );
 
-            const newFileName = `migrated/${Date.now()}.webp`;
+            const safeTitle = (post.title as string)
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '')
+                .substring(0, 50) || 'post';
+            const shortId = (post.id as string).substring(0, 8);
+            const newFileName = `migrated/${safeTitle}-${shortId}.webp`;
 
             console.log(`     Uploading as ${newFileName}...`);
             const { error: uploadError } = await supabase.storage
                 .from('community-images')
                 .upload(newFileName, webpBuffer, {
                     contentType: 'image/webp',
-                    upsert: false,
+                    upsert: true,
                 });
 
             if (uploadError) throw uploadError;
