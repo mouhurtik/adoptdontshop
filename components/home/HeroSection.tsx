@@ -23,14 +23,14 @@ const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
 
                 {/* Content Column */}
                 <div className="text-center lg:text-left">
-                    <ScrollReveal mode="fade-up" delay={0.1} width="100%">
+                    <ScrollReveal mode="fade-up" width="100%">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-6 border border-gray-100 mx-auto lg:mx-0">
                             <span className="flex h-2 w-2 rounded-full bg-playful-coral animate-pulse"></span>
                             <span className="text-sm font-bold text-gray-600">Over <span className="text-playful-coral">{petCount}+</span> pets waiting for a home</span>
                         </div>
                     </ScrollReveal>
 
-                    <ScrollReveal mode="fade-up" delay={0.2} width="100%">
+                    <ScrollReveal mode="fade-up" width="100%">
                         <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-black text-playful-text mb-6 leading-tight tracking-tight">
                             Make a Friend <br />
                             <span className="relative inline-block mt-2 transform -rotate-2">
@@ -40,7 +40,7 @@ const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
                         </h1>
                     </ScrollReveal>
 
-                    <ScrollReveal mode="fade-up" delay={0.3} width="100%">
+                    <ScrollReveal mode="fade-up" delay={0.1} width="100%">
                         <p className="text-lg md:text-xl text-gray-600 mb-8 font-medium max-w-lg mx-auto lg:mx-0 leading-relaxed">
                             Don't buy a friend, adopt one. Connect with thousands of vaccinated, loving pets waiting to complete your family.
                         </p>

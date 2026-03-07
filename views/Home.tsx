@@ -10,12 +10,16 @@ import FeaturedPets from '@/components/home/FeaturedPets';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 // Below-fold sections — lazy loaded to reduce initial JS bundle
-const WhyAdopt = dynamic(() => import('@/components/home/WhyAdopt'), { ssr: false });
-const SponsorsSection = dynamic(() => import('@/components/home/SponsorsSection'), { ssr: false });
-const CallToAction = dynamic(() => import('@/components/home/CallToAction'), { ssr: false });
-const OurStoryWidget = dynamic(() => import('@/components/home/OurStoryWidget'), { ssr: false });
+const WhyAdopt = dynamic(() => import('@/components/home/WhyAdopt'));
+const SponsorsSection = dynamic(() => import('@/components/home/SponsorsSection'));
+const CallToAction = dynamic(() => import('@/components/home/CallToAction'));
+const OurStoryWidget = dynamic(() => import('@/components/home/OurStoryWidget'));
 
-const Home = () => {
+interface HomeProps {
+  initialPets?: Array<Record<string, unknown>>;
+}
+
+const Home = ({ initialPets }: HomeProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -42,7 +46,7 @@ const Home = () => {
 
       <HeroSection petCount={petCount} />
 
-      <ScrollReveal width="100%" mode="fade-up" delay={0.2}>
+      <ScrollReveal width="100%" mode="fade-up">
         <SearchSection
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -51,7 +55,7 @@ const Home = () => {
         />
       </ScrollReveal>
 
-      <FeaturedPets />
+      <FeaturedPets initialPets={initialPets} />
 
       <WhyAdopt />
 

@@ -20,13 +20,21 @@ interface Pet {
     age: number | string | null;
 }
 
-const PlayfulFeaturedPets = () => {
-    const [featuredPets, setFeaturedPets] = useState<Pet[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+interface FeaturedPetsProps {
+    initialPets?: Array<Record<string, unknown>>;
+}
+
+const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
+    const [featuredPets, setFeaturedPets] = useState<Pet[]>(
+        (initialPets as unknown as Pet[]) || []
+    );
+    const [isLoading, setIsLoading] = useState(!initialPets || initialPets.length === 0);
 
     useEffect(() => {
+        // Skip client fetch if server already provided data
+        if (initialPets && initialPets.length > 0) return;
         fetchLatestPets();
-    }, []);
+    }, [initialPets]);
 
     const fetchLatestPets = async () => {
         setIsLoading(true);
