@@ -124,7 +124,7 @@ const ContactInfoCard = ({ petId, petLocation }: ContactInfoCardProps) => {
       {/* Map Placeholder */}
       <div className="mt-6 rounded-2xl overflow-hidden h-48 bg-gray-100 relative group">
         <img
-          src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=600"
+          src="/images/map-placeholder.webp"
           alt="Map location"
           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
         />

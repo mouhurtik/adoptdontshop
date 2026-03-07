@@ -17,7 +17,7 @@ export const PRODUCTS: Product[] = [
         category: "Food",
         petType: "dog",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?q=80&w=2070&auto=format&fit=crop",
+        image: "/images/store/dog-food.webp",
         description: "High-protein, grain-free formula for active dogs.",
         badge: "Best Seller",
         affiliateLink: "https://amzn.to/44VAWBs"
@@ -28,7 +28,7 @@ export const PRODUCTS: Product[] = [
         category: "Toys",
         petType: "dog",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2070&auto=format&fit=crop",
+        image: "/images/store/dog-toys.webp",
         description: "Durable rubber toys for aggressive chewers.",
         badge: "New",
         affiliateLink: "https://amzn.to/4rGdwtx"
@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
         category: "Accessories",
         petType: "dog",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=2574&auto=format&fit=crop",
+        image: "/images/store/dog-accessories.webp",
         description: "Beds, leashes, and accessories for joint support and comfort.",
         affiliateLink: "https://amzn.to/4pV8QP4"
     },
@@ -49,7 +49,7 @@ export const PRODUCTS: Product[] = [
         category: "Food",
         petType: "cat",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=2688&auto=format&fit=crop",
+        image: "/images/store/cat-food.webp",
         description: "Nutritious and delicious food that cats love.",
         badge: "Staff Pick",
         affiliateLink: "https://amzn.to/4pXFpvN"
@@ -60,7 +60,7 @@ export const PRODUCTS: Product[] = [
         category: "Toys",
         petType: "cat",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=2070&auto=format&fit=crop",
+        image: "/images/store/cat-toys.webp",
         description: "Automatic toys to keep your cat entertained.",
         affiliateLink: "https://amzn.to/48JvNxz"
     },
@@ -70,7 +70,7 @@ export const PRODUCTS: Product[] = [
         category: "Accessories",
         petType: "cat",
         price: "View on Amazon",
-        image: "https://images.unsplash.com/photo-1545249390-6bdfa286032f?q=80&w=2588&auto=format&fit=crop",
+        image: "/images/store/cat-accessories.webp",
         description: "Stylish condensed wood cat trees and accessories.",
         affiliateLink: "https://amzn.to/4iIxfER"
     }

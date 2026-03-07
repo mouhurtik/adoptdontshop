@@ -48,7 +48,7 @@ export const metadata: Metadata = {
             'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
         images: [
             {
-                url: 'https://adoptdontshop.xyz/og-image.png',
+                url: 'https://adoptdontshop.xyz/og-image.webp',
                 width: 1200,
                 height: 630,
                 alt: 'AdoptDontShop - Rescue Pet Adoption & Care Community',
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
-        images: ['https://adoptdontshop.xyz/og-image.png'],
+        images: ['https://adoptdontshop.xyz/og-image.webp'],
     },
     robots: {
         index: true,

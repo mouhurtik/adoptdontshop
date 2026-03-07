@@ -4,6 +4,13 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    async redirects() {
+        return [
+            { source: '/sponsors', destination: '/about?tab=patrons', permanent: true },
+            { source: '/resources', destination: '/about?tab=store', permanent: true },
+            { source: '/pet-essentials', destination: '/about?tab=store', permanent: true },
+        ];
+    },
     compiler: {
         removeConsole: process.env.NODE_ENV === "production" ? { exclude: ['error', 'warn'] } : false,
     },
