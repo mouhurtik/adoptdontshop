@@ -19,6 +19,7 @@ const OurStoryWidget = () => {
                                     src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/pet-images/founder/mouhurtik-ray.webp`}
                                     alt="Mouhurtik Ray — Founder"
                                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy"
                                 />
                                 {/* Overlay gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -32,7 +33,7 @@ const OurStoryWidget = () => {
                         {/* Content Section */}
                         <div className="w-full lg:w-3/5 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-white">
                             <Quote className="absolute top-12 left-12 h-24 w-24 text-gray-50 opacity-50 -z-0 rotate-180" />
-                            
+
                             <div className="relative z-10 text-left">
                                 <div className="flex items-center gap-2 mb-6">
                                     <div className="bg-playful-yellow/20 p-2.5 rounded-full text-playful-yellow">
@@ -41,7 +42,7 @@ const OurStoryWidget = () => {
                                     <span className="text-sm font-black text-gray-400 uppercase tracking-[0.2em]">Our Story</span>
                                 </div>
                                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-heading font-black text-playful-text mb-6 leading-tight">
-                                    Every pet deserves a <br className="hidden md:block"/><span className="text-playful-coral">second chance</span>.
+                                    Every pet deserves a <br className="hidden md:block" /><span className="text-playful-coral">second chance</span>.
                                 </h2>
                                 <p className="text-lg md:text-2xl text-gray-500 font-medium leading-relaxed mb-8 font-heading">
                                     Founded in 2025, Adopt Don't Shop was born from a simple belief: that no animal should be left behind. We connect stray and rescue animals with loving, forever families.

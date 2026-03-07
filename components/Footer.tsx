@@ -73,10 +73,12 @@ const Footer = () => {
                             <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer">
                                 <img
                                     height="36"
+                                    width="143"
                                     style={{ border: 0, height: 36 }}
                                     src="https://storage.ko-fi.com/cdn/kofi1.png?v=6"
                                     alt="Buy Me a Coffee at ko-fi.com"
                                     className="hover:opacity-90 transition-opacity hover:-translate-y-0.5 transform duration-200"
+                                    loading="lazy"
                                 />
                             </a>
                         </div>
