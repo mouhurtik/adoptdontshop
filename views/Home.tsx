@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { usePetCount } from '@/hooks/usePets';
-import HeroSection from '@/components/home/HeroSection';
 import SearchSection from '@/components/home/SearchSection';
 import FeaturedPets from '@/components/home/FeaturedPets';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -15,15 +13,14 @@ const SponsorsSection = dynamic(() => import('@/components/home/SponsorsSection'
 const CallToAction = dynamic(() => import('@/components/home/CallToAction'));
 const OurStoryWidget = dynamic(() => import('@/components/home/OurStoryWidget'));
 
-interface HomeProps {
+interface HomeClientProps {
   initialPets?: Array<Record<string, unknown>>;
+  petCount?: number;
 }
 
-const Home = ({ initialPets }: HomeProps) => {
+const HomeClient = ({ initialPets, petCount: _petCount }: HomeClientProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
-
-  const { data: petCount = 0 } = usePetCount();
 
   const handleSearch = (animalType?: string) => {
     if (animalType) {
@@ -42,10 +39,7 @@ const Home = ({ initialPets }: HomeProps) => {
   };
 
   return (
-    <div className="overflow-hidden bg-playful-cream min-h-screen">
-
-      <HeroSection petCount={petCount} />
-
+    <>
       <ScrollReveal width="100%" mode="fade-up">
         <SearchSection
           searchQuery={searchQuery}
@@ -66,8 +60,8 @@ const Home = ({ initialPets }: HomeProps) => {
       <CallToAction />
 
       <OurStoryWidget />
-    </div>
+    </>
   );
 };
 
-export default Home;
+export default HomeClient;

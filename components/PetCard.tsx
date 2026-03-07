@@ -54,7 +54,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute top-4 right-4 z-10">
-            <button onClick={handleFavorite} className={`p-3 sm:p-2 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 group/heart active-scale ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>
+            <button onClick={handleFavorite} aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`} className={`p-3 sm:p-2 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 group/heart active-scale ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>
               <Heart className={`w-6 h-6 sm:w-5 sm:h-5 transition-colors ${isFavorited ? 'fill-playful-coral text-playful-coral hover:text-white hover:fill-current' : 'text-playful-coral group-hover/heart:fill-current group-hover/heart:text-white'}`} />
             </button>
           </div>

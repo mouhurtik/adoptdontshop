@@ -45,7 +45,7 @@ const PlayfulSearchSection = ({
                             onKeyDown={handleKeyPress}
                         />
                         <div className="absolute inset-y-1 right-1">
-                            <PrimaryButton onClick={() => handleSearch()} size="md" className="h-full rounded-full px-4 md:px-6">
+                            <PrimaryButton onClick={() => handleSearch()} size="md" className="h-full rounded-full px-4 md:px-6" aria-label="Search">
                                 <span className="hidden md:inline">Search</span>
                                 <Search className="md:hidden h-5 w-5" />
                             </PrimaryButton>
