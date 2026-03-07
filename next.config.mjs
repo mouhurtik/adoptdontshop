@@ -22,7 +22,6 @@ const nextConfig = {
             "date-fns",
             "@supabase/supabase-js",
             "@supabase/ssr",
-            "react-hot-toast",
             "@tanstack/react-query",
             "@tiptap/react",
             "@tiptap/starter-kit",
@@ -37,10 +36,6 @@ const nextConfig = {
             {
                 protocol: "https",
                 hostname: "**.supabase.co",
-            },
-            {
-                protocol: "https",
-                hostname: "**.jiobase.com",
             },
         ],
         loader: "custom",

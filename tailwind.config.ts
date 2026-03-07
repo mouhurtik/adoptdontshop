@@ -11,7 +11,6 @@ export default {
 		"./hooks/**/*.{ts,tsx}",
 		"./contexts/**/*.{ts,tsx}",
 		"./lib/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
 	theme: {
