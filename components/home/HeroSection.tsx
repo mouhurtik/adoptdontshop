@@ -66,8 +66,10 @@ const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
                         <div className="relative z-10 blob-shape overflow-hidden border-8 border-white shadow-2xl bg-playful-coral/10 aspect-square max-w-lg mx-auto transform hover:rotate-1 transition-transform duration-500">
                             <img
                                 src="/images/hero-dogs.webp"
-                                alt="Happy Dog Running"
+                                alt="Happy rescue dog and cat together"
                                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000"
+                                loading="eager"
+                                fetchPriority="high"
                             />
                         </div>
                     </ScrollReveal>

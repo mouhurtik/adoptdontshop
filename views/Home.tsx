@@ -2,15 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { usePetCount } from '@/hooks/usePets';
 import HeroSection from '@/components/home/HeroSection';
 import SearchSection from '@/components/home/SearchSection';
 import FeaturedPets from '@/components/home/FeaturedPets';
-import WhyAdopt from '@/components/home/WhyAdopt';
-import SponsorsSection from '@/components/home/SponsorsSection';
-import CallToAction from '@/components/home/CallToAction';
-import OurStoryWidget from '@/components/home/OurStoryWidget';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+
+// Below-fold sections — lazy loaded to reduce initial JS bundle
+const WhyAdopt = dynamic(() => import('@/components/home/WhyAdopt'), { ssr: false });
+const SponsorsSection = dynamic(() => import('@/components/home/SponsorsSection'), { ssr: false });
+const CallToAction = dynamic(() => import('@/components/home/CallToAction'), { ssr: false });
+const OurStoryWidget = dynamic(() => import('@/components/home/OurStoryWidget'), { ssr: false });
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');

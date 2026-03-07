@@ -100,6 +100,7 @@ export default function RootLayout({
         <html lang="en" className={`${quicksand.variable} ${nunito.variable} ${pacifico.variable}`} suppressHydrationWarning>
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
+                <link rel="preload" as="image" href="/images/hero-dogs.webp" type="image/webp" />
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
                     strategy="lazyOnload"

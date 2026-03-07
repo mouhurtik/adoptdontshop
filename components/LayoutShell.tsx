@@ -1,15 +1,18 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import BottomNav from '@/components/BottomNav';
-import FloatingMessages from '@/components/FloatingMessages';
+
+// Lazy-load heavy components that aren't needed on initial paint
+const Footer = dynamic(() => import('@/components/Footer'), { ssr: false });
+const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isAdminRoute = pathname.startsWith('/admin');
-    
+
     const isMessages = pathname === '/messages' || pathname.startsWith('/messages/');
     // Deep views where bottom nav should be hidden (Messages removed so users can navigate away)
     const isDeepView = pathname.startsWith('/pet/');
