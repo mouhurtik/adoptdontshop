@@ -38,51 +38,28 @@ const ScrollReveal = ({
         return () => mql.removeEventListener("change", handler);
     }, []);
 
-    // Mobile: render children directly — no animation, no opacity:0
-    if (!isDesktop) {
-        return (
-            <div className={`relative ${className}`} style={{ width }}>
-                {children}
-            </div>
-        );
-    }
-
-    const getVariants = () => {
-        const variants = {
-            hidden: {},
-            visible: {},
-        };
-
+    const getDesktopVariants = () => {
         switch (mode) {
             case "fade-up":
-                variants.hidden = { opacity: 0, y: 20 };
-                variants.visible = { opacity: 1, y: 0 };
-                break;
+                return { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
             case "fade-in":
-                variants.hidden = { opacity: 0 };
-                variants.visible = { opacity: 1 };
-                break;
+                return { hidden: { opacity: 0 }, visible: { opacity: 1 } };
             case "slide-left":
-                variants.hidden = { opacity: 0, x: -20 };
-                variants.visible = { opacity: 1, x: 0 };
-                break;
+                return { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } };
             case "slide-right":
-                variants.hidden = { opacity: 0, x: 20 };
-                variants.visible = { opacity: 1, x: 0 };
-                break;
+                return { hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } };
             case "pop":
-                variants.hidden = { opacity: 0, scale: 0.9 };
-                variants.visible = { opacity: 1, scale: 1 };
-                break;
+                return { hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1 } };
             default:
-                variants.hidden = { opacity: 0, y: 20 };
-                variants.visible = { opacity: 1, y: 0 };
+                return { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
         }
-
-        return variants;
     };
 
-    const variants = getVariants();
+    // Mobile/SSR: empty variants = no style changes = content at full opacity
+    // Desktop: real animation variants
+    const variants = isDesktop
+        ? getDesktopVariants()
+        : { hidden: {}, visible: {} };
 
     return (
         <motion.div
@@ -90,7 +67,7 @@ const ScrollReveal = ({
             variants={variants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            transition={{ duration, delay, ease: "easeOut" }}
+            transition={{ duration: isDesktop ? duration : 0, delay: isDesktop ? delay : 0, ease: "easeOut" }}
             className={`relative ${className}`}
             style={{ width }}
         >
