@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useInView, UseInViewOptions } from "framer-motion";
-import { useRef, ReactNode } from "react";
+import { useRef, useEffect, useState, ReactNode } from "react";
 
 interface ScrollRevealProps {
     children: ReactNode;
@@ -26,6 +26,26 @@ const ScrollReveal = ({
 }: ScrollRevealProps) => {
     const ref = useRef(null);
     const isInView = useInView(ref, viewport);
+
+    // Default to mobile (no animation) for SSR — crawlers see full-opacity content
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const mql = window.matchMedia("(min-width: 768px)");
+        setIsDesktop(mql.matches);
+        const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+        mql.addEventListener("change", handler);
+        return () => mql.removeEventListener("change", handler);
+    }, []);
+
+    // Mobile: render children directly — no animation, no opacity:0
+    if (!isDesktop) {
+        return (
+            <div className={`relative ${className}`} style={{ width }}>
+                {children}
+            </div>
+        );
+    }
 
     const getVariants = () => {
         const variants = {

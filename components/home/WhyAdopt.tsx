@@ -1,3 +1,4 @@
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Heart, Home, ShieldCheck } from 'lucide-react';
 
 const PlayfulWhyAdopt = () => {
@@ -7,18 +8,21 @@ const PlayfulWhyAdopt = () => {
             title: "Save a Life",
             description: "When you adopt, you're not just getting a friend, you're saving a life and making space for another animal in need.",
             color: "bg-playful-coral",
+            delay: 0
         },
         {
             icon: <Home className="w-8 h-8 text-white" />,
             title: "Unconditional Love",
             description: "Shelter pets are known for their loyalty and affection. They know you saved them and will love you forever.",
             color: "bg-playful-teal",
+            delay: 0.2
         },
         {
             icon: <ShieldCheck className="w-8 h-8 text-white" />,
             title: "Healthy & Vaccinated",
             description: "Our pets are vaccinated, microchipped, and spayed/neutered before adoption. They are ready for a fresh start.",
             color: "bg-playful-yellow",
+            delay: 0.4
         }
     ];
 
@@ -31,18 +35,27 @@ const PlayfulWhyAdopt = () => {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center mb-16">
+                <ScrollReveal
+                    mode="fade-up"
+                    width="100%"
+                    className="text-center mb-16"
+                >
                     <h2 className="text-4xl md:text-5xl font-heading font-bold text-playful-text mb-6">
                         Why <span className="text-playful-teal">Adopt?</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         Adopting a pet is one of the most rewarding experiences. Here is why you should consider adoption.
                     </p>
-                </div>
+                </ScrollReveal>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {reasons.map((reason, index) => (
-                        <div key={index} className="h-full">
+                        <ScrollReveal
+                            key={index}
+                            mode="fade-up"
+                            delay={reason.delay}
+                            className="h-full"
+                        >
                             <div className="bg-white p-8 rounded-[2rem] shadow-soft border border-gray-100 hover:shadow-hover transition-all duration-300 h-full group">
                                 <div className={`w-16 h-16 ${reason.color} rounded-2xl flex items-center justify-center mb-6 shadow-md rotate-3 group-hover:rotate-6 transition-transform`}>
                                     {reason.icon}
@@ -54,7 +67,7 @@ const PlayfulWhyAdopt = () => {
                                     {reason.description}
                                 </p>
                             </div>
-                        </div>
+                        </ScrollReveal>
                     ))}
                 </div>
             </div>

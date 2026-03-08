@@ -4,6 +4,7 @@ import WhyAdopt from '@/components/home/WhyAdopt';
 import SponsorsSection from '@/components/home/SponsorsSection';
 import CallToAction from '@/components/home/CallToAction';
 import OurStoryWidget from '@/components/home/OurStoryWidget';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import type { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
@@ -51,7 +52,9 @@ export default async function HomePage() {
             <HomeClient initialPets={initialPets} petCount={petCount} />
             {/* Server-rendered below-fold sections — no ScrollReveal = no opacity:0 in HTML */}
             <WhyAdopt />
-            <SponsorsSection />
+            <ScrollReveal width="100%" mode="fade-in">
+                <SponsorsSection />
+            </ScrollReveal>
             <CallToAction />
             <OurStoryWidget />
         </div>
