@@ -129,6 +129,7 @@ const BrowsePets = () => {
               </div>
               <input
                 type="text"
+                aria-label="Search pets"
                 placeholder="Search pets..."
                 className="w-full pl-11 md:pl-14 pr-4 py-3 md:py-4 bg-gray-50/50 border-2 border-transparent focus:bg-white focus:border-playful-coral rounded-[1.5rem] md:rounded-[2rem] font-bold text-gray-700 placeholder-gray-400 focus:outline-none transition-all duration-200 text-sm md:text-base"
                 value={filters.searchTerm}

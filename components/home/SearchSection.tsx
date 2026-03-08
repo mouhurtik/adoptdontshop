@@ -38,6 +38,7 @@ const PlayfulSearchSection = ({
                         </div>
                         <input
                             type="text"
+                            aria-label="Search by breed, name, or location"
                             className="w-full pl-12 pr-4 py-4 rounded-full border-2 border-gray-200 focus:border-playful-coral focus:ring-4 focus:ring-playful-coral/20 outline-none text-lg transition-all shadow-sm"
                             placeholder="Search by breed, name, or location..."
                             value={searchQuery}

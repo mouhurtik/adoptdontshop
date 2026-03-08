@@ -2,16 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import SearchSection from '@/components/home/SearchSection';
 import FeaturedPets from '@/components/home/FeaturedPets';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-
-// Below-fold sections — lazy loaded to reduce initial JS bundle
-const WhyAdopt = dynamic(() => import('@/components/home/WhyAdopt'));
-const SponsorsSection = dynamic(() => import('@/components/home/SponsorsSection'));
-const CallToAction = dynamic(() => import('@/components/home/CallToAction'));
-const OurStoryWidget = dynamic(() => import('@/components/home/OurStoryWidget'));
 
 interface HomeClientProps {
   initialPets?: Array<Record<string, unknown>>;
@@ -50,16 +43,6 @@ const HomeClient = ({ initialPets, petCount: _petCount }: HomeClientProps) => {
       </ScrollReveal>
 
       <FeaturedPets initialPets={initialPets} />
-
-      <WhyAdopt />
-
-      <ScrollReveal width="100%" mode="fade-in">
-        <SponsorsSection />
-      </ScrollReveal>
-
-      <CallToAction />
-
-      <OurStoryWidget />
     </>
   );
 };
