@@ -1,7 +1,6 @@
 import React from 'react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Heart } from 'lucide-react';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const PlayfulCallToAction = () => {
     return (
@@ -11,11 +10,7 @@ const PlayfulCallToAction = () => {
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-playful-yellow/10 rounded-full translate-x-1/3 translate-y-1/3"></div>
 
             <div className="container mx-auto px-4 relative z-10 text-center">
-                <ScrollReveal
-                    mode="pop"
-                    width="100%"
-                    className="flex flex-col items-center"
-                >
+                <div className="flex flex-col items-center">
                     <h2 className="text-4xl md:text-6xl font-heading font-black text-playful-text mb-6">
                         Ready to meet your new <span className="text-playful-teal">best friend?</span>
                     </h2>
@@ -32,7 +27,7 @@ const PlayfulCallToAction = () => {
                             Donate to Shelter
                         </PrimaryButton>
                     </div>
-                </ScrollReveal>
+                </div>
             </div>
         </section>
     );

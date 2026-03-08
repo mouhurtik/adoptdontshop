@@ -50,6 +50,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
             alt={name}
             width={400}
             height={400}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             unoptimized
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />

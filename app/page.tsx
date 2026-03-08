@@ -4,7 +4,6 @@ import WhyAdopt from '@/components/home/WhyAdopt';
 import SponsorsSection from '@/components/home/SponsorsSection';
 import CallToAction from '@/components/home/CallToAction';
 import OurStoryWidget from '@/components/home/OurStoryWidget';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 import type { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
@@ -17,10 +16,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-    // Server-side fetch — eliminates client-side waterfall for mobile LCP
+    // Server-side fetch with 5s timeout — prevents SEOptimer/crawler timeouts
     let initialPets: Array<Record<string, unknown>> = [];
     let petCount = 0;
     try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
         const supabase = await createServerSupabaseClient();
         const [petsResult, countResult] = await Promise.all([
             supabase
@@ -28,11 +29,14 @@ export default async function HomePage() {
                 .select('*')
                 .eq('status', 'available')
                 .order('created_at', { ascending: false })
-                .limit(4),
+                .limit(4)
+                .abortSignal(controller.signal),
             supabase
                 .from('pet_listings')
-                .select('*', { count: 'exact', head: true }),
+                .select('*', { count: 'exact', head: true })
+                .abortSignal(controller.signal),
         ]);
+        clearTimeout(timeout);
         if (petsResult.data) initialPets = petsResult.data;
         if (countResult.count) petCount = countResult.count;
     } catch {
@@ -41,15 +45,13 @@ export default async function HomePage() {
 
     return (
         <div className="overflow-hidden bg-playful-cream min-h-screen">
-            {/* Server Components — content in initial HTML for LLM/crawler readability */}
+            {/* Server Components — content in initial HTML, visible to crawlers at full opacity */}
             <HeroSection petCount={petCount} />
             {/* Client-side interactive sections (search + featured pets) */}
             <HomeClient initialPets={initialPets} petCount={petCount} />
-            {/* Server-rendered below-fold sections — static content in HTML */}
+            {/* Server-rendered below-fold sections — no ScrollReveal = no opacity:0 in HTML */}
             <WhyAdopt />
-            <ScrollReveal width="100%" mode="fade-in">
-                <SponsorsSection />
-            </ScrollReveal>
+            <SponsorsSection />
             <CallToAction />
             <OurStoryWidget />
         </div>
