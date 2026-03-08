@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { Quicksand, Nunito, Pacifico } from 'next/font/google';
+import { Quicksand, Nunito } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import LayoutShell from '@/components/LayoutShell';
@@ -19,12 +19,7 @@ const nunito = Nunito({
     weight: ['400', '600', '700'],
 });
 
-const pacifico = Pacifico({
-    subsets: ['latin'],
-    variable: '--font-pacifico',
-    display: 'swap',
-    weight: '400',
-});
+
 
 export const metadata: Metadata = {
     title: {
@@ -97,7 +92,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${quicksand.variable} ${nunito.variable} ${pacifico.variable}`} suppressHydrationWarning>
+        <html lang="en" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <link rel="preload" as="image" href="/images/hero-dogs.webp" type="image/webp" />

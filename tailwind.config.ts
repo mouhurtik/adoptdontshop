@@ -78,7 +78,6 @@ export default {
 			fontFamily: {
 				sans: ['var(--font-quicksand)', 'Quicksand', 'sans-serif'],
 				heading: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
-				pacifico: ['var(--font-pacifico)', 'Pacifico', 'cursive'],
 			},
 			boxShadow: {
 				'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',

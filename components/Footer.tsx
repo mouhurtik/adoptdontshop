@@ -67,21 +67,6 @@ const Footer = () => {
                                 <Mail className="h-5 w-5" />
                             </a>
                         </div>
-
-                        {/* Ko-fi Button */}
-                        <div className="pt-1">
-                            <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer">
-                                <img
-                                    height="36"
-                                    width="143"
-                                    style={{ border: 0, height: 36 }}
-                                    src="https://storage.ko-fi.com/cdn/kofi1.png?v=6"
-                                    alt="Buy Me a Coffee at ko-fi.com"
-                                    className="hover:opacity-90 transition-opacity hover:-translate-y-0.5 transform duration-200"
-                                    loading="lazy"
-                                />
-                            </a>
-                        </div>
                     </div>
 
                     {/* About Links */}
@@ -162,13 +147,16 @@ const Footer = () => {
                 <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
                     <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
                     <div className="flex items-center gap-6 flex-wrap justify-center">
-                        <a
-                            href="https://github.com/mouhurtik/adoptdontshop"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 hover:text-playful-yellow transition-colors"
-                        >
-                            <Github className="h-4 w-4" /> Open Source 🐾
+                        <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer">
+                            <img
+                                height="36"
+                                width="143"
+                                style={{ border: 0, height: 36 }}
+                                src="https://storage.ko-fi.com/cdn/kofi1.png?v=6"
+                                alt="Buy Me a Coffee at ko-fi.com"
+                                className="hover:opacity-90 transition-opacity hover:-translate-y-0.5 transform duration-200"
+                                loading="lazy"
+                            />
                         </a>
                         <Link href="/privacy-policy" className="hover:text-playful-yellow transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-playful-yellow transition-colors">Terms of Service</Link>
