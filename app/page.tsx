@@ -6,7 +6,6 @@ import CallToAction from '@/components/home/CallToAction';
 import OurStoryWidget from '@/components/home/OurStoryWidget';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import type { Metadata } from 'next';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export const revalidate = 3600; // Rebuild every hour
 
