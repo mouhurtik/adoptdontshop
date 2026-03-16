@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Heart } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -24,13 +25,17 @@ const PlayfulCallToAction = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <PrimaryButton size="lg" className="shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
-                            Adopt Now
-                        </PrimaryButton>
-                        <PrimaryButton size="lg" variant="outline" className="border-playful-teal text-playful-teal hover:bg-playful-teal/10">
-                            <Heart className="mr-2 h-5 w-5" />
-                            Donate to Shelter
-                        </PrimaryButton>
+                        <Link href="/browse">
+                            <PrimaryButton size="lg" className="shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
+                                Adopt Now
+                            </PrimaryButton>
+                        </Link>
+                        <Link href="/about?tab=patrons">
+                            <PrimaryButton size="lg" variant="outline" className="border-playful-teal text-playful-teal hover:bg-playful-teal/10">
+                                <Heart className="mr-2 h-5 w-5" />
+                                Donate to Shelter
+                            </PrimaryButton>
+                        </Link>
                     </div>
                 </ScrollReveal>
             </div>

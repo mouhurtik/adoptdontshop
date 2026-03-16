@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Heart, Search } from 'lucide-react';
 
@@ -35,14 +36,18 @@ const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-10">
-                            <PrimaryButton size="lg" className="w-full sm:w-auto shadow-xl hover:shadow-2xl transition-all duration-300">
-                                <Search className="mr-2 h-5 w-5" />
-                                Find a Pet Now
-                            </PrimaryButton>
-                            <PrimaryButton variant="outline" size="lg" className="w-full sm:w-auto border-2 hover:bg-white/50">
-                                <Heart className="mr-2 h-5 w-5 text-playful-coral" />
-                                Success Stories
-                            </PrimaryButton>
+                            <Link href="/browse">
+                                <PrimaryButton size="lg" className="w-full sm:w-auto shadow-xl hover:shadow-2xl transition-all duration-300">
+                                    <Search className="mr-2 h-5 w-5" />
+                                    Find a Pet Now
+                                </PrimaryButton>
+                            </Link>
+                            <Link href="/community">
+                                <PrimaryButton variant="outline" size="lg" className="w-full sm:w-auto border-2 hover:bg-white/50">
+                                    <Heart className="mr-2 h-5 w-5 text-playful-coral" />
+                                    Community
+                                </PrimaryButton>
+                            </Link>
                         </div>
                     </div>
 

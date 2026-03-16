@@ -15,10 +15,11 @@ export const APP_CONFIG = {
     WEEKEND: 'Sun: 10am - 4pm',
   },
   SOCIAL: {
-    FACEBOOK: 'https://facebook.com/adoptdontshop',
-    TWITTER: 'https://twitter.com/adoptdontshop',
-    INSTAGRAM: 'https://instagram.com/adoptdontshop',
+    FACEBOOK: 'https://www.facebook.com/profile.php?id=61583730512051',
+    TWITTER: 'https://x.com/mouhurtik',
+    INSTAGRAM: 'https://instagram.com/adoptdontshop.xyz',
     LINKEDIN: 'https://www.linkedin.com/company/adoptdontshop-xyz/',
+    YOUTUBE: 'https://www.youtube.com/@mouhurtik',
   },
 } as const;
 

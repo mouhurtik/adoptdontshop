@@ -25,6 +25,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
   const { isAuthenticated } = useAuth();
   const { favorites, toggleFavorite } = useFavorites();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const isFavorited = favorites.includes(id);
 
@@ -37,6 +38,8 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
     }
   };
 
+  const imgSrc = imgError ? '/placeholder.svg' : (image || '/placeholder.svg');
+
   return (
     <>
       <motion.div
@@ -46,13 +49,14 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
         {/* Image Container */}
         <div className="relative h-[360px] sm:h-64 overflow-hidden bg-gray-100">
           <Image
-            src={image || '/placeholder.svg'}
+            src={imgSrc}
             alt={name}
             width={400}
             height={400}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             unoptimized
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={() => setImgError(true)}
           />
           <div className="absolute top-4 right-4 z-10">
             <button onClick={handleFavorite} aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`} className={`p-3 sm:p-2 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 group/heart active-scale ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>

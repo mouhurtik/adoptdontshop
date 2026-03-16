@@ -97,7 +97,16 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
             let imageUrl = null;
             if (image) {
                 // Convert to WebP (max 1200px wide, 85% quality)
-                const webpBlob = await resizeAndConvertToWebP(image, 1200, 0.85);
+                let webpBlob: Blob;
+                try {
+                    webpBlob = await resizeAndConvertToWebP(image, 1200, 0.85);
+                } catch (conversionError) {
+                    console.error('WebP conversion failed:', conversionError);
+                    toast.error("Failed to process image. Please try a different photo.");
+                    setIsSubmitting(false);
+                    return;
+                }
+
                 const safeName = formData.petName
                     .toLowerCase()
                     .replace(/[^a-z0-9]/g, '-')
@@ -106,7 +115,7 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
                     .substring(0, 30) || 'pet';
                 const fileName = `${safeName}-${petId.substring(0, 8)}.webp`;
 
-                const { error: uploadError, data } = await supabase.storage
+                const { error: uploadError } = await supabase.storage
                     .from('pet-images')
                     .upload(fileName, webpBlob, {
                         contentType: 'image/webp',
@@ -116,10 +125,16 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
                     throw uploadError;
                 }
 
-                if (data) {
-                    const { data: urlData } = supabase.storage.from('pet-images').getPublicUrl(fileName);
-                    imageUrl = urlData.publicUrl;
+                // Verify the file actually exists in storage before using the URL
+                const { data: urlData } = supabase.storage.from('pet-images').getPublicUrl(fileName);
+                const verifyResponse = await fetch(urlData.publicUrl, { method: 'HEAD' });
+                if (!verifyResponse.ok) {
+                    console.error('Image upload verification failed:', verifyResponse.status);
+                    toast.error("Image upload could not be verified. Please try again.");
+                    setIsSubmitting(false);
+                    return;
                 }
+                imageUrl = urlData.publicUrl;
             }
 
             const { error } = await supabase.from('pet_listings').insert({

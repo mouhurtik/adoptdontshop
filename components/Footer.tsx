@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Mail, PawPrint, Heart, Instagram, Twitter } from 'lucide-react';
+import { Github, Mail, PawPrint, Heart, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -33,6 +33,15 @@ const Footer = () => {
                         {/* Social Icons */}
                         <div className="flex items-center gap-4 pt-2">
                             <a
+                                href="https://www.facebook.com/profile.php?id=61583730512051"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/10 p-3 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Follow us on Facebook"
+                            >
+                                <Facebook className="h-5 w-5" />
+                            </a>
+                            <a
                                 href="https://x.com/mouhurtik"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -49,6 +58,15 @@ const Footer = () => {
                                 title="Follow us on Instagram"
                             >
                                 <Instagram className="h-5 w-5" />
+                            </a>
+                            <a
+                                href="https://www.youtube.com/@mouhurtik"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white/10 p-3 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
+                                title="Subscribe on YouTube"
+                            >
+                                <Youtube className="h-5 w-5" />
                             </a>
                             <a
                                 href="https://github.com/mouhurtik/adoptdontshop"
