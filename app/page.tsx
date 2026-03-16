@@ -16,33 +16,12 @@ export const metadata: Metadata = {
     keywords: ['adopt pet', 'rescue animals', 'adopt dog', 'adopt cat', 'pet adoption India', 'adopt pet near me', 'adopt dont shop'],
 };
 
-export default async function HomePage() {
-    // Server-side fetch with 5s timeout — prevents SEOptimer/crawler timeouts
-    let initialPets: Array<Record<string, unknown>> = [];
-    let petCount = 0;
-    try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        const supabase = await createServerSupabaseClient();
-        const [petsResult, countResult] = await Promise.all([
-            supabase
-                .from('pet_listings')
-                .select('*')
-                .eq('status', 'available')
-                .order('created_at', { ascending: false })
-                .limit(4)
-                .abortSignal(controller.signal),
-            supabase
-                .from('pet_listings')
-                .select('*', { count: 'exact', head: true })
-                .abortSignal(controller.signal),
-        ]);
-        clearTimeout(timeout);
-        if (petsResult.data) initialPets = petsResult.data;
-        if (countResult.count) petCount = countResult.count;
-    } catch {
-        // Fallback: FeaturedPets will client-fetch if this fails
-    }
+export default function HomePage() {
+    // Client-side fetch takes over fully to bypass Cloudflare Worker CPU limits.
+    // This allows the homepage to be statically generated instantly (TTFB ~200ms)
+    // and eliminates "Error 1102 Worker Exceeded Restrictions" during PageSpeed audits.
+    const initialPets: Array<Record<string, unknown>> = [];
+    const petCount = 0;
 
     return (
         <div className="overflow-hidden bg-playful-cream min-h-screen">

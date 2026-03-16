@@ -144,20 +144,22 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
+                <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium relative z-10">
                     <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
-                    <div className="flex items-center gap-6 flex-wrap justify-center">
-                        <a
-                            href="https://ko-fi.com/Q5Q714H8LX"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 border border-white/20"
-                        >
-                            <span>☕</span>
-                            <span>Buy us a Coffee</span>
-                        </a>
+                    <div className="flex items-center gap-6 flex-wrap justify-center md:-mt-1">
                         <Link href="/privacy-policy" className="hover:text-playful-yellow transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-playful-yellow transition-colors">Terms of Service</Link>
+                        <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer" className="ml-2">
+                            <img
+                                height="36"
+                                width="143"
+                                style={{ border: 0, height: 36 }}
+                                src="https://storage.ko-fi.com/cdn/kofi1.png?v=3"
+                                alt="Buy Me a Coffee at ko-fi.com"
+                                className="hover:opacity-90 transition-all hover:-translate-y-0.5 transform duration-200 mix-blend-screen contrast-125 brightness-110"
+                                loading="lazy"
+                            />
+                        </a>
                     </div>
                 </div>
             </div>

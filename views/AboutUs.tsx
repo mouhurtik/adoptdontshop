@@ -190,66 +190,81 @@ function OurStoryTab() {
                     </div>
                     <h2 className="text-4xl font-heading font-black text-playful-text">Contact Us</h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-mint/30 hover:scale-105 transition-transform duration-300">
-                        <div className="flex items-center mb-6">
-                            <div className="bg-playful-mint/20 p-4 mr-4 rounded-full text-green-600">
-                                <Mail className="h-6 w-6" />
-                            </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">Email</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-8">
+                    {/* Email Card */}
+                    <a href="mailto:mouhurtikr@gmail.com" 
+                       className="relative overflow-hidden group bg-gradient-to-br from-green-50 to-emerald-100/50 rounded-3xl p-6 shadow-sm border border-emerald-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
+                            <Mail className="w-24 h-24 text-emerald-600" />
                         </div>
-                        <a href="mailto:mouhurtikr@gmail.com" className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
-                            mouhurtikr@gmail.com
-                        </a>
-                    </div>
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-teal/30 hover:scale-105 transition-transform duration-300">
-                        <div className="flex items-center mb-6">
-                            <div className="bg-playful-teal/20 p-4 mr-4 rounded-full text-playful-teal">
-                                <Linkedin className="h-6 w-6" />
+                        <div className="relative z-10">
+                            <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-emerald-600">
+                                <Mail className="w-6 h-6" />
                             </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">LinkedIn</h3>
+                            <p className="text-sm font-bold text-emerald-800/60 uppercase tracking-wider mb-1">Email</p>
+                            <p className="font-bold text-gray-800 truncate">mouhurtikr@gmail.com</p>
                         </div>
-                        <a href="https://www.linkedin.com/in/mouhurtik/" target="_blank" rel="noopener noreferrer"
-                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
-                            linkedin.com/in/mouhurtik
-                        </a>
-                    </div>
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-coral/30 hover:scale-105 transition-transform duration-300">
-                        <div className="flex items-center mb-6">
-                            <div className="bg-gray-900/10 p-4 mr-4 rounded-full text-gray-900">
-                                <Twitter className="h-6 w-6" />
+                    </a>
+                    
+                    {/* LinkedIn Card */}
+                    <a href="https://www.linkedin.com/in/mouhurtik/" target="_blank" rel="noopener noreferrer"
+                       className="relative overflow-hidden group bg-gradient-to-br from-blue-50 to-sky-100/50 rounded-3xl p-6 shadow-sm border border-sky-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
+                            <Linkedin className="w-24 h-24 text-sky-600" />
+                        </div>
+                        <div className="relative z-10">
+                            <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-sky-600">
+                                <Linkedin className="w-6 h-6" />
                             </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">X</h3>
+                            <p className="text-sm font-bold text-sky-800/60 uppercase tracking-wider mb-1">LinkedIn</p>
+                            <p className="font-bold text-gray-800 truncate">mouhurtik</p>
                         </div>
-                        <a href="https://x.com/mouhurtik" target="_blank" rel="noopener noreferrer"
-                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
-                            x.com/mouhurtik
-                        </a>
-                    </div>
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-blue-200 hover:scale-105 transition-transform duration-300">
-                        <div className="flex items-center mb-6">
-                            <div className="bg-blue-100 p-4 mr-4 rounded-full text-blue-600">
-                                <Facebook className="h-6 w-6" />
+                    </a>
+
+                    {/* X (Twitter) Card */}
+                    <a href="https://x.com/mouhurtik" target="_blank" rel="noopener noreferrer"
+                       className="relative overflow-hidden group bg-gradient-to-br from-gray-50 to-gray-200/50 rounded-3xl p-6 shadow-sm border border-gray-300/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
+                            <Twitter className="w-24 h-24 text-gray-800" />
+                        </div>
+                        <div className="relative z-10">
+                            <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-gray-800">
+                                <Twitter className="w-6 h-6" />
                             </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">Facebook</h3>
+                            <p className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-1">X</p>
+                            <p className="font-bold text-gray-800 truncate">@mouhurtik</p>
                         </div>
-                        <a href="https://www.facebook.com/profile.php?id=61583730512051" target="_blank" rel="noopener noreferrer"
-                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
-                            AdoptDontShop
-                        </a>
-                    </div>
-                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-red-200 hover:scale-105 transition-transform duration-300">
-                        <div className="flex items-center mb-6">
-                            <div className="bg-red-100 p-4 mr-4 rounded-full text-red-600">
-                                <Youtube className="h-6 w-6" />
+                    </a>
+
+                    {/* Facebook Card */}
+                    <a href="https://www.facebook.com/profile.php?id=61583730512051" target="_blank" rel="noopener noreferrer"
+                       className="relative overflow-hidden group bg-gradient-to-br from-indigo-50 to-blue-200/40 rounded-3xl p-6 shadow-sm border border-blue-300/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
+                            <Facebook className="w-24 h-24 text-blue-700" />
+                        </div>
+                        <div className="relative z-10">
+                            <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-blue-700">
+                                <Facebook className="w-6 h-6" />
                             </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">YouTube</h3>
+                            <p className="text-sm font-bold text-blue-800/60 uppercase tracking-wider mb-1">Facebook</p>
+                            <p className="font-bold text-gray-800 truncate">AdoptDontShop</p>
                         </div>
-                        <a href="https://www.youtube.com/@mouhurtik" target="_blank" rel="noopener noreferrer"
-                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
-                            @mouhurtik
-                        </a>
-                    </div>
+                    </a>
+
+                    {/* YouTube Card */}
+                    <a href="https://www.youtube.com/@mouhurtik" target="_blank" rel="noopener noreferrer"
+                       className="relative overflow-hidden group bg-gradient-to-br from-red-50 to-rose-100/50 rounded-3xl p-6 shadow-sm border border-rose-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
+                            <Youtube className="w-24 h-24 text-rose-600" />
+                        </div>
+                        <div className="relative z-10">
+                            <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-rose-600">
+                                <Youtube className="w-6 h-6" />
+                            </div>
+                            <p className="text-sm font-bold text-rose-800/60 uppercase tracking-wider mb-1">YouTube</p>
+                            <p className="font-bold text-gray-800 truncate">@mouhurtik</p>
+                        </div>
+                    </a>
                 </div>
             </ScrollReveal>
         </div>
