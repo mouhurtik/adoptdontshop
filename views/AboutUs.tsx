@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
     Mail, Linkedin, Twitter, PawPrint, Users, Target, Award,
-    Building, UserCheck, Star, Eye, ShoppingBag, Heart
+    Building, UserCheck, Star, Eye, ShoppingBag, Heart, Facebook, Youtube
 } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -190,7 +190,7 @@ function OurStoryTab() {
                     </div>
                     <h2 className="text-4xl font-heading font-black text-playful-text">Contact Us</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-mint/30 hover:scale-105 transition-transform duration-300">
                         <div className="flex items-center mb-6">
                             <div className="bg-playful-mint/20 p-4 mr-4 rounded-full text-green-600">
@@ -198,7 +198,7 @@ function OurStoryTab() {
                             </div>
                             <h3 className="text-2xl font-heading font-black text-playful-text">Email</h3>
                         </div>
-                        <a href="mailto:mouhurtikr@gmail.com" className="text-xl text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
+                        <a href="mailto:mouhurtikr@gmail.com" className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
                             mouhurtikr@gmail.com
                         </a>
                     </div>
@@ -210,20 +210,44 @@ function OurStoryTab() {
                             <h3 className="text-2xl font-heading font-black text-playful-text">LinkedIn</h3>
                         </div>
                         <a href="https://www.linkedin.com/in/mouhurtik/" target="_blank" rel="noopener noreferrer"
-                            className="text-xl text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
+                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
                             linkedin.com/in/mouhurtik
                         </a>
                     </div>
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-playful-coral/30 hover:scale-105 transition-transform duration-300">
                         <div className="flex items-center mb-6">
-                            <div className="bg-playful-coral/20 p-4 mr-4 rounded-full text-playful-coral">
+                            <div className="bg-gray-900/10 p-4 mr-4 rounded-full text-gray-900">
                                 <Twitter className="h-6 w-6" />
                             </div>
-                            <h3 className="text-2xl font-heading font-black text-playful-text">Twitter</h3>
+                            <h3 className="text-2xl font-heading font-black text-playful-text">X</h3>
                         </div>
                         <a href="https://x.com/mouhurtik" target="_blank" rel="noopener noreferrer"
-                            className="text-xl text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
+                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
                             x.com/mouhurtik
+                        </a>
+                    </div>
+                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-blue-200 hover:scale-105 transition-transform duration-300">
+                        <div className="flex items-center mb-6">
+                            <div className="bg-blue-100 p-4 mr-4 rounded-full text-blue-600">
+                                <Facebook className="h-6 w-6" />
+                            </div>
+                            <h3 className="text-2xl font-heading font-black text-playful-text">Facebook</h3>
+                        </div>
+                        <a href="https://www.facebook.com/profile.php?id=61583730512051" target="_blank" rel="noopener noreferrer"
+                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
+                            AdoptDontShop
+                        </a>
+                    </div>
+                    <div className="bg-white rounded-[2.5rem] p-8 shadow-soft border-2 border-red-200 hover:scale-105 transition-transform duration-300">
+                        <div className="flex items-center mb-6">
+                            <div className="bg-red-100 p-4 mr-4 rounded-full text-red-600">
+                                <Youtube className="h-6 w-6" />
+                            </div>
+                            <h3 className="text-2xl font-heading font-black text-playful-text">YouTube</h3>
+                        </div>
+                        <a href="https://www.youtube.com/@mouhurtik" target="_blank" rel="noopener noreferrer"
+                            className="text-lg text-gray-600 font-bold hover:text-playful-teal transition-colors break-all">
+                            @mouhurtik
                         </a>
                     </div>
                 </div>

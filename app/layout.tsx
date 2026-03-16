@@ -83,7 +83,14 @@ const organizationSchema = {
     url: 'https://adoptdontshop.xyz',
     logo: 'https://adoptdontshop.xyz/logo.png',
     description: 'India\'s largest pet adoption community connecting rescue animals with loving families.',
-    sameAs: ['https://www.linkedin.com/company/adoptdontshop-xyz/'],
+    sameAs: [
+        'https://www.facebook.com/profile.php?id=61583730512051',
+        'https://x.com/mouhurtik',
+        'https://instagram.com/adoptdontshop.xyz',
+        'https://www.youtube.com/@mouhurtik',
+        'https://www.linkedin.com/company/adoptdontshop-xyz/',
+        'https://github.com/mouhurtik/adoptdontshop',
+    ],
 };
 
 export default function RootLayout({

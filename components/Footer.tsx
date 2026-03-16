@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Mail, PawPrint, Heart, Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
+import { Github, Mail, PawPrint, Heart, Instagram, Facebook } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -42,15 +42,6 @@ const Footer = () => {
                                 <Facebook className="h-5 w-5" />
                             </a>
                             <a
-                                href="https://x.com/mouhurtik"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white/10 p-3 rounded-full hover:bg-black hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
-                                title="Follow us on X"
-                            >
-                                <Twitter className="h-5 w-5" />
-                            </a>
-                            <a
                                 href="https://instagram.com/adoptdontshop.xyz"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -58,15 +49,6 @@ const Footer = () => {
                                 title="Follow us on Instagram"
                             >
                                 <Instagram className="h-5 w-5" />
-                            </a>
-                            <a
-                                href="https://www.youtube.com/@mouhurtik"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-white/10 p-3 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-xl"
-                                title="Subscribe on YouTube"
-                            >
-                                <Youtube className="h-5 w-5" />
                             </a>
                             <a
                                 href="https://github.com/mouhurtik/adoptdontshop"
@@ -165,16 +147,14 @@ const Footer = () => {
                 <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80 font-medium">
                     <p>&copy; {new Date().getFullYear()} AdoptDontShop. Made with <Heart className="h-4 w-4 inline text-red-500 fill-current mx-0.5 animate-pulse" /> for pets.</p>
                     <div className="flex items-center gap-6 flex-wrap justify-center">
-                        <a href="https://ko-fi.com/Q5Q714H8LX" target="_blank" rel="noopener noreferrer">
-                            <img
-                                height="36"
-                                width="143"
-                                style={{ border: 0, height: 36 }}
-                                src="https://storage.ko-fi.com/cdn/kofi1.png?v=6"
-                                alt="Buy Me a Coffee at ko-fi.com"
-                                className="hover:opacity-90 transition-opacity hover:-translate-y-0.5 transform duration-200"
-                                loading="lazy"
-                            />
+                        <a
+                            href="https://ko-fi.com/Q5Q714H8LX"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 border border-white/20"
+                        >
+                            <span>☕</span>
+                            <span>Buy us a Coffee</span>
                         </a>
                         <Link href="/privacy-policy" className="hover:text-playful-yellow transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-playful-yellow transition-colors">Terms of Service</Link>
