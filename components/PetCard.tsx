@@ -19,9 +19,10 @@ interface PetProps {
   location: string;
   image: string;
   type: string;
+  compact?: boolean;
 }
 
-const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
+const PetCard = ({ id, name, breed, age, location, image, type, compact = false }: PetProps) => {
   const { isAuthenticated } = useAuth();
   const { favorites, toggleFavorite } = useFavorites();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -39,6 +40,61 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
   };
 
   const imgSrc = imgError ? '/placeholder.svg' : (image || '/placeholder.svg');
+  const petSlug = generatePetSlug(name, id);
+
+  if (compact) {
+    return (
+      <>
+        <Link href={`/pet/${petSlug}`} className="block h-full">
+          <motion.div
+            whileHover={{ y: -6 }}
+            className="group relative bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 border border-gray-100 hover:border-playful-teal/20 h-full"
+          >
+            {/* Compact Image */}
+            <div className="relative h-36 sm:h-44 overflow-hidden bg-gray-100">
+              <Image
+                src={imgSrc}
+                alt={name}
+                width={300}
+                height={300}
+                sizes="(max-width: 640px) 50vw, 25vw"
+                unoptimized
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={() => setImgError(true)}
+              />
+              <div className="absolute top-2 right-2 z-10">
+                <button onClick={handleFavorite} aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`} className={`p-1.5 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>
+                  <Heart className={`w-3.5 h-3.5 transition-colors ${isFavorited ? 'fill-playful-coral text-playful-coral' : 'text-playful-coral'}`} />
+                </button>
+              </div>
+              <div className="absolute top-2 left-2">
+                <span className="inline-block px-2 py-0.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold text-playful-text shadow-sm">
+                  {type === 'dog' ? '🐶' : type === 'cat' ? '🐱' : '🐾'} {typeof age === 'string' ? age : `${age}yr`}
+                </span>
+              </div>
+            </div>
+
+            {/* Compact Content */}
+            <div className="p-2.5 sm:p-3">
+              <h3 className="text-sm sm:text-base font-heading font-bold text-playful-text group-hover:text-playful-teal transition-colors line-clamp-1">
+                {name}
+              </h3>
+              <div className="flex items-center text-gray-500 mt-0.5">
+                <MapPin className="w-3 h-3 mr-1 text-playful-coral flex-shrink-0" />
+                <span className="text-[11px] sm:text-xs font-medium truncate">{location}</span>
+              </div>
+            </div>
+          </motion.div>
+        </Link>
+
+        <AuthPromptModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          message="Sign in to save your favorite pets and never lose track of them! ❤️"
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -86,7 +142,7 @@ const PetCard = ({ id, name, breed, age, location, image, type }: PetProps) => {
             <span className="text-sm font-medium truncate">{location}</span>
           </div>
 
-          <Link href={`/pet/${generatePetSlug(name, id)}`} className="block">
+          <Link href={`/pet/${petSlug}`} className="block">
             <PrimaryButton
               variant="secondary"
               className="w-full group-hover:bg-playful-teal group-hover:text-white py-3 sm:py-2.5 text-[15px] sm:text-base font-bold rounded-xl sm:rounded-full"

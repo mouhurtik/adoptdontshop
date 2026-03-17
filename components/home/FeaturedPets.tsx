@@ -70,25 +70,25 @@ const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
     }
 
     return (
-        <section className="py-20 bg-playful-cream">
+        <section className="py-10 lg:py-20 bg-playful-cream">
             <div className="container mx-auto px-4">
                 <ScrollReveal
                     mode="fade-up"
                     width="100%"
-                    className="text-center mb-16"
+                    className="text-center mb-8 lg:mb-16"
                 >
-                    <span className="inline-block px-4 py-1 bg-playful-mint/30 text-teal-800 rounded-full font-bold text-sm tracking-wide mb-4">
+                    <span className="inline-block px-4 py-1 bg-playful-mint/30 text-teal-800 rounded-full font-bold text-sm tracking-wide mb-3 lg:mb-4">
                         Meet Our Stars
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-heading font-bold text-playful-text mb-6">
+                    <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading font-bold text-playful-text mb-3 lg:mb-6">
                         Featured <span className="text-playful-coral">Friends</span>
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-sm sm:text-base lg:text-xl text-gray-600 max-w-2xl mx-auto">
                         These adorable pets are looking for their forever homes. Could you be the one they've been waiting for?
                     </p>
                 </ScrollReveal>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8 mb-8 lg:mb-16">
                     {featuredPets.map((pet, index) => (
                         <ScrollReveal
                             key={pet.id}
@@ -105,6 +105,7 @@ const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
                                 location={pet.location}
                                 image={pet.image_url || "/placeholder.svg"}
                                 type={pet.animal_type || 'dog'}
+                                compact
                             />
                         </ScrollReveal>
                     ))}
