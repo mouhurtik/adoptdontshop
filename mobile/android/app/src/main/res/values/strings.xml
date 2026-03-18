@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AdoptDontShop</string>
+    <string name="title_activity_main">AdoptDontShop</string>
+    <string name="package_name">com.adoptdontshop.app</string>
+    <string name="custom_url_scheme">com.adoptdontshop.app</string>
+</resources>

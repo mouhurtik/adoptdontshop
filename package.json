@@ -18,9 +18,20 @@
     "cf:deploy": "npm run cf:build && npx wrangler deploy",
     "preview": "npm run cf:build && npx wrangler dev",
     "prepare": "husky",
-    "migrate:webp": "npx tsx scripts/migrate-images-to-webp.ts"
+    "migrate:webp": "npx tsx scripts/migrate-images-to-webp.ts",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/app": "^8.0.1",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "@capacitor/haptics": "^8.0.1",
+    "@capacitor/push-notifications": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",

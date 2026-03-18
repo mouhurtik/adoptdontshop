@@ -48,3 +48,13 @@ NEXT_TODO.md
 
 # Supabase (keep migrations private)
 supabase/migrations/
+
+# Capacitor / Android
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/app/release/
+*.keystore
+*.jks
+# google-services.json contains Firebase keys — add manually per machine
+mobile/android/app/google-services.json
