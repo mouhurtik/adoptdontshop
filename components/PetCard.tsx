@@ -20,9 +20,10 @@ interface PetProps {
   image: string;
   type: string;
   compact?: boolean;
+  priority?: boolean;
 }
 
-const PetCard = ({ id, name, breed, age, location, image, type, compact = false }: PetProps) => {
+const PetCard = ({ id, name, breed, age, location, image, type, compact = false, priority = false }: PetProps) => {
   const { isAuthenticated } = useAuth();
   const { favorites, toggleFavorite } = useFavorites();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -59,6 +60,8 @@ const PetCard = ({ id, name, breed, age, location, image, type, compact = false 
                 height={300}
                 sizes="(max-width: 640px) 50vw, 25vw"
                 unoptimized
+                priority={priority}
+                loading={priority ? 'eager' : 'lazy'}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 onError={() => setImgError(true)}
               />
@@ -111,6 +114,8 @@ const PetCard = ({ id, name, breed, age, location, image, type, compact = false 
             height={400}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             unoptimized
+            priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             onError={() => setImgError(true)}
           />

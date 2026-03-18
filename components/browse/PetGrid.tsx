@@ -150,6 +150,7 @@ const PetGrid = ({
               location={pet.location}
               image={pet.image_url || '/placeholder.svg'}
               type={pet.animal_type || 'dog'}
+              priority={index === 0}
             />
           </motion.div>
         ))}

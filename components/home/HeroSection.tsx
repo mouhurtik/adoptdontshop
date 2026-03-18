@@ -1,9 +1,24 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { Heart, Search } from 'lucide-react';
+import { supabase } from '@/lib/supabase/client';
 
-const PlayfulHeroSection = ({ petCount }: { petCount: number }) => {
+const PlayfulHeroSection = ({ petCount: initialCount }: { petCount: number }) => {
+    const [petCount, setPetCount] = useState(initialCount);
+
+    useEffect(() => {
+        if (initialCount > 0) return;
+        supabase
+            .from('pet_listings')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'available')
+            .then(({ count }) => {
+                if (count && count > 0) setPetCount(count);
+            });
+    }, [initialCount]);
     return (
         <section className="relative overflow-hidden pt-10 pb-8 lg:pt-16 lg:pb-16 min-h-[60vh] lg:min-h-[90vh] flex items-center bg-playful-cream">
             {/* Static Background Elements — no animation to prevent CLS */}

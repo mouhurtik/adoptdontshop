@@ -88,7 +88,7 @@ const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
                     </p>
                 </ScrollReveal>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8 mb-8 lg:mb-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-8 lg:mb-16">
                     {featuredPets.map((pet, index) => (
                         <ScrollReveal
                             key={pet.id}
@@ -105,7 +105,7 @@ const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
                                 location={pet.location}
                                 image={pet.image_url || "/placeholder.svg"}
                                 type={pet.animal_type || 'dog'}
-                                compact
+                                priority={index < 2}
                             />
                         </ScrollReveal>
                     ))}

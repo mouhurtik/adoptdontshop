@@ -24,9 +24,9 @@ const PlayfulSearchSection = ({
     ];
 
     return (
-        <section className="py-10 lg:py-16 px-4 bg-white relative z-10 -mt-6 lg:-mt-10 rounded-t-[2rem] lg:rounded-t-[3rem]">
+        <section className="py-10 lg:py-16 px-2 sm:px-4 bg-white relative z-10 -mt-6 lg:-mt-10 rounded-t-[2rem] lg:rounded-t-[3rem]">
             <div className="container mx-auto max-w-4xl">
-                <div className="bg-white rounded-2xl lg:rounded-[2rem] shadow-xl p-4 sm:p-6 lg:p-8 border border-gray-100">
+                <div className="bg-white rounded-2xl lg:rounded-[2rem] shadow-xl p-5 sm:p-6 lg:p-8 border border-gray-100 mx-auto max-w-[92%] sm:max-w-none">
                     <h2 className="text-xl sm:text-2xl lg:text-3xl font-heading font-bold text-center mb-4 lg:mb-8 text-playful-text">
                         Who are you looking for?
                     </h2>
