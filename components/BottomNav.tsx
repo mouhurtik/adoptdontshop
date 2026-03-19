@@ -50,7 +50,7 @@ export default function BottomNav() {
                                     transition-colors duration-150
                                     ${active
                                         ? 'text-playful-coral'
-                                        : 'text-gray-400 active:text-gray-500'
+                                        : 'text-gray-500 active:text-gray-600'
                                     }
                                 `}
                             >
@@ -84,7 +84,7 @@ export default function BottomNav() {
                             transition-colors duration-150
                             ${meActive
                                 ? 'text-playful-coral'
-                                : 'text-gray-400 active:text-gray-500'
+                                : 'text-gray-500 active:text-gray-600'
                             }
                         `}
                     >

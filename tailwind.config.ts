@@ -58,10 +58,10 @@ export default {
 				},
 				// Playful & Vibrant Theme Colors
 				playful: {
-					coral: '#FF7F50',
-					teal: '#20B2AA',
+					coral: '#E8663A',   // Darkened from #FF7F50 — passes 4.5:1 on white
+					teal: '#0E8C85',    // Darkened from #20B2AA — passes 4.5:1 on white
 					yellow: '#FFD700',
-					cream: '#FFFDF5',
+					cream: '#FFF8F0',
 					lavender: '#E6E6FA',
 					mint: '#98FF98',
 					text: '#2D3436',
