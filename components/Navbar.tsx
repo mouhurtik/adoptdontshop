@@ -99,7 +99,7 @@ const NavbarInner = () => {
                             <PawPrint className="h-4 w-4 fill-current" />
                         </div>
                         <span className="text-lg font-heading font-black tracking-tight text-playful-text">
-                            Adopt<span className="text-playful-coral">Dont</span>Shop
+                            Adopt<span className="text-playful-coral-text">Dont</span>Shop
                         </span>
                     </Link>
                     {mobileTitle && (
@@ -137,7 +137,7 @@ const NavbarInner = () => {
                                     <PawPrint className="h-6 w-6 fill-current" />
                                 </div>
                                 <span className="text-2xl font-heading font-black tracking-tight text-playful-text">
-                                    Adopt<span className="text-playful-coral">Dont</span>Shop
+                                    Adopt<span className="text-playful-coral-text">Dont</span>Shop
                                 </span>
                             </Link>
 

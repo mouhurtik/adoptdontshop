@@ -20,7 +20,7 @@ const PlayfulSponsorsSection = () => {
                         <motion.div
                             key={index}
                             whileHover={{ scale: 1.1, rotate: Math.random() * 4 - 2 }}
-                            className="text-2xl font-heading font-bold text-playful-text/60 hover:text-playful-coral cursor-pointer"
+                            className="text-2xl font-heading font-bold text-playful-text/60 hover:text-playful-coral-text cursor-pointer"
                         >
                             {sponsor}
                         </motion.div>

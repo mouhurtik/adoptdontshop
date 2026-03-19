@@ -49,7 +49,7 @@ export default function BottomNav() {
                                     py-2.5
                                     transition-colors duration-150
                                     ${active
-                                        ? 'text-playful-coral'
+                                        ? 'text-playful-coral-text'
                                         : 'text-gray-500 active:text-gray-600'
                                     }
                                 `}
@@ -83,7 +83,7 @@ export default function BottomNav() {
                             py-2.5
                             transition-colors duration-150
                             ${meActive
-                                ? 'text-playful-coral'
+                                ? 'text-playful-coral-text'
                                 : 'text-gray-500 active:text-gray-600'
                             }
                         `}

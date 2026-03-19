@@ -81,7 +81,7 @@ const PlayfulFeaturedPets = ({ initialPets }: FeaturedPetsProps) => {
                         Meet Our Stars
                     </span>
                     <h2 className="text-2xl sm:text-3xl md:text-5xl font-heading font-bold text-playful-text mb-3 lg:mb-6">
-                        Featured <span className="text-playful-coral">Friends</span>
+                        Featured <span className="text-playful-coral-text">Friends</span>
                     </h2>
                     <p className="text-sm sm:text-base lg:text-xl text-gray-600 max-w-2xl mx-auto">
                         These adorable pets are looking for their forever homes. Could you be the one they've been waiting for?

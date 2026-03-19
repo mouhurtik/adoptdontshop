@@ -44,7 +44,7 @@ const OurStoryWidget = () => {
                                     <span className="text-sm font-black text-gray-400 uppercase tracking-[0.2em]">Our Story</span>
                                 </div>
                                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-heading font-black text-playful-text mb-6 leading-tight">
-                                    Every pet deserves a <br className="hidden md:block" /><span className="text-playful-coral">second chance</span>.
+                                    Every pet deserves a <br className="hidden md:block" /><span className="text-playful-coral-text">second chance</span>.
                                 </h2>
                                 <p className="text-lg md:text-2xl text-gray-500 font-medium leading-relaxed mb-8 font-heading">
                                     Founded in 2025, Adopt Don't Shop was born from a simple belief: that no animal should be left behind. We connect stray and rescue animals with loving, forever families.

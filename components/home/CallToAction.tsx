@@ -18,7 +18,7 @@ const PlayfulCallToAction = () => {
                     className="flex flex-col items-center"
                 >
                     <h2 className="text-4xl md:text-6xl font-heading font-black text-playful-text mb-6">
-                        Ready to meet your new <span className="text-playful-teal">best friend?</span>
+                        Ready to meet your new <span className="text-playful-teal-text">best friend?</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">
                         Thousands of pets are waiting for a loving home. Start your journey today and make a difference.
@@ -31,7 +31,7 @@ const PlayfulCallToAction = () => {
                             </PrimaryButton>
                         </Link>
                         <Link href="/about?tab=patrons">
-                            <PrimaryButton size="lg" variant="outline" className="border-playful-teal text-playful-teal hover:bg-playful-teal/10">
+                            <PrimaryButton size="lg" variant="outline" className="border-playful-teal text-playful-teal-text hover:bg-playful-teal/10">
                                 <Heart className="mr-2 h-5 w-5" />
                                 Donate to Shelter
                             </PrimaryButton>

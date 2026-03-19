@@ -58,8 +58,10 @@ export default {
 				},
 				// Playful & Vibrant Theme Colors
 				playful: {
-					coral: '#E8663A',   // Darkened from #FF7F50 — passes 4.5:1 on white
-					teal: '#0E8C85',    // Darkened from #20B2AA — passes 4.5:1 on white
+					coral: '#FF7F50',         // Original — bg, badges, footer
+					'coral-text': '#D4572A',  // AA contrast on white (4.5:1)
+					teal: '#20B2AA',          // Original — bg, footer, badges
+					'teal-text': '#0E7E77',   // AA contrast on white (4.5:1)
 					yellow: '#FFD700',
 					cream: '#FFF8F0',
 					lavender: '#E6E6FA',

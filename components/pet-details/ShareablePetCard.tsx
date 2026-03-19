@@ -16,6 +16,12 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
     const location = pet.location;
     const description = pet.description;
 
+    // Cap description length for the shareable card
+    const maxDescLength = 150;
+    const truncatedDescription = description && description.length > maxDescLength
+        ? description.slice(0, maxDescLength).trim() + '...'
+        : description;
+
     // Filter out badges to avoid duplicates (e.g. if breed is 'Stray' and status is 'Stray')
     const badges = [
         { label: type, color: 'bg-playful-teal/10 text-playful-teal', icon: <PawPrint className="w-5 h-5" /> },
@@ -31,8 +37,8 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
     return (
         <div
             id={elementId}
-            className="fixed left-[-9999px] top-0 w-[800px] bg-white text-gray-800 font-sans border-none overflow-hidden"
-            style={{ minHeight: '1000px', height: 'auto' }}
+            className="fixed left-[-9999px] top-0 w-[600px] bg-white text-gray-800 font-sans border-none overflow-hidden"
+            style={{ minHeight: '600px', height: 'auto' }}
         >
             <div className="w-full h-full bg-white p-6 flex flex-col items-center">
 
@@ -52,15 +58,25 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
                             {/* Gradient Overlay for depth */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
 
-                            {/* Branding Overlay - Navbar Style */}
+                            {/* Branding Overlay - Navbar Style (table layout for html2canvas compatibility) */}
                             <div className="absolute top-6 left-6 z-20">
-                                <div className="bg-white/90 backdrop-blur-md border border-white/50 shadow-lg rounded-[2rem] px-6 py-3 flex items-center gap-3">
-                                    <div className="bg-playful-coral text-white p-2 rounded-xl rotate-3 shadow-sm flex items-center justify-center">
-                                        <PawPrint className="h-5 w-5 fill-current" />
-                                    </div>
-                                    <span className="text-3xl font-heading font-black tracking-tight text-playful-text" style={{ lineHeight: '1', transform: 'translateY(-12px)' }}>
-                                        Adopt<span className="text-playful-coral">Dont</span>Shop
-                                    </span>
+                                <div className="bg-white/95 backdrop-blur-md border border-white/50 shadow-lg rounded-full" style={{ padding: '10px 20px 10px 14px' }}>
+                                    <table style={{ borderCollapse: 'collapse', borderSpacing: '0' }}>
+                                        <tbody>
+                                            <tr>
+                                                <td style={{ verticalAlign: 'middle', padding: '0 10px 0 0' }}>
+                                                    <div className="bg-playful-coral text-white" style={{ width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <PawPrint style={{ width: '24px', height: '24px', fill: 'white' }} />
+                                                    </div>
+                                                </td>
+                                                <td style={{ verticalAlign: 'middle', padding: '0' }}>
+                                                    <span className="font-heading font-black tracking-tight text-playful-text" style={{ fontSize: '24px', lineHeight: '1', whiteSpace: 'nowrap', position: 'relative', top: '-8px' }}>
+                                                        Adopt<span className="text-playful-coral">Dont</span>Shop
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -75,7 +91,7 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
 
                         {/* Powered By Label - Tape Style */}
                         <div className="w-full bg-playful-coral text-white py-1 text-center rounded-b-[2.5rem]">
-                            <span className="text-2xl font-bold tracking-wide" style={{ transform: 'translateY(-12px)', display: 'inline-block' }}>
+                            <span className="text-lg font-bold tracking-wide" style={{ transform: 'translateY(-8px)', display: 'inline-block' }}>
                                 Powered by adoptdontshop.xyz
                             </span>
                         </div>
@@ -84,37 +100,36 @@ const ShareablePetCard = ({ pet, elementId }: ShareablePetCardProps) => {
                     {/* Content Section */}
                     <div className="flex flex-col gap-6 w-full px-2">
 
-                        {/* Info Row: Badges Left, Location Right */}
-                        <div className="flex flex-row justify-between items-start w-full mt-2">
-                            {/* Badges - Left Side */}
-                            <div className="flex flex-wrap gap-3 max-w-[65%] justify-start">
-                                {badges.map((badge, index) => (
-                                    <span key={index} className={`${badge.color} px-5 py-3 rounded-2xl text-xl font-bold border border-black/5 whitespace-nowrap flex items-center gap-2`}>
-                                        <span style={{ transform: 'translateY(-2px)' }}>{badge.icon}</span>
-                                        <span style={{ transform: 'translateY(-10px)' }}>{badge.label}</span>
-                                    </span>
-                                ))}
-                            </div>
-
-                            {/* Location - Right Side */}
-                            <div className="flex items-center gap-2 text-gray-500 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100 shadow-sm min-h-[48px]">
-                                <MapPin className="w-5 h-5 text-playful-teal flex-shrink-0" />
-                                <span className="text-xl font-bold tracking-tight text-gray-700 text-right max-w-[200px]" style={{ transform: 'translateY(-10px)' }}>
-                                    {location}
+                        {/* Info Row: Badges & Location */}
+                        <div className="flex flex-wrap items-center gap-3 w-full mt-2">
+                            {badges.map((badge, index) => (
+                                <span key={index} className={`${badge.color} px-3 py-2 rounded-xl text-sm font-bold border border-black/5 whitespace-nowrap flex items-center gap-1.5`}>
+                                    <span style={{ transform: 'translateY(-1px)' }}>{badge.icon}</span>
+                                    <span style={{ transform: 'translateY(-6px)' }}>{badge.label}</span>
                                 </span>
-                            </div>
+                            ))}
+
+                            {/* Location */}
+                            {location && (
+                                <div className="flex items-center gap-2 text-gray-500 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100 shadow-sm shrink-0">
+                                    <MapPin className="w-4 h-4 text-playful-teal flex-shrink-0" />
+                                    <span className="text-sm font-bold tracking-tight text-gray-700 max-w-[200px]" style={{ transform: 'translateY(-6px)' }}>
+                                        {location}
+                                    </span>
+                                </div>
+                            )}
                         </div>
 
                         {/* Description - Renamed Title */}
                         <div className="w-full -mt-2 flex-1">
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-5xl" style={{ lineHeight: '1' }}>👋</span>
-                                <h1 className="text-5xl font-heading font-black text-gray-900 tracking-tight" style={{ lineHeight: '1' }}>
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="text-3xl" style={{ lineHeight: '1' }}>👋</span>
+                                <h1 className="text-3xl font-heading font-black text-gray-900 tracking-tight" style={{ lineHeight: '1' }}>
                                     Hi, I'm {name}
                                 </h1>
                             </div>
-                            <p className="text-gray-600 text-3xl leading-relaxed font-medium text-justify">
-                                {description || `I'm looking for a loving home. I am a ${age} old ${breed}. Please adopt me!`}
+                            <p className="text-gray-600 text-lg leading-relaxed font-medium">
+                                {truncatedDescription || `I'm looking for a loving home. I am a ${age} old ${breed}. Please adopt me!`}
                             </p>
                         </div>
                     </div>

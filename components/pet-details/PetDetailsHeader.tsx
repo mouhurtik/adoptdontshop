@@ -115,7 +115,7 @@ const PetDetailsHeader = ({ pet, openAdoptModal }: PetDetailsHeaderProps) => {
                 </span>
               </div>
 
-              <p className="text-gray-600 text-base lg:text-lg leading-relaxed">{pet.description}</p>
+              <p className="text-gray-600 text-base lg:text-lg leading-relaxed line-clamp-2">{pet.description}</p>
 
               {/* Desktop Adopt Button (hidden on mobile, replaced by FAB) */}
               <div className="pt-4 lg:pt-6 hidden lg:block">

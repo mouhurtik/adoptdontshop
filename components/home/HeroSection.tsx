@@ -35,7 +35,7 @@ const PlayfulHeroSection = ({ petCount: initialCount }: { petCount: number }) =>
                     <div className="text-center lg:text-left">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 bg-white rounded-full shadow-sm mb-4 lg:mb-6 border border-gray-100 mx-auto lg:mx-0">
                             <span className="flex h-2 w-2 rounded-full bg-playful-coral animate-pulse"></span>
-                            <span className="text-xs lg:text-sm font-bold text-gray-600">Over <span className="text-playful-coral">{petCount}+</span> pets waiting for a home</span>
+                            <span className="text-xs lg:text-sm font-bold text-gray-600">Over <span className="text-playful-coral-text">{petCount}+</span> pets waiting for a home</span>
                         </div>
 
                         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-black text-playful-text mb-4 lg:mb-6 leading-tight tracking-tight">

@@ -41,7 +41,7 @@ const PlayfulWhyAdopt = () => {
                     className="text-center mb-16"
                 >
                     <h2 className="text-4xl md:text-5xl font-heading font-bold text-playful-text mb-6">
-                        Why <span className="text-playful-teal">Adopt?</span>
+                        Why <span className="text-playful-teal-text">Adopt?</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                         Adopting a pet is one of the most rewarding experiences. Here is why you should consider adoption.
