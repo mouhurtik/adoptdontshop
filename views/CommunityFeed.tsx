@@ -13,7 +13,7 @@ import PostCard from '@/components/community/PostCard';
 import PostCardList from '@/components/community/PostCardList';
 import TagFilter from '@/components/community/TagFilter';
 import TrendingSidebar from '@/components/community/TrendingSidebar';
-import HomeSidebar from '@/components/home/HomeSidebar';
+import HomeRightSidebar from '@/components/home/HomeRightSidebar';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -171,8 +171,8 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
                         {isLoading ? (
-                            <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'flex flex-col gap-4'}>
-                                {[...Array(viewMode === 'grid' ? 6 : 4)].map((_, i) => (
+                            <div className="flex flex-col gap-5">
+                                {[...Array(4)].map((_, i) => (
                                     <div key={i} className={`bg-white animate-pulse shadow-soft ${viewMode === 'grid' ? 'rounded-[2rem] h-80' : 'rounded-2xl h-28'}`} />
                                 ))}
                             </div>
@@ -183,7 +183,7 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
                             </div>
                         ) : posts && posts.length > 0 ? (
                             viewMode === 'grid' ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex flex-col gap-5">
                                     {posts.map((post, index) => (
                                         <ScrollReveal key={post.id} mode="fade-up" delay={index * 0.05} width="100%">
                                             <PostCard post={post} />
@@ -232,7 +232,7 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
 
                     {/* Sidebar — HomeSidebar on homepage, TrendingSidebar on standalone */}
                     {isHome ? (
-                        <HomeSidebar />
+                        <HomeRightSidebar />
                     ) : (
                         <TrendingSidebar activeTag={activeTag} onTagChange={setActiveTag} />
                     )}

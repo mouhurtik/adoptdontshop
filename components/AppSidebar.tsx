@@ -171,7 +171,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                 ) : !collapsed && isAuthenticated ? (
                     <div className="text-center py-4">
                         <p className="text-xs text-gray-400 mb-2">No communities joined yet</p>
-                        <Link href="/explore" className="text-xs font-bold text-playful-teal hover:underline">
+                        <Link href="/groups" className="text-xs font-bold text-playful-teal hover:underline">
                             Explore Communities →
                         </Link>
                     </div>

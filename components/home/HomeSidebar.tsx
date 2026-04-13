@@ -25,7 +25,7 @@ interface MiniGroup {
     category: string;
 }
 
-const HomeSidebar = () => {
+const ExploreSidebar = () => {
     const [pets, setPets] = useState<MiniPet[]>([]);
     const [groups, setGroups] = useState<MiniGroup[]>([]);
     const { data: trendingPosts } = useCommunityPosts({ sort: 'hot', limit: 5 });
@@ -200,4 +200,4 @@ const HomeSidebar = () => {
     );
 };
 
-export default HomeSidebar;
+export default ExploreSidebar;

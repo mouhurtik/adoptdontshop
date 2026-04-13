@@ -127,3 +127,27 @@
 .animate-slide-in-left {
   animation: slide-in-left 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Auth modal: strip full-page wrappers from LoginForm/SignupForm */
+.auth-modal-content > div {
+  min-height: auto !important;
+  padding-top: 0 !important;
+  padding-bottom: 1rem !important;
+  background: transparent !important;
+}
+.auth-modal-content > div > div {
+  max-width: 100% !important;
+}
+/* Hide the header (paw icon, title, subtitle) inside modal — the tabs handle it */
+.auth-modal-content > div > div > .text-center:first-child {
+  display: none;
+}
+/* Strip shadow/border from the card — modal itself is the card */
+.auth-modal-content > div > div > .bg-white {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+

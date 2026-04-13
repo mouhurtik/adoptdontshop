@@ -33,6 +33,7 @@ export default function AdminGroupsPage() {
     const fetchGroups = async () => {
         setLoading(true);
         const { data, error } = await supabase
+            // @ts-expect-error — groups table exists but types need regenerating
             .from('groups')
             .select('*')
             .order('created_at', { ascending: false });

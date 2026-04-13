@@ -6,9 +6,11 @@ import dynamic from 'next/dynamic';
 import AppSidebar from '@/components/AppSidebar';
 import TopBar from '@/components/TopBar';
 import BottomNav from '@/components/BottomNav';
+import { AuthModalProvider } from '@/contexts/AuthModalContext';
 
 // Lazy-load heavy components that aren't needed on initial paint
 const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
+const AuthModal = dynamic(() => import('@/components/AuthModal'), { ssr: false });
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -41,6 +43,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     }
 
     return (
+        <AuthModalProvider>
         <div className="min-h-screen bg-playful-cream">
             {/* Desktop: Persistent left sidebar */}
             <AppSidebar
@@ -72,6 +75,10 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
 
             {/* Floating messages (desktop chat popout) */}
             <FloatingMessages />
+
+            {/* Auth Modal */}
+            <AuthModal />
         </div>
+        </AuthModalProvider>
     );
 }
