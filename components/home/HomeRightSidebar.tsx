@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { PenSquare, Bell, Clock, Heart, MessageCircle, UserPlus, BookOpen, Award, Sparkles } from 'lucide-react';
+import { PenSquare, Bell, Clock, Heart, MessageCircle, UserPlus, BookOpen, Award, Sparkles, Eye } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthModal } from '@/contexts/AuthModalContext';
 import { supabase } from '@/lib/supabase/client';
@@ -148,7 +148,42 @@ const HomeRightSidebar = () => {
                 )}
             </div>
 
-            {/* Recent Activity */}
+            {/* History — recently visited posts */}
+            <div className="bg-white rounded-[1.5rem] shadow-soft border border-gray-100 overflow-hidden">
+                <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-orange-500/5 to-transparent">
+                    <div className="bg-orange-50 p-1.5 rounded-lg">
+                        <Eye className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <h3 className="font-heading font-bold text-playful-text text-sm">History</h3>
+                </div>
+                {isAuthenticated ? (
+                    <div className="px-5 py-4 space-y-2.5">
+                        {/* Placeholder entries — will be populated with real data later */}
+                        {[
+                            { title: 'Recently viewed posts appear here', time: 'Just now' },
+                            { title: 'Keep track of what you\'ve read', time: 'Earlier' },
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-start gap-3 group cursor-default">
+                                <div className="bg-gray-100 p-1.5 rounded-lg flex-shrink-0 mt-0.5">
+                                    <Clock className="w-3 h-3 text-gray-400" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-xs text-gray-400 leading-snug line-clamp-1 italic">
+                                        {item.title}
+                                    </p>
+                                    <p className="text-[10px] text-gray-300 mt-0.5">{item.time}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="px-5 py-6 text-center">
+                        <p className="text-xs text-gray-400">Sign in to see your history</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Your Posts */}
             {isAuthenticated && recentPosts.length > 0 && (
                 <div className="bg-white rounded-[1.5rem] shadow-soft border border-gray-100 overflow-hidden">
                     <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-purple-500/5 to-transparent">

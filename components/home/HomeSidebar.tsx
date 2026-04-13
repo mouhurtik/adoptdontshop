@@ -163,7 +163,7 @@ const ExploreSidebar = () => {
                         ))}
                     </div>
                     <Link
-                        href="/groups"
+                        href="/communities"
                         className="flex items-center justify-center gap-1.5 px-5 py-3 border-t border-gray-100 text-xs font-bold text-playful-teal hover:bg-playful-teal/5 transition-colors"
                     >
                         Explore Groups <ArrowRight className="w-3.5 h-3.5" />

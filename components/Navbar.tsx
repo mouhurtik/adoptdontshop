@@ -53,7 +53,7 @@ const NavbarInner = () => {
     const navLinks = [
         { name: "Home", path: "/" },
         { name: "Browse Pets", path: "/browse" },
-        { name: "Groups", path: "/groups" },
+        { name: "Communities", path: "/communities" },
         { name: "About", path: "/about" },
     ];
 
@@ -62,7 +62,7 @@ const NavbarInner = () => {
         if (pathname === '/') return null; // show logo on home
         if (pathname.startsWith('/browse')) return 'Browse Pets';
         if (pathname.startsWith('/community')) return 'Community';
-        if (pathname.startsWith('/groups')) return 'Groups';
+        if (pathname.startsWith('/communities')) return 'Communities';
         if (pathname.startsWith('/welcome')) return 'Welcome';
         if (pathname.startsWith('/resources') || pathname.startsWith('/pet-essentials')) return 'Store';
         if (pathname.startsWith('/messages')) return 'Messages';

@@ -71,7 +71,7 @@ const GroupDetail = ({ slug }: GroupDetailProps) => {
         return (
             <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen text-center">
                 <h1 className="text-3xl font-heading font-black text-playful-text">Group not found</h1>
-                <Link href="/groups" className="text-playful-teal font-bold mt-4 inline-block">← Back to Groups</Link>
+                <Link href="/communities" className="text-playful-teal font-bold mt-4 inline-block">← Back to Groups</Link>
             </div>
         );
     }
@@ -80,7 +80,7 @@ const GroupDetail = ({ slug }: GroupDetailProps) => {
         <div className="pt-6 lg:pt-24 pb-16 bg-playful-cream min-h-screen">
             <div className="max-w-7xl mx-auto px-4 lg:px-6">
                 {/* Back */}
-                <Link href="/groups" className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-playful-text transition-colors mb-6">
+                <Link href="/communities" className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-playful-text transition-colors mb-6">
                     <ArrowLeft className="w-4 h-4" /> All Groups
                 </Link>
 

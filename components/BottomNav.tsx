@@ -31,7 +31,7 @@ export default function BottomNav() {
             name: 'Explore',
             href: '/explore',
             icon: Compass,
-            active: isActive('/groups') || isActive('/explore'),
+            active: isActive('/communities') || isActive('/explore'),
         },
         {
             name: 'Post',

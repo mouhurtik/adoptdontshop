@@ -13,7 +13,7 @@ export default function TopBar() {
     const getContextLabel = () => {
         if (pathname === '/') return null;
         if (pathname.startsWith('/browse')) return 'Browse Pets';
-        if (pathname.startsWith('/explore') || pathname.startsWith('/groups')) return 'Explore';
+        if (pathname.startsWith('/explore') || pathname.startsWith('/communities')) return 'Explore';
         if (pathname.startsWith('/community/write')) return 'Create Post';
         if (pathname.startsWith('/community')) return 'Community';
         if (pathname.startsWith('/messages')) return 'Messages';

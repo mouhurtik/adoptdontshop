@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Compass, Users, ArrowRight, Flame, Heart, MessageCircle, PawPrint } from 'lucide-react';
+import { Search, Compass, Users, ArrowRight, Heart, MessageCircle, PawPrint, TrendingUp, X } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { supabase } from '@/lib/supabase/client';
 import { useCommunityPosts } from '@/hooks/useCommunity';
@@ -18,23 +18,23 @@ interface MiniGroup {
     description: string | null;
 }
 
-const QUICK_TAGS = [
-    { label: '🐕 Dogs', query: 'dogs' },
-    { label: '🐱 Cats', query: 'cats' },
-    { label: '📍 Local', query: 'local' },
-    { label: '💡 Tips & Care', query: 'tips' },
-    { label: '❤️ Adoption', query: 'adoption' },
-    { label: '🔍 Lost & Found', query: 'lost found' },
-    { label: '🐾 Breed Specific', query: 'breed' },
-    { label: '🤝 Volunteering', query: 'volunteering' },
+const SEARCH_SUGGESTIONS = [
+    { emoji: '🐕', label: 'Dogs', query: 'dogs' },
+    { emoji: '🐱', label: 'Cats', query: 'cats' },
+    { emoji: '❤️', label: 'Adoption Stories', query: 'adoption' },
+    { emoji: '💡', label: 'Pet Care Tips', query: 'tips' },
+    { emoji: '🔍', label: 'Lost & Found', query: 'lost found' },
+    { emoji: '🤝', label: 'Volunteering', query: 'volunteering' },
 ];
 
 const ExplorePage = () => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchFocused, setSearchFocused] = useState(false);
     const [groups, setGroups] = useState<MiniGroup[]>([]);
     const [filteredGroups, setFilteredGroups] = useState<MiniGroup[]>([]);
     const [loadingGroups, setLoadingGroups] = useState(true);
     const { data: trendingPosts } = useCommunityPosts({ sort: 'hot', limit: 6 });
+    const searchRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         supabase
@@ -67,14 +67,32 @@ const ExplorePage = () => {
         );
     }, [searchQuery, groups]);
 
-    const handleTagClick = (query: string) => {
+    // Close search dropdown on outside click
+    useEffect(() => {
+        const handleClick = (e: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+                setSearchFocused(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, []);
+
+    const handleSuggestionClick = useCallback((query: string) => {
         setSearchQuery(query);
+        setSearchFocused(false);
+    }, []);
+
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSearchFocused(true);
     };
+
+    const showSuggestions = searchFocused && !searchQuery;
 
     return (
         <div className="pt-4 lg:pt-6 pb-16 bg-playful-cream min-h-screen">
             <div className="max-w-7xl mx-auto px-4 lg:px-6">
-                {/* Same flex layout as homepage — main content + right sidebar */}
                 <div className="flex gap-8">
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
@@ -82,52 +100,78 @@ const ExplorePage = () => {
                         <ScrollReveal mode="fade-up" width="100%">
                             <div className="mb-5">
                                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
-                                    <Compass className="w-6 h-6 text-playful-coral hidden md:block" />
-                                    <span className="bg-playful-coral/10 px-3 py-0.5 rounded-xl">Explore</span>
+                                    <Compass className="w-6 h-6 text-purple-500 hidden md:block" />
+                                    <span className="bg-purple-100 px-3 py-1 rounded-xl">Explore</span>
                                 </h1>
                             </div>
                         </ScrollReveal>
 
-                        {/* Search Bar */}
-                        <ScrollReveal mode="fade-up" delay={0.05} width="100%" className="mb-4">
-                            <div className="relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        {/* Search Bar with Dropdown Suggestions */}
+                        <ScrollReveal mode="fade-up" delay={0.05} width="100%" className="mb-6">
+                            <div ref={searchRef} className="relative">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
                                 <input
                                     type="text"
                                     placeholder="Search communities, posts, pets..."
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-playful-teal/30 focus:border-playful-teal shadow-soft transition-all"
+                                    onFocus={() => setSearchFocused(true)}
+                                    className={`w-full pl-12 pr-10 py-3.5 bg-white border text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400 shadow-soft transition-all ${
+                                        showSuggestions ? 'rounded-t-2xl rounded-b-none border-purple-200' : 'rounded-2xl border-gray-200'
+                                    }`}
                                 />
+                                {searchQuery && (
+                                    <button
+                                        onClick={clearSearch}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+
+                                {/* Suggestions dropdown */}
+                                {showSuggestions && (
+                                    <div className="absolute top-full left-0 right-0 z-30 bg-white border border-t-0 border-purple-200 rounded-b-2xl shadow-lg overflow-hidden">
+                                        <div className="px-4 py-2.5 border-b border-gray-50">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Popular Searches</p>
+                                        </div>
+                                        {SEARCH_SUGGESTIONS.map(s => (
+                                            <button
+                                                key={s.query}
+                                                onClick={() => handleSuggestionClick(s.query)}
+                                                className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-purple-50/50 transition-colors"
+                                            >
+                                                <span className="text-base">{s.emoji}</span>
+                                                <span className="text-sm font-medium text-gray-700">{s.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </ScrollReveal>
 
-                        {/* Quick Tags */}
-                        {!searchQuery && (
-                            <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="mb-8">
-                                <div className="flex flex-wrap gap-2">
-                                    {QUICK_TAGS.map(tag => (
-                                        <button
-                                            key={tag.query}
-                                            onClick={() => handleTagClick(tag.query)}
-                                            className="px-3.5 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-playful-teal/5 hover:border-playful-teal/30 hover:text-playful-teal transition-all shadow-sm"
-                                        >
-                                            {tag.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </ScrollReveal>
+                        {/* Active search indicator */}
+                        {searchQuery && (
+                            <div className="mb-5 flex items-center gap-2">
+                                <span className="text-xs text-gray-400 font-medium">Showing results for:</span>
+                                <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5">
+                                    {searchQuery}
+                                    <button onClick={clearSearch} className="hover:text-purple-900">
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </span>
+                            </div>
                         )}
 
                         {/* Communities Section */}
-                        <ScrollReveal mode="fade-up" delay={0.15} width="100%" className="mb-8">
+                        <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="mb-8">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-heading font-bold text-playful-text flex items-center gap-2">
                                     <Users className="w-5 h-5 text-playful-teal" />
-                                    Communities
+                                    {searchQuery ? 'Matching Communities' : 'Popular Communities'}
                                 </h2>
                                 <Link
-                                    href="/groups"
+                                    href="/communities"
                                     className="text-sm font-bold text-playful-teal hover:text-playful-teal/80 flex items-center gap-1 transition-colors"
                                 >
                                     See All <ArrowRight className="w-3.5 h-3.5" />
@@ -145,7 +189,7 @@ const ExplorePage = () => {
                                     {filteredGroups.slice(0, 6).map(group => (
                                         <Link
                                             key={group.id}
-                                            href={`/groups/${group.slug}`}
+                                            href={`/communities/${group.slug}`}
                                             className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-playful-teal/20 transition-all group"
                                         >
                                             <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
@@ -176,10 +220,10 @@ const ExplorePage = () => {
                         </ScrollReveal>
 
                         {/* Trending Posts Section */}
-                        <ScrollReveal mode="fade-up" delay={0.2} width="100%">
+                        <ScrollReveal mode="fade-up" delay={0.15} width="100%">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-heading font-bold text-playful-text flex items-center gap-2">
-                                    <Flame className="w-5 h-5 text-orange-500" />
+                                    <TrendingUp className="w-5 h-5 text-orange-500" />
                                     Trending Posts
                                 </h2>
                             </div>
@@ -219,7 +263,7 @@ const ExplorePage = () => {
                         </ScrollReveal>
 
                         {/* Browse Pets CTA */}
-                        <ScrollReveal mode="fade-up" delay={0.25} width="100%" className="mt-8">
+                        <ScrollReveal mode="fade-up" delay={0.2} width="100%" className="mt-8">
                             <Link
                                 href="/browse"
                                 className="flex items-center justify-between p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-playful-coral/20 transition-all group"
@@ -240,7 +284,7 @@ const ExplorePage = () => {
                         </ScrollReveal>
                     </div>
 
-                    {/* Right Sidebar — Explore sidebar (pets, trending, groups, quick links) */}
+                    {/* Right Sidebar */}
                     <ExploreSidebar />
                 </div>
             </div>

@@ -132,7 +132,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Communities</span>
                         {isAuthenticated && (
                             <Link
-                                href="/groups/create"
+                                href="/communities/create"
                                 className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-playful-teal transition-colors"
                                 title="Create community"
                             >
@@ -171,7 +171,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                 ) : !collapsed && isAuthenticated ? (
                     <div className="text-center py-4">
                         <p className="text-xs text-gray-400 mb-2">No communities joined yet</p>
-                        <Link href="/groups" className="text-xs font-bold text-playful-teal hover:underline">
+                        <Link href="/communities" className="text-xs font-bold text-playful-teal hover:underline">
                             Explore Communities →
                         </Link>
                     </div>
@@ -184,7 +184,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                 {/* Explore all link */}
                 {!collapsed && communities.length > 0 && (
                     <Link
-                        href="/groups"
+                        href="/communities"
                         className="flex items-center gap-2 px-2.5 py-2 mt-1 rounded-xl text-xs font-semibold text-gray-400 hover:text-playful-teal hover:bg-gray-50 transition-colors"
                     >
                         <Compass className="w-4 h-4" />

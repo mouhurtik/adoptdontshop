@@ -72,14 +72,14 @@ const GroupsPage = () => {
                                                 : 'text-gray-500 hover:text-playful-text'
                                         }`}
                                     >
-                                        My Groups
+                                        My Communities
                                     </button>
                                 )}
                             </div>
 
                             {/* Create Group */}
                             {isAuthenticated && (
-                                <Link href="/groups/create" prefetch={false}>
+                                <Link href="/communities/create" prefetch={false}>
                                     <PrimaryButton size="md" className="shadow-sm whitespace-nowrap">
                                         <Plus className="h-4 w-4 mr-1.5" />
                                         Create
@@ -160,22 +160,20 @@ const GroupsPage = () => {
                                 <Users className="h-10 w-10 text-playful-teal" />
                             </div>
                             <h2 className="text-xl font-heading font-bold text-playful-text mb-2">
-                                {activeTab === 'my' ? 'No groups joined yet' : 'No groups found'}
+                                {activeTab === 'my' ? 'No communities joined yet' : 'No communities found'}
                             </h2>
                             <p className="text-sm text-gray-500 font-medium mb-6 max-w-md mx-auto">
                                 {activeTab === 'my'
-                                    ? 'Discover and join groups to connect with pet lovers.'
-                                    : 'Be the first to create a group for your community.'}
+                                    ? 'Discover and join communities to connect with pet lovers.'
+                                    : 'Be the first to create a community for your group.'}
                             </p>
                             {activeTab === 'my' ? (
-                                <button onClick={() => setActiveTab('discover')}>
-                                    <PrimaryButton size="md">Discover Groups</PrimaryButton>
-                                </button>
+                                <PrimaryButton size="md" onClick={() => setActiveTab('discover')}>Discover Communities</PrimaryButton>
                             ) : isAuthenticated ? (
-                                <Link href="/groups/create" prefetch={false}>
+                                <Link href="/communities/create" prefetch={false}>
                                     <PrimaryButton size="md">
                                         <Plus className="h-4 w-4 mr-2" />
-                                        Create Group
+                                        Create Community
                                     </PrimaryButton>
                                 </Link>
                             ) : (

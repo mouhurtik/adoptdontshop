@@ -105,7 +105,7 @@ const BrowsePets = () => {
               <div>
                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
                   <PawPrint className="w-6 h-6 text-playful-coral hidden md:block" />
-                  Browse <span className="bg-playful-yellow px-3 py-0.5 rounded-xl">Pets</span>
+                  <span className="bg-playful-yellow/40 px-3 py-1 rounded-xl">Browse Pets</span>
                 </h1>
                 <p className="text-sm text-gray-500 font-medium mt-1 hidden md:block">
                   Find adorable pets waiting for a loving home
