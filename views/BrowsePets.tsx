@@ -5,7 +5,7 @@ import { usePets } from '@/hooks/usePets';
 import { useFilters } from '@/hooks/useFilters';
 import PetFilters from '@/components/browse/PetFilters';
 import PetGrid from '@/components/browse/PetGrid';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, PawPrint } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
@@ -73,8 +73,8 @@ const BrowsePets = () => {
   // Handle error state
   if (error) {
     return (
-      <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-        <div className="container mx-auto px-6 text-center">
+      <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
           <ScrollReveal
             mode="fade-up"
             width="100%"
@@ -97,19 +97,21 @@ const BrowsePets = () => {
 
   return (
     <div className="min-h-screen bg-playful-cream pb-20">
-      {/* Hero Header */}
-      <div className="pt-6 md:pt-28 pb-4 md:pb-12 relative overflow-hidden mb-2 md:mb-8">
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <ScrollReveal
-            mode="fade-up"
-            width="100%"
-          >
-            <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-black text-playful-text mb-2 md:mb-6 leading-tight flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3">
-              <span>Find Your</span> <span className="inline-block px-3 py-1.5 lg:px-6 md:py-0 bg-playful-yellow text-playful-text rounded-2xl md:rounded-3xl shadow-sm">Perfect Match</span>
-            </h1>
-            <p className="hidden md:block text-base lg:text-lg text-gray-600 font-medium max-w-2xl mx-auto mb-6 lg:mb-8">
-              Browse through our list of adorable pets waiting for a loving home.
-            </p>
+      {/* Compact Header */}
+      <div className="pt-4 lg:pt-6 pb-4 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 relative z-10">
+          <ScrollReveal mode="fade-up" width="100%">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
+                  <PawPrint className="w-6 h-6 text-playful-coral hidden md:block" />
+                  Browse Pets
+                </h1>
+                <p className="text-sm text-gray-500 font-medium mt-1 hidden md:block">
+                  Find adorable pets waiting for a loving home
+                </p>
+              </div>
+            </div>
           </ScrollReveal>
         </div>
       </div>

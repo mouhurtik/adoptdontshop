@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Eye } from 'lucide-react';
+import { useLikePost, useUserLiked } from '@/hooks/useCommunity';
+import { useAuth } from '@/contexts/AuthContext';
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
     success_story: { bg: 'bg-green-100', text: 'text-green-700' },
@@ -43,6 +45,9 @@ export interface PostCardData {
 
 const PostCard = ({ post }: { post: PostCardData }) => {
     const router = useRouter();
+    const { user } = useAuth();
+    const { data: liked } = useUserLiked(post.id);
+    const likePost = useLikePost();
 
     const preview = post.content_text.length > 140
         ? post.content_text.slice(0, 140) + '...'
@@ -54,6 +59,15 @@ const PostCard = ({ post }: { post: PostCardData }) => {
 
     const handleCardClick = () => {
         router.push(`/community/${post.slug}`);
+    };
+
+    const handleLike = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!user) {
+            router.push('/login');
+            return;
+        }
+        likePost.mutate({ postId: post.id, liked: !!liked });
     };
 
     return (
@@ -140,11 +154,18 @@ const PostCard = ({ post }: { post: PostCardData }) => {
                         </div>
                     )}
 
-                    {/* Stats only — no action buttons on preview */}
+                    {/* Stats with interactive like */}
                     <div className="flex items-center gap-3 text-gray-400">
-                        <span className="flex items-center gap-1 text-xs">
-                            <Heart className="h-3.5 w-3.5" /> {post.like_count}
-                        </span>
+                        <button
+                            onClick={handleLike}
+                            className={`flex items-center gap-1 text-xs transition-all duration-200 hover:scale-110 active:scale-95 ${
+                                liked ? 'text-red-500' : 'text-gray-400 hover:text-red-400'
+                            }`}
+                            title={liked ? 'Unlike' : 'Like'}
+                        >
+                            <Heart className={`h-4 w-4 transition-all ${liked ? 'fill-current' : ''}`} />
+                            <span className="font-medium">{post.like_count + (liked ? (post.like_count === 0 ? 1 : 0) : 0)}</span>
+                        </button>
                         <span className="flex items-center gap-1 text-xs">
                             <MessageCircle className="h-3.5 w-3.5" /> {post.comment_count}
                         </span>

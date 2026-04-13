@@ -12,8 +12,8 @@ const TermsAndConditions = () => {
   }, []);
 
   return (
-    <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 max-w-4xl">
         <ScrollReveal
           mode="fade-up"
           duration={0.5}

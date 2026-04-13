@@ -119,8 +119,8 @@ const CommunityWrite = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-                <div className="container mx-auto px-6 text-center">
+            <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+                <div className="max-w-4xl mx-auto px-4 lg:px-6 text-center">
                     <h1 className="text-3xl font-heading font-black text-playful-text mb-4">
                         Sign in to write a post
                     </h1>
@@ -133,46 +133,43 @@ const CommunityWrite = () => {
     }
 
     return (
-        <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-            <div className="container mx-auto px-6 max-w-4xl">
+        <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+            <div className="max-w-4xl mx-auto px-4 lg:px-6">
                 {/* Back link */}
                 <ScrollReveal mode="fade-up" width="100%">
                     <Link
-                        href="/community"
+                        href="/"
                         prefetch={false}
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-playful-coral font-bold mb-8 transition-colors"
+                        className="inline-flex items-center gap-2 text-gray-500 hover:text-playful-coral font-bold mb-6 transition-colors"
                     >
                         <ArrowLeft className="h-4 w-4" />
-                        Back to Community
+                        Back to Feed
                     </Link>
-                </ScrollReveal>
-
-                {/* Header */}
-                <ScrollReveal mode="fade-up" delay={0.05} width="100%" className="mb-8">
-                    <h1 className="text-3xl md:text-5xl font-heading font-black text-playful-text">
-                        Write a
-                        <span className="relative inline-block ml-3 transform -rotate-1">
-                            <span className="absolute inset-0 bg-playful-teal rounded-2xl transform rotate-1"></span>
-                            <span className="relative text-white px-4 py-1">Post</span>
-                        </span>
-                    </h1>
                 </ScrollReveal>
 
                 {/* Form */}
                 <ScrollReveal mode="fade-up" delay={0.1} width="100%">
-                    <div className="space-y-6">
-                        {/* Title */}
-                        <div>
+                    <div className="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+                        {/* Title Section */}
+                        <div className="px-6 pt-6 pb-4">
+                            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 block">
+                                Post Title
+                            </label>
                             <input
                                 type="text"
-                                placeholder="Give your post a catchy title..."
+                                placeholder="What's on your mind?"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                className="w-full text-2xl md:text-3xl font-heading font-bold text-playful-text placeholder-gray-300 bg-transparent border-none outline-none py-4"
+                                className="w-full text-xl md:text-2xl font-heading font-bold text-playful-text placeholder-gray-300 bg-transparent border-none outline-none focus:ring-0 pb-3"
                                 maxLength={200}
                             />
-                            <div className="h-1 bg-gradient-to-r from-playful-coral via-playful-yellow to-playful-teal rounded-full" />
+                            <div className="flex items-center justify-between">
+                                <div className="h-0.5 flex-1 bg-gradient-to-r from-playful-coral via-playful-yellow to-playful-teal rounded-full" />
+                                <span className="text-[10px] text-gray-300 font-medium ml-3">{title.length}/200</span>
+                            </div>
                         </div>
+
+                        <div className="px-6 pb-6 space-y-6">
 
                         {/* Featured Image */}
                         <div>
@@ -255,7 +252,7 @@ const CommunityWrite = () => {
 
                         {/* Publish */}
                         <div className="flex items-center justify-end gap-4 pt-4">
-                            <Link href="/community" prefetch={false}>
+                            <Link href="/" prefetch={false}>
                                 <button className="px-6 py-3 text-gray-500 font-bold hover:text-playful-text transition-colors">
                                     Cancel
                                 </button>
@@ -276,7 +273,9 @@ const CommunityWrite = () => {
                                 )}
                             </PrimaryButton>
                         </div>
-                    </div>
+
+                        </div>{/* close inner px-6 div */}
+                    </div>{/* close card div */}
                 </ScrollReveal>
             </div>
         </div>

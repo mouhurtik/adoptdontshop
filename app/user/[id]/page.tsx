@@ -162,8 +162,8 @@ export default function PublicProfilePage() {
 
     if (!profile) {
         return (
-            <div className="pt-32 pb-16 min-h-screen bg-playful-cream">
-                <div className="container mx-auto px-4 text-center">
+            <div className="pt-4 lg:pt-8 pb-16 min-h-screen bg-playful-cream">
+                <div className="max-w-4xl mx-auto px-4 lg:px-6 text-center">
                     <ScrollReveal mode="fade-up" width="100%">
                         <div className="max-w-md mx-auto bg-white rounded-[2rem] p-12 shadow-soft">
                             <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -187,13 +187,13 @@ export default function PublicProfilePage() {
     const joinDate = profile.created_at ? format(new Date(profile.created_at), 'MMMM yyyy') : null;
 
     return (
-        <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-            <div className="container mx-auto px-4 max-w-4xl">
+        <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+            <div className="max-w-4xl mx-auto px-4 lg:px-6">
                 {/* Profile Header */}
                 <ScrollReveal mode="fade-up" width="100%">
                     <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-soft border-2 border-gray-100 mb-8 relative overflow-hidden">
                         {/* Decorative background */}
-                        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-playful-teal to-playful-coral opacity-10 rounded-t-[2.5rem]" />
+                        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-playful-teal/20 via-playful-coral/10 to-playful-yellow/15 rounded-t-[2.5rem]" />
 
                         {/* Share button */}
                         <button

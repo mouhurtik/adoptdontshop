@@ -1,36 +1,77 @@
 'use client';
 
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import Navbar from '@/components/Navbar';
+import AppSidebar from '@/components/AppSidebar';
+import TopBar from '@/components/TopBar';
 import BottomNav from '@/components/BottomNav';
 
 // Lazy-load heavy components that aren't needed on initial paint
-const Footer = dynamic(() => import('@/components/Footer'), { ssr: false });
 const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const isAdminRoute = pathname.startsWith('/admin');
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+    const isAdminRoute = pathname.startsWith('/admin');
     const isMessages = pathname === '/messages' || pathname.startsWith('/messages/');
-    // Deep views where bottom nav should be hidden (Messages removed so users can navigate away)
     const isDeepView = pathname.startsWith('/pet/');
     const showBottomNav = !isAdminRoute && !isDeepView;
-    const showFooter = !isAdminRoute && !isMessages;
+
+    const sidebarWidth = sidebarCollapsed ? 72 : 260;
+
+    // Admin routes use their own layout
+    if (isAdminRoute) {
+        return (
+            <div className="min-h-screen flex flex-col bg-playful-cream">
+                <main className="flex-grow">{children}</main>
+            </div>
+        );
+    }
+
+    // Messages — full-screen layout, sidebar hidden on messages
+    if (isMessages) {
+        return (
+            <div className="min-h-screen bg-white">
+                {children}
+                <FloatingMessages />
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen flex flex-col bg-playful-cream">
-            {!isAdminRoute && <Navbar />}
-            <main className={isAdminRoute ? 'flex-grow' : `flex-grow pt-16 ${showBottomNav ? 'pb-14 ' : 'pb-0 '}lg:pb-0`}>
+        <div className="min-h-screen bg-playful-cream">
+            {/* Desktop: Persistent left sidebar */}
+            <AppSidebar
+                collapsed={sidebarCollapsed}
+                onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            />
+
+            {/* Mobile: Top bar */}
+            <TopBar />
+
+            {/* Main content area — offset by sidebar on desktop */}
+            <main
+                className={`${showBottomNav ? 'pb-20 lg:pb-0' : 'pb-0'} pt-14 lg:pt-0 min-h-screen transition-all duration-300`}
+                style={{ marginLeft: `var(--sidebar-width, 0px)` }}
+            >
+                <style>{`
+                    @media (min-width: 1024px) {
+                        :root { --sidebar-width: ${sidebarWidth}px; }
+                    }
+                    @media (max-width: 1023px) {
+                        :root { --sidebar-width: 0px; }
+                    }
+                `}</style>
                 {children}
             </main>
-            {showFooter && <div className="hidden lg:block"><Footer /></div>}
+
+            {/* Mobile bottom nav */}
             {showBottomNav && <BottomNav />}
+
+            {/* Floating messages (desktop chat popout) */}
             <FloatingMessages />
         </div>
     );
 }
-
-
-

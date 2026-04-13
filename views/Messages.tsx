@@ -57,7 +57,7 @@ const Messages = () => {
     if (!isAuthenticated) {
         return (
             <div className="pt-32 pb-16 min-h-screen bg-playful-cream">
-                <div className="container mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-4 lg:px-6">
                     <div className="max-w-md mx-auto text-center bg-white rounded-[2rem] p-12 shadow-soft">
                         <div className="bg-playful-cream p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                             <MessageCircle className="w-8 h-8 text-playful-coral" />

@@ -1,21 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronDown, X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TAG_LABELS } from './PostCard';
 
 const ALL_TAGS = ['all', 'success_story', 'fundraiser', 'virtual_adoption', 'tips', 'discussion', 'lost_found'];
 
-const TAG_PILL_COLORS: Record<string, string> = {
-    all: 'bg-playful-text text-white',
-    success_story: 'bg-green-500 text-white',
-    fundraiser: 'bg-purple-500 text-white',
-    virtual_adoption: 'bg-blue-500 text-white',
-    tips: 'bg-yellow-500 text-white',
-    discussion: 'bg-orange-500 text-white',
-    lost_found: 'bg-red-500 text-white',
-};
+
 
 interface TagFilterProps {
     activeTag: string;
@@ -24,8 +16,19 @@ interface TagFilterProps {
 
 const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isDesktopOpen, setIsDesktopOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const desktopRef = useRef<HTMLDivElement>(null);
     const activeLabel = activeTag === 'all' ? 'All Posts' : TAG_LABELS[activeTag] || activeTag;
+
+    // Close desktop dropdown on outside click
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (desktopRef.current && !desktopRef.current.contains(e.target as Node)) setIsDesktopOpen(false);
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
 
     const handleCloseModal = () => {
         setIsOpen(false);
@@ -129,24 +132,39 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
                 </AnimatePresence>
             </div>
 
-            {/* Desktop Tags */}
-            <div className="hidden md:flex flex-wrap gap-2">
-                {ALL_TAGS.map(tag => {
-                    const isActive = activeTag === tag;
-                    const label = tag === 'all' ? 'All Posts' : TAG_LABELS[tag] || tag;
-                    return (
-                        <button
-                            key={tag}
-                            onClick={() => onTagChange(tag)}
-                            className={`flex-shrink-0 px-4 py-2 rounded-full font-bold text-sm transition-all duration-200 ${isActive
-                                ? `${TAG_PILL_COLORS[tag]} shadow-md scale-105`
-                                : 'bg-white text-gray-500 hover:bg-playful-cream hover:text-playful-text shadow-sm border border-gray-100'
-                                }`}
-                        >
-                            {label}
-                        </button>
-                    );
-                })}
+            {/* Desktop Compact Dropdown (replaces horizontal pills) */}
+            <div className="hidden md:block relative" ref={desktopRef}>
+                <button
+                    onClick={() => setIsDesktopOpen(!isDesktopOpen)}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-playful-cream rounded-full text-sm font-bold text-playful-text shadow-sm hover:border-playful-teal/30 transition-colors"
+                >
+                    <SlidersHorizontal className="h-3.5 w-3.5 text-gray-400" />
+                    {activeLabel}
+                    <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isDesktopOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isDesktopOpen && (
+                    <div className="absolute top-full mt-1.5 left-0 z-50 w-[180px] bg-white border border-gray-100 shadow-lg rounded-xl p-1.5">
+                        {ALL_TAGS.map(tag => {
+                            const isActive = activeTag === tag;
+                            const label = tag === 'all' ? 'All Posts' : TAG_LABELS[tag] || tag;
+                            return (
+                                <button
+                                    key={tag}
+                                    onClick={() => { onTagChange(tag); setIsDesktopOpen(false); }}
+                                    className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center justify-between ${
+                                        isActive
+                                            ? 'bg-playful-cream text-playful-teal'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    {label}
+                                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-playful-teal" />}
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -53,7 +53,7 @@ const PetDetails = () => {
 
   if (!pet) {
     return (
-      <div className="pt-32 pb-16 container mx-auto px-4 min-h-screen bg-playful-cream">
+      <div className="pt-4 lg:pt-8 pb-16 max-w-7xl mx-auto px-4 lg:px-6 min-h-screen bg-playful-cream">
         <div className="text-center py-16 bg-white rounded-[2rem] shadow-soft max-w-2xl mx-auto">
           <AlertCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Pet Not Found</h1>
@@ -70,7 +70,7 @@ const PetDetails = () => {
   }
 
   return (
-    <div className="pt-0 lg:pt-32 pb-32 lg:pb-16 bg-white lg:bg-playful-cream min-h-screen relative">
+    <div className="pt-0 lg:pt-8 pb-32 lg:pb-16 bg-white lg:bg-playful-cream min-h-screen relative">
       {/* Absolute Back Button for Mobile (Floating over image) / Standard for Desktop */}
       <div className="absolute lg:relative top-safe lg:top-0 left-4 lg:left-0 z-50 lg:container lg:mx-auto lg:px-4 mt-4 lg:mt-0 lg:mb-6">
         <Link

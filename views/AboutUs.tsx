@@ -40,8 +40,8 @@ const AboutUsInner = () => {
     ];
 
     return (
-        <div className={`lg:pt-32 pb-16 bg-playful-cream min-h-screen ${activeTab === 'store' ? 'pt-2' : 'pt-6'}`}>
-            <div className="container mx-auto px-6">
+        <div className={`lg:pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen ${activeTab === 'store' ? 'pt-2' : 'pt-6'}`}>
+            <div className="max-w-7xl mx-auto px-4 lg:px-6">
                 {/* Hero */}
                 <ScrollReveal mode="fade-up" width="100%" className={`text-center mb-8 lg:mb-12 relative ${activeTab === 'store' ? 'hidden lg:block' : ''}`}>
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-coral/20 rounded-full blur-3xl -z-10" />
@@ -378,7 +378,7 @@ function StoreTab({
 }
 
 const AboutUs = () => (
-    <Suspense fallback={<div className="min-h-screen pt-32 pb-16 bg-playful-cream" />}>
+    <Suspense fallback={<div className="min-h-screen pt-4 lg:pt-8 pb-16 bg-playful-cream" />}>
         <AboutUsInner />
     </Suspense>
 );

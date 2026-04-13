@@ -12,8 +12,8 @@ const SuccessStories = () => {
   }, []);
 
   return (
-    <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-      <div className="container mx-auto px-6">
+    <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6">
         {/* Playful Header */}
         <ScrollReveal
           mode="fade-up"

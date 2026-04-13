@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, PawPrint, MessageSquare, FileText, ChevronLeft, ChevronRight, Menu, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Users, PawPrint, MessageSquare, FileText, ChevronLeft, ChevronRight, Menu, ClipboardList, UsersRound, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
@@ -12,6 +12,8 @@ const navItems = [
     { href: '/admin/applications', label: 'Applications', icon: ClipboardList },
     { href: '/admin/posts', label: 'Posts', icon: FileText },
     { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
+    { href: '/admin/groups', label: 'Groups', icon: UsersRound },
+    { href: '/admin/group-chat', label: 'Group Chat', icon: MessageCircle },
 ];
 
 interface AdminSidebarProps {

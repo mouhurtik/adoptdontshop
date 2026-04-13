@@ -3,7 +3,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const EssentialsHero = () => {
     return (
-        <section className="relative pt-32 pb-20 overflow-hidden bg-playful-cream/30">
+        <section className="relative pt-4 lg:pt-8 pb-20 overflow-hidden bg-playful-cream/30">
             <div className="container mx-auto px-4 relative z-10">
                 <ScrollReveal
                     mode="fade-up"

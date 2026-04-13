@@ -78,8 +78,8 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
 
     if (isLoading) {
         return (
-            <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-                <div className="container mx-auto px-6 max-w-4xl">
+            <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+                <div className="max-w-7xl mx-auto px-4 lg:px-6 max-w-4xl">
                     <div className="animate-pulse space-y-6">
                         <div className="h-8 w-48 bg-gray-200 rounded-full" />
                         <div className="h-12 w-3/4 bg-gray-200 rounded-2xl" />
@@ -92,8 +92,8 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
 
     if (error || !post) {
         return (
-            <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-                <div className="container mx-auto px-6 text-center">
+            <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+                <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
                     <h1 className="text-3xl font-heading font-black text-playful-text mb-4">Post not found</h1>
                     <Link href="/community" prefetch={false}>
                         <PrimaryButton>Back to Community</PrimaryButton>
@@ -114,7 +114,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
     const replies = comments.filter((c: Record<string, unknown>) => c.parent_comment_id);
 
     return (
-        <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
+        <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
             {/* BlogPosting structured data for Google rich results */}
             <script
                 type="application/ld+json"
@@ -159,7 +159,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                     }),
                 }}
             />
-            <div className="container mx-auto px-6 max-w-4xl">
+            <div className="max-w-7xl mx-auto px-4 lg:px-6 max-w-4xl">
                 {/* Back */}
                 <ScrollReveal mode="fade-up" width="100%">
                     <Link

@@ -34,8 +34,8 @@ const ResourcesInner = () => {
     ];
 
     return (
-        <div className="pt-32 pb-16 bg-playful-cream min-h-screen">
-            <div className="container mx-auto px-6">
+        <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
+            <div className="max-w-7xl mx-auto px-4 lg:px-6">
                 {/* Header */}
                 <ScrollReveal mode="fade-up" width="100%" className="text-center mb-12 relative">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-teal/20 rounded-full blur-3xl -z-10" />
@@ -205,7 +205,7 @@ function PatronsContent() {
 }
 
 const Resources = () => (
-    <Suspense fallback={<div className="min-h-screen pt-32 pb-16 bg-playful-cream" />}>
+    <Suspense fallback={<div className="min-h-screen pt-4 lg:pt-8 pb-16 bg-playful-cream" />}>
         <ResourcesInner />
     </Suspense>
 );
