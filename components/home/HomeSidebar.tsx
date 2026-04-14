@@ -143,7 +143,7 @@ const ExploreSidebar = () => {
                         {groups.map(group => (
                             <Link
                                 key={group.id}
-                                href={`/groups/${group.slug}`}
+                                href={`/communities/${group.slug}`}
                                 className="flex items-center gap-3 px-5 py-3 hover:bg-playful-cream/30 transition-colors group"
                             >
                                 <div className="w-9 h-9 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">

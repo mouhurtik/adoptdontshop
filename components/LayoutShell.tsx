@@ -17,7 +17,6 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     const isAdminRoute = pathname.startsWith('/admin');
-    const isMessages = pathname === '/messages' || pathname.startsWith('/messages/');
     const isDeepView = pathname.startsWith('/pet/');
     const showBottomNav = !isAdminRoute && !isDeepView;
 
@@ -32,15 +31,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
         );
     }
 
-    // Messages — full-screen layout, sidebar hidden on messages
-    if (isMessages) {
-        return (
-            <div className="min-h-screen bg-white">
-                {children}
-                <FloatingMessages />
-            </div>
-        );
-    }
+    // Messages — uses standard layout with sidebar (removed early return)
 
     return (
         <AuthModalProvider>

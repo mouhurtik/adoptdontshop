@@ -2,14 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, PenSquare, MessageCircle, LogIn } from 'lucide-react';
+import { Home, Compass, PawPrint, MessageCircle, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useUnreadCount } from '@/hooks/useMessages';
 
 export default function BottomNav() {
     const pathname = usePathname();
     const { isAuthenticated, profile, user } = useAuth();
-    const { data: unreadCount = 0 } = useUnreadCount();
 
     const isActive = (path: string) => {
         if (path === '/') return pathname === '/';
@@ -17,7 +15,6 @@ export default function BottomNav() {
     };
 
     const meActive = pathname.startsWith('/user') || pathname.startsWith('/profile') || pathname === '/login';
-    const postActive = pathname.startsWith('/community/write') || pathname.startsWith('/list-pet');
     const displayInitial = (profile?.display_name || user?.email?.split('@')[0] || 'U').charAt(0).toUpperCase();
 
     const tabs = [
@@ -34,17 +31,16 @@ export default function BottomNav() {
             active: isActive('/communities') || isActive('/explore'),
         },
         {
-            name: 'Post',
-            href: isAuthenticated ? '/community/write' : '/login',
-            icon: PenSquare,
-            active: postActive,
+            name: 'Browse',
+            href: '/browse',
+            icon: PawPrint,
+            active: isActive('/browse') || isActive('/pet/'),
         },
         {
             name: 'Chat',
             href: '/messages',
             icon: MessageCircle,
             active: isActive('/messages'),
-            badge: unreadCount,
         },
     ];
 
@@ -61,17 +57,10 @@ export default function BottomNav() {
                                 tab.active ? 'text-playful-coral' : 'text-gray-500 active:text-gray-600'
                             }`}
                         >
-                            <div className="relative">
-                                <tab.icon
-                                    className="h-[22px] w-[22px]"
-                                    strokeWidth={tab.active ? 2.4 : 1.8}
-                                />
-                                {tab.badge && tab.badge > 0 && (
-                                    <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 flex items-center justify-center bg-playful-coral text-white text-[9px] font-bold rounded-full px-1">
-                                        {tab.badge > 99 ? '99+' : tab.badge}
-                                    </span>
-                                )}
-                            </div>
+                            <tab.icon
+                                className="h-[22px] w-[22px]"
+                                strokeWidth={tab.active ? 2.4 : 1.8}
+                            />
                             <span className={`text-[10px] mt-0.5 ${tab.active ? 'font-bold' : 'font-medium'}`}>
                                 {tab.name}
                             </span>

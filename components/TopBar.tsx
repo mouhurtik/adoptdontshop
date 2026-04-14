@@ -2,12 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PawPrint, Search, Bell } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { PawPrint } from 'lucide-react';
 
 export default function TopBar() {
     const pathname = usePathname();
-    const { isAuthenticated } = useAuth();
 
     // Page context label
     const getContextLabel = () => {
@@ -52,26 +50,8 @@ export default function TopBar() {
                     )}
                 </div>
 
-                {/* Right: Search + Notifications */}
-                <div className="flex items-center gap-1">
-                    <Link
-                        href="/browse"
-                        className="p-2 rounded-xl hover:bg-gray-100 text-gray-500 transition-colors"
-                        aria-label="Search"
-                    >
-                        <Search className="w-5 h-5" />
-                    </Link>
-
-                    {isAuthenticated && (
-                        <Link
-                            href="/messages"
-                            className="p-2 rounded-xl hover:bg-gray-100 text-gray-500 transition-colors relative"
-                            aria-label="Notifications"
-                        >
-                            <Bell className="w-5 h-5" />
-                        </Link>
-                    )}
-                </div>
+                {/* Right: Intentionally empty — search/notification icons hidden until functional */}
+                <div className="flex items-center gap-1" />
             </div>
         </header>
     );
