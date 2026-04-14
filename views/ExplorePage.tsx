@@ -64,7 +64,7 @@ const ExplorePage = () => {
                             <div className="mb-5">
                                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
                                     <Compass className="w-6 h-6 text-purple-500 hidden md:block" />
-                                    <span className="bg-purple-200/70 px-4 py-1.5 rounded-2xl">Explore</span>
+                                    <span className="bg-purple-300/80 px-4 py-1.5 rounded-2xl">Explore</span>
                                 </h1>
                             </div>
                         </ScrollReveal>

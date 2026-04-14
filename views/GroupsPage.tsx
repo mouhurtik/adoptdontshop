@@ -43,7 +43,7 @@ const GroupsPage = () => {
                         <div>
                             <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
                                 <Users className="w-6 h-6 text-playful-teal hidden md:block" />
-                                <span className="bg-teal-200/60 px-4 py-1.5 rounded-2xl">Communities</span>
+                                <span className="bg-teal-300/70 px-4 py-1.5 rounded-2xl">Communities</span>
                             </h1>
                             <p className="text-sm text-gray-500 font-medium mt-1 hidden md:block">
                                 Join communities of pet lovers near you
