@@ -168,6 +168,93 @@ export type Database = {
           },
         ]
       }
+      group_members: {
+        Row: {
+          id: string
+          group_id: string
+          user_id: string
+          role: string
+          joined_at: string
+        }
+        Insert: {
+          id?: string
+          group_id: string
+          user_id: string
+          role?: string
+          joined_at?: string
+        }
+        Update: {
+          id?: string
+          group_id?: string
+          user_id?: string
+          role?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      groups: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          category: string
+          avatar_url: string | null
+          cover_image_url: string | null
+          created_by: string
+          is_private: boolean
+          member_count: number
+          post_count: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          category?: string
+          avatar_url?: string | null
+          cover_image_url?: string | null
+          created_by: string
+          is_private?: boolean
+          member_count?: number
+          post_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          description?: string | null
+          category?: string
+          avatar_url?: string | null
+          cover_image_url?: string | null
+          created_by?: string
+          is_private?: boolean
+          member_count?: number
+          post_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -204,6 +291,36 @@ export type Database = {
           read_by?: Json
           sender_id?: string
           sender_name?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          message: string
+          link: string | null
+          read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          message: string
+          link?: string | null
+          read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          message?: string
+          link?: string | null
+          read?: boolean
+          created_at?: string
         }
         Relationships: []
       }

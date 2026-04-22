@@ -203,7 +203,7 @@ export function useCreateGroup() {
                     avatar_url: group.avatar_url || null,
                     cover_image_url: group.cover_image_url || null,
                     created_by: user.id,
-                } as Record<string, unknown>)
+                })
                 .select()
                 .single();
 
@@ -216,7 +216,7 @@ export function useCreateGroup() {
                     group_id: (newGroup as unknown as Group).id,
                     user_id: user.id,
                     role: 'owner',
-                } as Record<string, unknown>);
+                });
 
             if (memberError) throw memberError;
 
@@ -243,7 +243,7 @@ export function useJoinGroup() {
                     group_id: groupId,
                     user_id: user.id,
                     role: 'member',
-                } as Record<string, unknown>);
+                });
             if (error) throw error;
         },
         onSuccess: (_, groupId) => {
