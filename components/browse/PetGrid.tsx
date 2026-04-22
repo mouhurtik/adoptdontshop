@@ -92,7 +92,7 @@ const PetGrid = ({
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8 gap-4 px-4 sm:px-0">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8 gap-4 px-0">
         <p className="text-xl font-heading font-bold text-playful-text">
           Found <span className="text-playful-coral">{pets.length}</span> friends
         </p>
@@ -133,7 +133,7 @@ const PetGrid = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 px-0">
         {pets.map((pet, index) => (
           <motion.div
             key={pet.id}

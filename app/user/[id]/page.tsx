@@ -163,7 +163,7 @@ export default function PublicProfilePage() {
     if (!profile) {
         return (
             <div className="pt-4 lg:pt-8 pb-16 min-h-screen bg-playful-cream">
-                <div className="max-w-4xl mx-auto px-4 lg:px-6 text-center">
+                <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12 text-center">
                     <ScrollReveal mode="fade-up" width="100%">
                         <div className="max-w-md mx-auto bg-white rounded-[2rem] p-12 shadow-soft">
                             <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -188,7 +188,7 @@ export default function PublicProfilePage() {
 
     return (
         <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
-            <div className="max-w-4xl mx-auto px-4 lg:px-6">
+            <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Profile Header */}
                 <ScrollReveal mode="fade-up" width="100%">
                     <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-soft border-2 border-gray-100 mb-8 relative overflow-hidden">

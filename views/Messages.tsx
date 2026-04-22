@@ -81,7 +81,15 @@ const Messages = () => {
     }
 
     return (
-        <div className="fixed inset-0 bg-white flex flex-col">
+        <div 
+            className="fixed bg-white flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0 z-10"
+            style={{
+                top: 0,
+                bottom: 0,
+                right: 0,
+                left: 'var(--sidebar-width, 0px)'
+            }}
+        >
             <div className="h-full flex-1 flex flex-col min-h-0 lg:px-0">
                 <div className="bg-white h-full flex flex-col overflow-hidden min-h-0 lg:border-t lg:border-gray-100">
                     <div className="flex h-full flex-1 min-h-0">

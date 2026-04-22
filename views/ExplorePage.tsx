@@ -55,7 +55,7 @@ const ExplorePage = () => {
 
     return (
         <div className="pt-4 lg:pt-6 pb-16 bg-playful-cream min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 lg:px-6">
+            <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 <div className="flex gap-8">
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
@@ -63,24 +63,28 @@ const ExplorePage = () => {
                         <ScrollReveal mode="fade-up" width="100%">
                             <div className="mb-5">
                                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
-                                    <Compass className="w-6 h-6 text-purple-500 hidden md:block" />
-                                    <span className="bg-purple-300/80 px-4 py-1.5 rounded-2xl">Explore</span>
+                                    <span className="bg-purple-300/80 px-4 py-1.5 rounded-2xl flex items-center gap-2">
+                                        <Compass className="w-6 h-6 text-purple-700 hidden md:block" />
+                                        Explore
+                                    </span>
                                 </h1>
                             </div>
                         </ScrollReveal>
 
                         {/* Search Bar with Dropdown Suggestions */}
                         <ScrollReveal mode="fade-up" delay={0.05} width="100%" className="mb-6">
-                            <div ref={searchRef} className="relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                            <div ref={searchRef} className="relative group">
+                                <div className={`absolute left-2.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 z-10 ${searchFocused ? 'bg-purple-100 text-purple-600' : 'bg-gray-50 text-gray-400 group-hover:bg-purple-50 group-hover:text-purple-500'}`}>
+                                    <Search className="w-4 h-4" />
+                                </div>
                                 <input
                                     type="text"
                                     placeholder="Search posts, communities, pets..."
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
                                     onFocus={() => setSearchFocused(true)}
-                                    className={`w-full pl-12 pr-10 py-3.5 bg-white border text-sm font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400 shadow-soft transition-all ${
-                                        showSuggestions ? 'rounded-t-2xl rounded-b-none border-purple-200' : 'rounded-2xl border-gray-200'
+                                    className={`w-full pl-16 pr-12 py-3.5 bg-white border-2 text-sm md:text-base font-bold placeholder:text-gray-400 placeholder:font-medium focus:outline-none focus:border-purple-400 focus:shadow-md transition-all duration-300 ${
+                                        showSuggestions ? 'rounded-t-[2rem] rounded-b-none border-purple-200 shadow-sm' : 'rounded-[2rem] md:rounded-full border-gray-100 shadow-sm hover:border-purple-200 hover:shadow-md'
                                     }`}
                                 />
                                 {searchQuery && (

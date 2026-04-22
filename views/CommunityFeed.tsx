@@ -57,7 +57,7 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
 
     return (
         <div className={`${isHome ? 'pt-4 lg:pt-6' : 'pt-4 lg:pt-8'} pb-16 bg-playful-cream min-h-screen`}>
-            <div className="max-w-7xl mx-auto px-4 lg:px-6">
+            <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
                 {isHome ? (
                     /* Home: no hero, just a subtle heading */

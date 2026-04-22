@@ -98,55 +98,54 @@ const BrowsePets = () => {
   return (
     <div className="min-h-screen bg-playful-cream pb-20">
       {/* Compact Header */}
-      <div className="pt-4 lg:pt-6 pb-4 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 relative z-10">
+      <div className="pt-4 lg:pt-6 pb-0 relative overflow-hidden">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12 relative z-10">
           <ScrollReveal mode="fade-up" width="100%">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
               <div>
                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
-                  <PawPrint className="w-6 h-6 text-playful-coral hidden md:block" />
-                  <span className="bg-amber-300/80 px-4 py-1.5 rounded-2xl">Browse Pets</span>
+                  <span className="bg-amber-300/80 px-4 py-1.5 rounded-2xl flex items-center gap-2">
+                    <PawPrint className="w-6 h-6 text-amber-700 hidden md:block" />
+                    Browse Pets
+                  </span>
                 </h1>
-                <p className="text-sm text-gray-500 font-medium mt-1 hidden md:block">
-                  Find adorable pets waiting for a loving home
-                </p>
               </div>
             </div>
           </ScrollReveal>
         </div>
       </div>
 
-      <div className="container mx-auto px-0 md:px-6 md:-mt-16 relative z-20">
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12 relative z-20">
         {/* Search Bar */}
         <div className="relative z-40 px-4 md:px-0 pt-2 md:pt-4 pb-2 bg-playful-cream/90 backdrop-blur-md">
           <ScrollReveal
             mode="fade-up"
             delay={0.2}
             width="100%"
-            className="bg-white rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-3 shadow-md md:shadow-xl max-w-4xl mx-auto flex flex-row gap-2 md:gap-3 items-center border border-gray-100"
+            className="w-full"
           >
-            <div className="flex-grow relative w-full">
-              <div className="absolute left-4 md:left-6 top-1/2 transform -translate-y-1/2 text-playful-coral">
-                <Search className="h-5 w-5 md:h-6 md:w-6" />
+            <div className="bg-white rounded-[1.5rem] md:rounded-full p-1.5 md:p-2 shadow-sm border border-gray-200 focus-within:border-playful-coral focus-within:shadow-md transition-all duration-300 flex flex-row gap-2 items-center hover:border-playful-coral/50">
+              <div className="flex-grow relative flex items-center">
+                <Search className="absolute left-4 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  aria-label="Search pets"
+                  placeholder="Search for dogs, cats, or specific breeds..."
+                  className="w-full pl-11 pr-4 py-2.5 bg-transparent border-none font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 text-sm md:text-base"
+                  value={filters.searchTerm}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                />
               </div>
-              <input
-                type="text"
-                aria-label="Search pets"
-                placeholder="Search pets..."
-                className="w-full pl-11 md:pl-14 pr-4 py-3 md:py-4 bg-gray-50/50 border-2 border-transparent focus:bg-white focus:border-playful-coral rounded-[1.5rem] md:rounded-[2rem] font-bold text-gray-700 placeholder-gray-400 focus:outline-none transition-all duration-200 text-sm md:text-base"
-                value={filters.searchTerm}
-                onChange={(e) => handleSearchChange(e.target.value)}
-              />
+              <PrimaryButton
+                onClick={toggleFilters}
+                variant={showFilters ? "primary" : "outline"}
+                className={`flex-shrink-0 flex items-center justify-center rounded-full h-[42px] w-[42px] md:h-auto md:w-auto md:px-6 md:py-2.5 transition-all duration-200 ${!showFilters ? 'border-gray-200 text-gray-600 hover:bg-gray-50' : ''} p-0`}
+                title="Toggle Filters"
+              >
+                <Filter className="h-4 w-4" />
+                <span className="hidden md:inline ml-2 text-sm font-bold">Filters {showFilters ? 'On' : ''}</span>
+              </PrimaryButton>
             </div>
-            <PrimaryButton
-              onClick={toggleFilters}
-              variant={showFilters ? "primary" : "outline"}
-              className="flex-shrink-0 flex items-center justify-center rounded-[1.5rem] md:rounded-[2rem] h-[46px] w-[46px] md:h-auto md:w-auto md:px-6 md:py-4 active-scale p-0"
-              title="Toggle Filters"
-            >
-              <Filter className="h-5 w-5" />
-              <span className="hidden md:inline ml-2">Filters {showFilters ? 'On' : 'Off'}</span>
-            </PrimaryButton>
           </ScrollReveal>
         </div>
 
