@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { fetchCommunityPostsServer, serverPostsToPostCardData } from '@/lib/supabase/server-queries';
 import CommunityFeed from '@/views/CommunityFeed';
 import type { Metadata } from 'next';
 
@@ -10,10 +10,9 @@ export const metadata: Metadata = {
     keywords: ['adopt pet', 'rescue animals', 'pet community', 'adopt dog', 'adopt cat', 'pet adoption India', 'adopt dont shop'],
 };
 
-export default function HomePage() {
-    return (
-        <Suspense fallback={<div className="min-h-screen bg-playful-cream" />}>
-            <CommunityFeed variant="home" />
-        </Suspense>
-    );
+export default async function HomePage() {
+    const serverPosts = await fetchCommunityPostsServer({ tag: 'all', sort: 'new', limit: 20 });
+    const initialPosts = serverPostsToPostCardData(serverPosts);
+
+    return <CommunityFeed variant="home" initialPosts={initialPosts} />;
 }

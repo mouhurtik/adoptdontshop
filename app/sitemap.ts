@@ -5,11 +5,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await createServerSupabaseClient();
     const baseUrl = 'https://adoptdontshop.xyz';
 
-    // Static pages
+    // Static pages (only include canonical URLs, not redirect sources)
     const staticPages = [
-        '', '/browse', '/about', '/pet-essentials',
-        '/success-stories', '/sponsors', '/list-pet',
-        '/community', '/resources',
+        '', '/browse', '/about', '/community',
+        '/success-stories', '/list-pet',
         '/terms', '/privacy-policy',
     ].map(route => ({
         url: `${baseUrl}${route}`,

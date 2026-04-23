@@ -25,9 +25,10 @@ const SORT_OPTIONS: { value: SortOption; label: string; icon: React.ReactNode }[
 
 interface CommunityFeedInnerProps {
     variant?: 'home' | 'page';
+    initialPosts?: import('@/components/community/PostCard').PostCardData[];
 }
 
-const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
+const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }: CommunityFeedInnerProps) => {
     const searchParams = useSearchParams();
     const initialTag = searchParams.get('tag') || 'all';
 
@@ -53,6 +54,7 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
     const { data: posts, isLoading, error } = useCommunityPosts({
         tag: activeTag,
         sort,
+        initialData: initialPostsProp,
     });
 
     return (
@@ -245,11 +247,12 @@ const CommunityFeedInner = ({ variant = 'page' }: CommunityFeedInnerProps) => {
 
 interface CommunityFeedProps {
     variant?: 'home' | 'page';
+    initialPosts?: import('@/components/community/PostCard').PostCardData[];
 }
 
-const CommunityFeed = ({ variant = 'page' }: CommunityFeedProps) => (
+const CommunityFeed = ({ variant = 'page', initialPosts }: CommunityFeedProps) => (
     <Suspense fallback={<div className="min-h-screen pt-4 lg:pt-8 pb-16 bg-playful-cream" />}>
-        <CommunityFeedInner variant={variant} />
+        <CommunityFeedInner variant={variant} initialPosts={initialPosts} />
     </Suspense>
 );
 

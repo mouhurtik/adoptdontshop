@@ -59,21 +59,23 @@ const fetchPetCount = async (): Promise<number> => {
 // ─── Hooks ────────────────────────────────────────────────
 
 /** Hook to fetch all pets — cached, auto-refetches on window focus */
-export const usePets = () => {
+export const usePets = (initialData?: Pet[]) => {
   const { data: pets = [], isLoading, error } = useQuery({
     queryKey: ['pets'],
     queryFn: fetchPets,
+    initialData,
   });
 
   return { pets, isLoading, error: error?.message ?? null };
 };
 
 /** Hook to fetch a single pet by slug ID prefix */
-export const usePetBySlug = (idPrefix: string | undefined) => {
+export const usePetBySlug = (idPrefix: string | undefined, initialData?: Pet | null) => {
   return useQuery({
     queryKey: ['pet', idPrefix],
     queryFn: () => fetchPetByIdPrefix(idPrefix!),
     enabled: !!idPrefix,
+    initialData: initialData ?? undefined,
   });
 };
 

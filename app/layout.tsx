@@ -91,6 +91,43 @@ const organizationSchema = {
         'https://www.linkedin.com/company/adoptdontshop-xyz/',
         'https://github.com/mouhurtik/adoptdontshop',
     ],
+    contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        url: 'https://adoptdontshop.xyz/about',
+        availableLanguage: ['English', 'Hindi', 'Bengali'],
+    },
+};
+
+// WebSite schema with SearchAction for Google Sitelinks Searchbox
+const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'AdoptDontShop',
+    url: 'https://adoptdontshop.xyz',
+    potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://adoptdontshop.xyz/browse?search={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+    },
+};
+
+// LocalBusiness schema for better local SEO
+const localBusinessSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'AdoptDontShop',
+    image: 'https://adoptdontshop.xyz/og-image.webp',
+    url: 'https://adoptdontshop.xyz',
+    description: 'Pet adoption platform connecting rescue animals with loving families across India.',
+    areaServed: {
+        '@type': 'Country',
+        name: 'India',
+    },
+    priceRange: '$$',
 };
 
 export default function RootLayout({
@@ -118,6 +155,14 @@ export default function RootLayout({
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
                 />
             </head>
             <body suppressHydrationWarning>

@@ -18,7 +18,11 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PawprintLoader from '@/components/ui/PawprintLoader';
 
-const PetDetails = () => {
+interface PetDetailsProps {
+  initialPet?: import('@/types/pet.types').Pet | null;
+}
+
+const PetDetails = ({ initialPet }: PetDetailsProps) => {
   const params = useParams();
   const slug = params?.slug as string;
   const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
@@ -29,7 +33,7 @@ const PetDetails = () => {
   // Extract the short ID from the slug for database lookup
   const petIdPrefix = slug ? parseSlugId(slug) : '';
 
-  const { data: pet, isLoading, error } = usePetBySlug(petIdPrefix || undefined);
+  const { data: pet, isLoading, error } = usePetBySlug(petIdPrefix || undefined, initialPet);
 
   useEffect(() => {
     if (error) {

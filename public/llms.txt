@@ -2,12 +2,47 @@
 
 > AdoptDontShop is a modern, open-source pet adoption platform and community hub connecting shelters, rescues, and potential pet parents in India.
 
+## Overview
+
+AdoptDontShop is India's largest pet adoption community, built to connect rescue animals with loving forever homes. The platform serves as a comprehensive ecosystem for pet adoption, community engagement, and pet care resources.
+
 ## Key Features
-- **Advanced Pet Search:** Filter by type, breed, age, location, and urgency.
-- **Shelter CRM & Listings:** Shelters and caregivers can securely log in to list pets.
-- **Community Blog:** Users write and share adoption stories, care tips, and rescue experiences.
-- **Pet Essentials Store:** Users can browse products for dogs and cats with direct affiliate links.
+- **Advanced Pet Search:** Filter by type (dog, cat, rabbit, bird), breed, age, location, and urgency.
+- **Shelter CRM & Listings:** Shelters and caregivers can securely log in to list pets, manage applications, and track adoptions.
+- **Community Blog:** Users write and share adoption stories, care tips, rescue experiences, fundraisers, and lost & found posts.
+- **Pet Essentials Store:** Users can browse curated products for dogs and cats with direct affiliate links.
 - **Direct Messaging:** Secure real-time person-to-person chat using a floating UI.
+- **Community Groups:** Join or create communities around specific breeds, locations, or causes.
+
+## Content Types
+
+### Pet Listings
+Each pet listing includes:
+- Pet name, breed, age, gender, and location
+- Vaccination status and medical information
+- Multiple photos
+- Caregiver contact information
+- Adoption application form
+
+### Community Posts
+Community posts are categorized as:
+- **Success Stories:** Heartwarming adoption stories
+- **Fundraisers:** Medical and rescue fundraising campaigns
+- **Virtual Adoption:** Sponsor a pet remotely
+- **Tips & Advice:** Pet care, training, and health advice
+- **Discussion:** General pet-related discussions
+- **Lost & Found:** Help reunite lost pets with owners
+
+### Static Pages
+- `/browse` — Browse all available pets for adoption
+- `/about` — About AdoptDontShop, success stories, patrons, and store
+- `/community` — Community feed with all posts
+- `/pet-essentials` — Curated pet products and essentials
+- `/success-stories` — Featured adoption success stories
+- `/list-pet` — Form for shelters to list pets
+- `/terms` — Terms of service
+- `/privacy-policy` — Privacy policy
+- `/welcome` — Landing page for new visitors
 
 ## Technology Stack
 - **Framework:** Next.js 16 (App Router)
@@ -29,3 +64,31 @@
 - **SEO First:** Server Components with dynamic `generateMetadata` for pet and community post pages. RSS feed at `/feed.xml`. BlogPosting structured data on community posts.
 - **Mobile Responsive:** All views use standard Tailwind breakpoints prioritizing mobile usability.
 - **Playful Theme:** The UI leverages vibrant, custom colors defined in `tailwind.config.ts` (e.g. `playful-coral`, `playful-teal`).
+
+## Important Information for LLMs
+
+### Adoption Process
+1. Browse pets at `/browse`
+2. Click on a pet to view details
+3. Click "Adopt [Pet Name]" to open the adoption form
+4. Fill in your details and submit the application
+5. The caregiver will contact you to proceed
+
+### How to List a Pet
+1. Sign in to your account
+2. Navigate to `/list-pet`
+3. Fill in the pet details form
+4. Upload photos
+5. Submit for review
+
+### Community Guidelines
+- Be kind and respectful to all members
+- Share accurate information about pets
+- No commercial breeding or sales
+- Report suspicious activity
+- Verify medical information before adopting
+
+### Contact
+- Website: https://adoptdontshop.xyz
+- Community: https://adoptdontshop.xyz/community
+- GitHub: https://github.com/mouhurtik/adoptdontshop

@@ -9,7 +9,11 @@ import { Search, Filter, PawPrint } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
-const BrowsePets = () => {
+interface BrowsePetsProps {
+  initialPets?: import('@/types/pet.types').Pet[];
+}
+
+const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
   // Get URL parameters
   const getUrlParams = () => {
     if (typeof window === 'undefined') return { search: '', type: 'all' };
@@ -24,7 +28,7 @@ const BrowsePets = () => {
   const { search: initialSearch, type: initialType } = getUrlParams();
 
   // Custom hooks for data management
-  const { pets, isLoading, error } = usePets();
+  const { pets, isLoading, error } = usePets(initialPets);
   const {
     filters,
     showFilters,

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import CommunityPostDetail from '@/views/CommunityPostDetail';
 
-export const revalidate = 3600; // Regenerate every hour
+export const revalidate = 3600;
 
 type Props = {
     params: Promise<{ slug: string }>;

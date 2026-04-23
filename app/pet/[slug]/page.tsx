@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { fetchPetBySlugServer } from '@/lib/supabase/server-queries';
 import PetDetails from '@/views/PetDetails';
 
-export const revalidate = 3600; // Regenerate every hour
+export const revalidate = 3600;
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -11,16 +12,14 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
 
-    // Extract the ID prefix from slug (e.g., "buddy-abc123" -> "abc123")
-    const idPrefix = slug.split('-').pop() || '';
-
     try {
         const supabase = await createServerSupabaseClient();
         const { data: pets } = await supabase
             .from('pet_listings')
             .select('pet_name, breed, location, animal_type, description, image_url, id');
 
-        const pet = (pets ?? []).find(p => p.id.startsWith(idPrefix));
+        const idPrefix = slug.split('-').pop() || '';
+        const pet = (pets ?? []).find((p) => p.id.startsWith(idPrefix));
 
         if (pet) {
             const title = `Adopt ${pet.pet_name} — ${pet.breed} in ${pet.location}`;
@@ -55,6 +54,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default function PetDetailPage() {
-    return <PetDetails />;
+export default async function PetDetailPage({ params }: Props) {
+    const { slug } = await params;
+    const serverPet = await fetchPetBySlugServer(slug);
+
+    const initialPet = serverPet
+        ? ({
+              ...serverPet,
+              name: serverPet.pet_name,
+              type: serverPet.animal_type ?? undefined,
+              age: serverPet.age || 'Unknown',
+              urgent: serverPet.status === 'urgent',
+              image: serverPet.image_url ?? undefined,
+          } as unknown as import('@/types/pet.types').Pet)
+        : null;
+
+    return <PetDetails initialPet={initialPet} />;
 }

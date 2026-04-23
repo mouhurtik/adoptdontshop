@@ -13,12 +13,14 @@ interface FetchPostsParams {
     sort?: SortOption;
     limit?: number;
     offset?: number;
+    initialData?: PostCardData[];
 }
 
 // Fetch community posts
-export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offset = 0 }: FetchPostsParams = {}) {
+export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offset = 0, initialData }: FetchPostsParams = {}) {
     return useQuery({
         queryKey: ['community-posts', tag, sort, limit, offset],
+        initialData,
         queryFn: async (): Promise<PostCardData[]> => {
             // Use plain select without typed FK join — FK exists in DB but not in generated types
             let query = supabase
