@@ -187,19 +187,33 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                         ) : posts && posts.length > 0 ? (
                             viewMode === 'grid' ? (
                                 <div className="flex flex-col gap-5">
-                                    {posts.map((post, index) => (
-                                        <ScrollReveal key={post.id} mode="fade-up" delay={index * 0.05} width="100%">
-                                            <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />
-                                        </ScrollReveal>
-                                    ))}
+                                    {posts.map((post, index) => {
+                                        const card = <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />;
+                                        return index < 2 ? (
+                                            <div key={post.id} className="w-full">
+                                                {card}
+                                            </div>
+                                        ) : (
+                                            <ScrollReveal key={post.id} mode="fade-up" delay={(index - 2) * 0.05} width="100%">
+                                                {card}
+                                            </ScrollReveal>
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-4">
-                                    {posts.map((post, index) => (
-                                        <ScrollReveal key={post.id} mode="fade-up" delay={index * 0.03} width="100%">
-                                            <PostCardList post={post} />
-                                        </ScrollReveal>
-                                    ))}
+                                    {posts.map((post, index) => {
+                                        const card = <PostCardList post={post} />;
+                                        return index < 2 ? (
+                                            <div key={post.id} className="w-full">
+                                                {card}
+                                            </div>
+                                        ) : (
+                                            <ScrollReveal key={post.id} mode="fade-up" delay={(index - 2) * 0.03} width="100%">
+                                                {card}
+                                            </ScrollReveal>
+                                        );
+                                    })}
                                 </div>
                             )
                         ) : (
