@@ -7,7 +7,7 @@ import { Flame, Clock, TrendingUp, ChevronDown, LayoutGrid, List, PenSquare } fr
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, Suspense } from 'react';
 import PostCard from '@/components/community/PostCard';
 import PostCardList from '@/components/community/PostCardList';
@@ -58,6 +58,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
     });
 
     return (
+        <LazyMotion features={domAnimation}>
         <div className={`${isHome ? 'pt-4 lg:pt-6' : 'pt-4 lg:pt-8'} pb-16 bg-playful-cream min-h-screen`}>
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
@@ -110,7 +111,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
 
                                 <AnimatePresence>
                                     {isSortOpen && (
-                                        <motion.div
+                                        <m.div
                                             initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -132,7 +133,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                                                     {sort === option.value && <div className="w-1.5 h-1.5 rounded-full bg-playful-coral" />}
                                                 </button>
                                             ))}
-                                        </motion.div>
+                                        </m.div>
                                     )}
                                 </AnimatePresence>
                             </div>
@@ -188,7 +189,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                                 <div className="flex flex-col gap-5">
                                     {posts.map((post, index) => (
                                         <ScrollReveal key={post.id} mode="fade-up" delay={index * 0.05} width="100%">
-                                            <PostCard post={post} />
+                                            <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />
                                         </ScrollReveal>
                                     ))}
                                 </div>
@@ -242,6 +243,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                 </div>
             </div>
         </div>
+        </LazyMotion>
     );
 };
 

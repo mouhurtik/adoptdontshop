@@ -43,7 +43,7 @@ export interface PostCardData {
     };
 }
 
-const PostCard = ({ post }: { post: PostCardData }) => {
+const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: boolean }) => {
     const router = useRouter();
     const { user } = useAuth();
     const { data: liked } = useUserLiked(post.id);
@@ -82,7 +82,11 @@ const PostCard = ({ post }: { post: PostCardData }) => {
                         src={post.featured_image_url}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
+                        loading={priority ? "eager" : "lazy"}
+                        {...(priority ? { fetchPriority: "high" as const } : {})}
+                        width={1600}
+                        height={900}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 658px"
                     />
                 </div>
             )}

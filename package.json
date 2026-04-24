@@ -60,10 +60,10 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "browserslist": [
-    "chrome 111",
-    "edge 111",
-    "firefox 111",
-    "safari 16.4"
+    "chrome 120",
+    "edge 120",
+    "firefox 120",
+    "safari 17"
   ],
   "devDependencies": {
     "@eslint/js": "^9.39.2",

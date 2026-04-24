@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView, UseInViewOptions } from "framer-motion";
+import { m, LazyMotion, domAnimation, useInView, UseInViewOptions } from "framer-motion";
 import { useRef, useEffect, useState, ReactNode } from "react";
 
 interface ScrollRevealProps {
@@ -62,17 +62,19 @@ const ScrollReveal = ({
         : { hidden: {}, visible: {} };
 
     return (
-        <motion.div
-            ref={ref}
-            variants={variants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            transition={{ duration: isDesktop ? duration : 0, delay: isDesktop ? delay : 0, ease: "easeOut" }}
-            className={`relative ${className}`}
-            style={{ width }}
-        >
-            {children}
-        </motion.div>
+        <LazyMotion features={domAnimation}>
+            <m.div
+                ref={ref}
+                variants={variants}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                transition={{ duration: isDesktop ? duration : 0, delay: isDesktop ? delay : 0, ease: "easeOut" }}
+                className={`relative ${className}`}
+                style={{ width }}
+            >
+                {children}
+            </m.div>
+        </LazyMotion>
     );
 };
 
