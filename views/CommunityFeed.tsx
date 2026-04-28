@@ -3,18 +3,21 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Flame, Clock, TrendingUp, ChevronDown, LayoutGrid, List, PenSquare } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { m, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, Suspense } from 'react';
 import PostCard from '@/components/community/PostCard';
-import PostCardList from '@/components/community/PostCardList';
 import TagFilter from '@/components/community/TagFilter';
-import TrendingSidebar from '@/components/community/TrendingSidebar';
-import HomeRightSidebar from '@/components/home/HomeRightSidebar';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+
+// Lazy-load components not needed for mobile LCP
+const PostCardList = dynamic(() => import('@/components/community/PostCardList'), { ssr: false });
+const TrendingSidebar = dynamic(() => import('@/components/community/TrendingSidebar'), { ssr: false });
+const HomeRightSidebar = dynamic(() => import('@/components/home/HomeRightSidebar'), { ssr: false });
+const Badge = dynamic(() => import('@/components/ui/badge').then(m => ({ default: m.Badge })), { ssr: false });
 
 const SORT_OPTIONS: { value: SortOption; label: string; icon: React.ReactNode }[] = [
     { value: 'hot', label: 'Hot', icon: <Flame className="h-4 w-4" /> },

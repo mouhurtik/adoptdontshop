@@ -9,14 +9,14 @@ const quicksand = Quicksand({
     subsets: ['latin'],
     variable: '--font-quicksand',
     display: 'swap',
-    weight: ['400', '500', '600', '700'],
+    weight: ['600', '700'],
 });
 
 const nunito = Nunito({
     subsets: ['latin'],
     variable: '--font-nunito',
     display: 'swap',
-    weight: ['400', '600', '700'],
+    weight: ['400', '700'],
 });
 
 
@@ -140,6 +140,7 @@ export default function RootLayout({
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
+                <link rel="preconnect" href="https://uibsmaizlrekfooryrwq.supabase.co" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
