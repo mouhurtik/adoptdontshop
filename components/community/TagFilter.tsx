@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence, LazyMotion, domAnimation } from 'framer-motion';
 import { TAG_LABELS } from './PostCard';
 
 const ALL_TAGS = ['all', 'success_story', 'fundraiser', 'virtual_adoption', 'tips', 'discussion', 'lost_found'];
@@ -36,6 +36,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
     };
 
     return (
+        <LazyMotion features={domAnimation}>
         <div className={`relative ${isOpen ? 'z-[100]' : 'z-30'}`}>
             {/* Mobile Popout Modal with Custom Dropdown inside */}
             <div className="md:hidden">
@@ -53,7 +54,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
                             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" 
                             onClick={handleCloseModal}
                         >
-                            <motion.div
+                            <m.div
                                 className="bg-white rounded-[2rem] p-6 shadow-xl w-full max-w-md border-2 border-playful-cream relative"
                                 initial={{ opacity: 0, y: 50, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -88,7 +89,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
 
                                             <AnimatePresence>
                                                 {isDropdownOpen && (
-                                                    <motion.div
+                                                    <m.div
                                                         initial={{ opacity: 0, y: 10 }}
                                                         animate={{ opacity: 1, y: 0 }}
                                                         exit={{ opacity: 0, y: 10 }}
@@ -113,7 +114,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
                                                                 </button>
                                                             );
                                                         })}
-                                                    </motion.div>
+                                                    </m.div>
                                                 )}
                                             </AnimatePresence>
                                         </div>
@@ -126,7 +127,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
                                         Show Posts
                                     </button>
                                 </div>
-                            </motion.div>
+                            </m.div>
                         </div>
                     )}
                 </AnimatePresence>
@@ -167,6 +168,7 @@ const TagFilter = ({ activeTag, onTagChange }: TagFilterProps) => {
                 )}
             </div>
         </div>
+        </LazyMotion>
     );
 };
 

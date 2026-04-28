@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Flame, Clock, TrendingUp, ChevronDown, LayoutGrid, List, PenSquare } from 'lucide-react';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { m, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
@@ -67,11 +66,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                     null
                 ) : (
                     /* Full Hero for standalone /community page (if accessed via other means) */
-                    <ScrollReveal
-                        mode="fade-up"
-                        width="100%"
-                        className="text-center mb-10 lg:mb-16 relative"
-                    >
+                    <div className="text-center mb-10 lg:mb-16 relative">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-coral/20 rounded-full blur-3xl -z-10"></div>
                         <Badge variant="secondary" className="mb-4 bg-playful-yellow text-playful-text hover:bg-playful-yellow/80 hidden md:inline-flex">
                             Community
@@ -86,11 +81,11 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                         <p className="text-lg md:text-3xl text-gray-600 font-bold max-w-4xl mx-auto mt-4 lg:mt-8 font-heading">
                             Join our community of pet lovers 🐾
                         </p>
-                    </ScrollReveal>
+                    </div>
                 )}
 
-                {/* Controls Bar */}
-                <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="mb-8">
+                {/* Controls Bar — rendered without ScrollReveal to avoid framer-motion overhead */}
+                <div className="mb-8">
                     <div className="flex flex-row items-center justify-between gap-3 relative z-40">
                         {/* Tag Filters */}
                         <div className="flex-shrink-0">
@@ -167,7 +162,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                             )}
                         </div>
                     </div>
-                </ScrollReveal>
+                </div>
 
                 {/* Posts Grid + Sidebar Layout */}
                 <div className="flex gap-8">
@@ -187,63 +182,47 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                         ) : posts && posts.length > 0 ? (
                             viewMode === 'grid' ? (
                                 <div className="flex flex-col gap-5">
-                                    {posts.map((post, index) => {
-                                        const card = <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />;
-                                        return index < 2 ? (
-                                            <div key={post.id} className="w-full">
-                                                {card}
-                                            </div>
-                                        ) : (
-                                            <ScrollReveal key={post.id} mode="fade-up" delay={(index - 2) * 0.05} width="100%">
-                                                {card}
-                                            </ScrollReveal>
-                                        );
-                                    })}
+                                    {posts.map((post, index) => (
+                                        <div key={post.id} className="w-full">
+                                            <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />
+                                        </div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-4">
-                                    {posts.map((post, index) => {
-                                        const card = <PostCardList post={post} />;
-                                        return index < 2 ? (
-                                            <div key={post.id} className="w-full">
-                                                {card}
-                                            </div>
-                                        ) : (
-                                            <ScrollReveal key={post.id} mode="fade-up" delay={(index - 2) * 0.03} width="100%">
-                                                {card}
-                                            </ScrollReveal>
-                                        );
-                                    })}
+                                    {posts.map((post) => (
+                                        <div key={post.id} className="w-full">
+                                            <PostCardList post={post} />
+                                        </div>
+                                    ))}
                                 </div>
                             )
                         ) : (
-                            <ScrollReveal mode="fade-up" width="100%">
-                                <div className="text-center py-20">
-                                    <div className="bg-playful-yellow p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full shadow-lg text-white transform -rotate-6">
-                                        <PenSquare className="h-12 w-12" />
-                                    </div>
-                                    <h2 className="text-3xl font-heading font-black text-playful-text mb-4">
-                                        No posts yet!
-                                    </h2>
-                                    <p className="text-xl text-gray-500 font-medium mb-8 max-w-md mx-auto">
-                                        Be the first to share something with the community.
-                                    </p>
-                                    {isAuthenticated ? (
-                                        <Link href="/community/write" prefetch={false}>
-                                            <PrimaryButton size="lg" className="text-lg px-10">
-                                                <PenSquare className="h-5 w-5 mr-2" />
-                                                Write the First Post
-                                            </PrimaryButton>
-                                        </Link>
-                                    ) : (
-                                        <Link href="/login" prefetch={false}>
-                                            <PrimaryButton size="lg" className="text-lg px-10">
-                                                Sign In to Post
-                                            </PrimaryButton>
-                                        </Link>
-                                    )}
+                            <div className="text-center py-20">
+                                <div className="bg-playful-yellow p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full shadow-lg text-white transform -rotate-6">
+                                    <PenSquare className="h-12 w-12" />
                                 </div>
-                            </ScrollReveal>
+                                <h2 className="text-3xl font-heading font-black text-playful-text mb-4">
+                                    No posts yet!
+                                </h2>
+                                <p className="text-xl text-gray-500 font-medium mb-8 max-w-md mx-auto">
+                                    Be the first to share something with the community.
+                                </p>
+                                {isAuthenticated ? (
+                                    <Link href="/community/write" prefetch={false}>
+                                        <PrimaryButton size="lg" className="text-lg px-10">
+                                            <PenSquare className="h-5 w-5 mr-2" />
+                                            Write the First Post
+                                        </PrimaryButton>
+                                    </Link>
+                                ) : (
+                                    <Link href="/login" prefetch={false}>
+                                        <PrimaryButton size="lg" className="text-lg px-10">
+                                            Sign In to Post
+                                        </PrimaryButton>
+                                    </Link>
+                                )}
+                            </div>
                         )}
                     </div>
 

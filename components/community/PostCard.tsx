@@ -83,6 +83,7 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading={priority ? "eager" : "lazy"}
+                        decoding={priority ? "sync" : "async"}
                         {...(priority ? { fetchPriority: "high" as const } : {})}
                         width={1600}
                         height={900}

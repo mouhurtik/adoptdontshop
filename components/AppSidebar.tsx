@@ -31,6 +31,8 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
 
     // Fetch user's joined communities
     useEffect(() => {
+        // Sidebar is hidden on mobile — skip API call to save bandwidth + main thread
+        if (!window.matchMedia('(min-width: 1024px)').matches) return;
         if (!user?.id) return;
         const fetchCommunities = async () => {
             const { data: memberships } = await supabase

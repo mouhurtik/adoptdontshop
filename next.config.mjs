@@ -4,11 +4,13 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    compress: true,
     async redirects() {
         return [
             { source: '/sponsors', destination: '/about?tab=patrons', permanent: true },
             { source: '/resources', destination: '/about?tab=store', permanent: true },
             { source: '/pet-essentials', destination: '/about?tab=store', permanent: true },
+            { source: '/community', destination: '/', permanent: true },
         ];
     },
     async headers() {
@@ -57,6 +59,12 @@ const nextConfig = {
                 headers: [
                     { key: 'Content-Type', value: 'application/xml' },
                     { key: 'Cache-Control', value: 'public, max-age=3600' },
+                ],
+            },
+            {
+                source: '/_next/static/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
                 ],
             },
         ];

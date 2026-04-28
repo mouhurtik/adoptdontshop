@@ -35,6 +35,8 @@ const HomeRightSidebar = () => {
     const [recentPosts, setRecentPosts] = useState<RecentPost[]>([]);
 
     useEffect(() => {
+        // This sidebar is hidden below xl breakpoint — skip data fetching on mobile/tablet
+        if (!window.matchMedia('(min-width: 1280px)').matches) return;
         if (!user?.id) return;
 
         // Fetch recent notifications

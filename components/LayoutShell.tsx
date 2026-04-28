@@ -1,26 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import AppSidebar from '@/components/AppSidebar';
 import TopBar from '@/components/TopBar';
-import BottomNav from '@/components/BottomNav';
 import { AuthModalProvider } from '@/contexts/AuthModalContext';
 
 // Lazy-load heavy components that aren't needed on initial paint
 const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
 const AuthModal = dynamic(() => import('@/components/AuthModal'), { ssr: false });
 
+// Lazy-load navigation components — AppSidebar is hidden on mobile,
+// BottomNav is below the fold. Neither blocks LCP.
+const AppSidebar = dynamic(() => import('@/components/AppSidebar'), { ssr: false });
+const BottomNav = dynamic(() => import('@/components/BottomNav'), { ssr: false });
+
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [shellReady, setShellReady] = useState(false);
 
     const isAdminRoute = pathname.startsWith('/admin');
     const isDeepView = pathname.startsWith('/pet/');
     const showBottomNav = !isAdminRoute && !isDeepView;
 
     const sidebarWidth = sidebarCollapsed ? 72 : 260;
+
+    // Defer non-critical shell components until after first paint
+    useEffect(() => {
+        if ('requestIdleCallback' in window) {
+            const id = requestIdleCallback(() => setShellReady(true));
+            return () => cancelIdleCallback(id);
+        } else {
+            const timer = setTimeout(() => setShellReady(true), 100);
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     // Admin routes use their own layout
     if (isAdminRoute) {
@@ -36,13 +51,15 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     return (
         <AuthModalProvider>
         <div className="min-h-screen bg-playful-cream">
-            {/* Desktop: Persistent left sidebar */}
-            <AppSidebar
-                collapsed={sidebarCollapsed}
-                onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-            />
+            {/* Desktop: Persistent left sidebar — lazy-loaded, hidden on mobile via CSS */}
+            {shellReady && (
+                <AppSidebar
+                    collapsed={sidebarCollapsed}
+                    onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+                />
+            )}
 
-            {/* Mobile: Top bar */}
+            {/* Mobile: Top bar — lightweight, loads immediately */}
             <TopBar />
 
             {/* Main content area — offset by sidebar on desktop */}
@@ -61,8 +78,8 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
                 {children}
             </main>
 
-            {/* Mobile bottom nav */}
-            {showBottomNav && <BottomNav />}
+            {/* Mobile bottom nav — lazy-loaded, not needed for LCP */}
+            {showBottomNav && shellReady && <BottomNav />}
 
             {/* Floating messages (desktop chat popout) */}
             <FloatingMessages />

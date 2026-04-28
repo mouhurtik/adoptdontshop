@@ -139,7 +139,8 @@ export default function RootLayout({
         <html lang="en" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
-                <link rel="preload" as="image" href="/images/hero-dogs.webp" type="image/webp" />
+                <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
+                <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
                     strategy="lazyOnload"
