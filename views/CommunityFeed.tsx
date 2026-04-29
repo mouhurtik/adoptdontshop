@@ -65,8 +65,8 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
                 {isHome ? (
-                    /* Home: no hero, just a subtle heading */
-                    null
+                    /* Home: visually hidden H1 for SEO — the feed IS the page content */
+                    <h1 className="sr-only">AdoptDontShop — Pet Adoption & Community Portal</h1>
                 ) : (
                     /* Full Hero for standalone /community page (if accessed via other means) */
                     <div className="text-center mb-10 lg:mb-16 relative">
