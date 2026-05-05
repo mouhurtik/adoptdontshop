@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Eye } from 'lucide-react';
 import { useLikePost, useUserLiked } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+import { getOptimizedImageUrl } from '@/lib/imageLoader';
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
     success_story: { bg: 'bg-green-100', text: 'text-green-700' },
@@ -79,15 +80,16 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
             {post.featured_image_url && (
                 <div className="aspect-[16/9] overflow-hidden">
                     <img
-                        src={post.featured_image_url}
+                        src={getOptimizedImageUrl(post.featured_image_url, 800)}
+                        srcSet={`${getOptimizedImageUrl(post.featured_image_url, 480)} 480w, ${getOptimizedImageUrl(post.featured_image_url, 800)} 800w, ${getOptimizedImageUrl(post.featured_image_url, 1200)} 1200w`}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading={priority ? "eager" : "lazy"}
                         decoding="async"
                         {...(priority ? { fetchPriority: "high" as const } : {})}
-                        width={1600}
-                        height={900}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 658px"
+                        width={800}
+                        height={450}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 658px"
                     />
                 </div>
             )}

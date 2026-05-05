@@ -6,7 +6,6 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { Flame, Clock, TrendingUp, ChevronDown, LayoutGrid, List, PenSquare } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import { m, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, Suspense } from 'react';
 import PostCard from '@/components/community/PostCard';
 import TagFilter from '@/components/community/TagFilter';
@@ -60,7 +59,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
     });
 
     return (
-        <LazyMotion features={domAnimation}>
+        <>
         <div className={`${isHome ? 'pt-4 lg:pt-6' : 'pt-4 lg:pt-8'} pb-16 bg-playful-cream min-h-screen`}>
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
@@ -107,33 +106,29 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                                     <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
                                 </button>
 
-                                <AnimatePresence>
-                                    {isSortOpen && (
-                                        <m.div
-                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            transition={{ duration: 0.15 }}
-                                            className="absolute top-full mt-1.5 right-0 z-50 w-[130px] bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.25rem] p-1.5 origin-top-right"
+                                <div
+                                    className={`absolute top-full mt-1.5 right-0 z-50 w-[130px] bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.25rem] p-1.5 origin-top-right transition-all duration-150 ease-out ${
+                                        isSortOpen
+                                            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                                            : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
+                                    }`}
+                                >
+                                    {SORT_OPTIONS.map(option => (
+                                        <button
+                                            key={option.value}
+                                            onClick={() => { setSort(option.value); setIsSortOpen(false); }}
+                                            className="w-full text-left px-3 py-2.5 rounded-xl transition-colors duration-150 flex items-center justify-between group hover:bg-playful-cream/50"
                                         >
-                                            {SORT_OPTIONS.map(option => (
-                                                <button
-                                                    key={option.value}
-                                                    onClick={() => { setSort(option.value); setIsSortOpen(false); }}
-                                                    className="w-full text-left px-3 py-2.5 rounded-xl transition-colors duration-150 flex items-center justify-between group hover:bg-playful-cream/50"
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`${sort === option.value ? 'text-playful-text' : 'text-gray-500'}`}>{option.icon}</span>
-                                                        <span className={`text-sm font-bold ${sort === option.value ? 'text-playful-coral' : 'text-gray-600 group-hover:text-playful-text'}`}>
-                                                            {option.label}
-                                                        </span>
-                                                    </div>
-                                                    {sort === option.value && <div className="w-1.5 h-1.5 rounded-full bg-playful-coral" />}
-                                                </button>
-                                            ))}
-                                        </m.div>
-                                    )}
-                                </AnimatePresence>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`${sort === option.value ? 'text-playful-text' : 'text-gray-500'}`}>{option.icon}</span>
+                                                <span className={`text-sm font-bold ${sort === option.value ? 'text-playful-coral' : 'text-gray-600 group-hover:text-playful-text'}`}>
+                                                    {option.label}
+                                                </span>
+                                            </div>
+                                            {sort === option.value && <div className="w-1.5 h-1.5 rounded-full bg-playful-coral" />}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* View Toggle */}
@@ -239,7 +234,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                 </div>
             </div>
         </div>
-        </LazyMotion>
+        </>
     );
 };
 

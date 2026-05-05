@@ -142,16 +142,26 @@ export default function RootLayout({
                 <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
                 <link rel="preconnect" href="https://uibsmaizlrekfooryrwq.supabase.co" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-                <Script
-                    src="https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9"
-                    strategy="lazyOnload"
-                />
                 <Script id="google-analytics" strategy="lazyOnload">
                     {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'G-FJ0SET7VX9');
+                        (function() {
+                            function initGtag() {
+                                var s = document.createElement('script');
+                                s.src = 'https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9';
+                                s.async = true;
+                                document.head.appendChild(s);
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                window.gtag = gtag;
+                                gtag('js', new Date());
+                                gtag('config', 'G-FJ0SET7VX9');
+                            }
+                            if ('requestIdleCallback' in window) {
+                                requestIdleCallback(initGtag, { timeout: 3000 });
+                            } else {
+                                setTimeout(initGtag, 2000);
+                            }
+                        })();
                     `}
                 </Script>
                 <script
