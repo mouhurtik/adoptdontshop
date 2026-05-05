@@ -1,5 +1,3 @@
-'use client';
-
 // Custom image loader for Cloudflare Pages with Supabase image transforms
 // Supabase storage URLs are rewritten to use the render API for on-the-fly resizing
 
