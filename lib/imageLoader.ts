@@ -1,5 +1,6 @@
-// Custom image loader for Cloudflare Pages with Supabase image transforms
-// Supabase storage URLs are rewritten to use the render API for on-the-fly resizing
+// Custom image loader for Cloudflare Pages
+// Passes through image URLs directly since Supabase image transforms
+// require a paid plan and Cloudflare image resizing requires a paid plan.
 
 interface ImageLoaderProps {
     src: string;
@@ -7,34 +8,13 @@ interface ImageLoaderProps {
     quality?: number;
 }
 
-export default function imageLoader({ src, width, quality }: ImageLoaderProps): string {
-    const q = quality || 75;
-
-    // For Supabase storage URLs, use the image transformation API
-    // Rewrites: /storage/v1/object/public/ → /storage/v1/render/image/public/
-    if (src.includes('.supabase.co/storage/v1/object/public/')) {
-        return src.replace(
-            '/storage/v1/object/public/',
-            '/storage/v1/render/image/public/'
-        ) + `?width=${width}&quality=${q}&resize=contain`;
-    }
-
-    // For other external URLs, return as-is (no transforms available)
-    if (src.startsWith('http://') || src.startsWith('https://')) {
-        return src;
-    }
-
-    // For local images, add width/quality params for potential future CDN optimization
-    return `${src}?w=${width}&q=${q}`;
+export default function imageLoader({ src }: ImageLoaderProps): string {
+    // Return all URLs as-is — no server-side transforms available on free tiers
+    return src;
 }
 
-// Helper to generate an optimized URL for raw <img> tags (not using next/image)
-export function getOptimizedImageUrl(src: string, width: number, quality: number = 75): string {
-    if (src.includes('.supabase.co/storage/v1/object/public/')) {
-        return src.replace(
-            '/storage/v1/object/public/',
-            '/storage/v1/render/image/public/'
-        ) + `?width=${width}&quality=${quality}&resize=contain`;
-    }
+// Helper: returns the original URL (no transforms on free tier)
+// Used by PostCard and PostCardServer for consistent image handling
+export function getOptimizedImageUrl(src: string, _width?: number, _quality?: number): string {
     return src;
 }
