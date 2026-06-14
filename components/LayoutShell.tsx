@@ -24,8 +24,6 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     const isDeepView = pathname.startsWith('/pet/');
     const showBottomNav = !isAdminRoute && !isDeepView;
 
-    const sidebarWidth = sidebarCollapsed ? 72 : 260;
-
     // Defer non-critical shell components until after first paint
     useEffect(() => {
         if ('requestIdleCallback' in window) {
@@ -36,6 +34,16 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
             return () => clearTimeout(timer);
         }
     }, []);
+
+    // Update sidebar width CSS variable when collapse state changes (desktop only)
+    useEffect(() => {
+        if (window.matchMedia('(min-width: 1024px)').matches) {
+            document.documentElement.style.setProperty(
+                '--sidebar-width',
+                `${sidebarCollapsed ? 72 : 260}px`
+            );
+        }
+    }, [sidebarCollapsed]);
 
     // Admin routes use their own layout
     if (isAdminRoute) {
@@ -67,25 +75,18 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
                 className={`${showBottomNav ? 'pb-20 lg:pb-0' : 'pb-0'} pt-14 lg:pt-0 min-h-screen transition-all duration-300`}
                 style={{ marginLeft: `var(--sidebar-width, 0px)` }}
             >
-                <style>{`
-                    @media (min-width: 1024px) {
-                        :root { --sidebar-width: ${sidebarWidth}px; }
-                    }
-                    @media (max-width: 1023px) {
-                        :root { --sidebar-width: 0px; }
-                    }
-                `}</style>
+                {/* --sidebar-width is set in globals.css: 260px on lg+, 0px on mobile */}
                 {children}
             </main>
 
             {/* Mobile bottom nav — lazy-loaded, not needed for LCP */}
             {showBottomNav && shellReady && <BottomNav />}
 
-            {/* Floating messages (desktop chat popout) */}
-            <FloatingMessages />
+            {/* Floating messages (desktop chat popout) — deferred */}
+            {shellReady && <FloatingMessages />}
 
-            {/* Auth Modal */}
-            <AuthModal />
+            {/* Auth Modal — deferred */}
+            {shellReady && <AuthModal />}
         </div>
         </AuthModalProvider>
     );

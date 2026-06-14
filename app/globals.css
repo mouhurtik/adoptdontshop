@@ -114,6 +114,20 @@
   }
 }
 
+/* Reserve space for lazy-loaded bottom nav to prevent CLS */
+@media (max-width: 1023px) {
+  main {
+    /* Bottom nav is 64px + safe area. pb-20 (80px) already handles this in LayoutShell */
+  }
+}
+
+/* Reserve space for lazy-loaded sidebar to prevent CLS */
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-width: 260px; /* Matches default non-collapsed sidebar */
+  }
+}
+
 /* Sidebar slide-in animation */
 @keyframes slide-in-left {
   from {

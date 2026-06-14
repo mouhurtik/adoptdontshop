@@ -5,9 +5,13 @@ import type { Metadata } from 'next';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-    title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
-    description: 'Join the AdoptDontShop community. Share stories, discuss pet care, browse rescue animals for adoption, and connect with fellow animal lovers in India.',
-    keywords: ['adopt pet', 'rescue animals', 'pet community', 'adopt dog', 'adopt cat', 'pet adoption India', 'adopt dont shop'],
+    title: 'AdoptDontShop — Free Dog & Cat Adoption in India',
+    description: 'Adopt rescue dogs and cats for free across India. Join the AdoptDontShop community — share pet care tips, find adoption events, and connect with animal lovers in Mumbai, Delhi, Kolkata & more.',
+    keywords: [
+        'pet adoption India', 'adopt dog India', 'adopt cat India',
+        'rescue animals', 'pet community India', 'adopt dont shop',
+        'indie dog adoption', 'free pet adoption',
+    ],
 };
 
 export default async function HomePage() {

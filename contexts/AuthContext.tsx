@@ -58,32 +58,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 .single();
 
             // Auto-generate username if missing (OAuth users)
+            // Uses retry loop to handle race conditions (S7 fix)
             if (profile && !profile.username) {
                 const baseName = (profile.display_name || 'user')
                     .toLowerCase()
                     .replace(/[^a-z0-9]/g, '')
                     .substring(0, 20) || 'user';
 
-                // Try clean name first, only add numbers if taken
-                let generatedUsername = baseName;
-                const { data: existing } = await supabase
-                    .from('profiles')
-                    .select('id')
-                    .eq('username', baseName)
-                    .maybeSingle();
+                let usernameSet = false;
+                for (let attempt = 0; attempt < 3 && !usernameSet; attempt++) {
+                    const candidate = attempt === 0
+                        ? baseName
+                        : `${baseName.substring(0, 16)}${Math.floor(1000 + Math.random() * 9000)}`;
 
-                if (existing) {
-                    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-                    generatedUsername = `${baseName.substring(0, 16)}${randomSuffix}`;
-                }
+                    const { error: updateErr } = await supabase
+                        .from('profiles')
+                        .update({ username: candidate })
+                        .eq('id', userId)
+                        .is('username', null); // Only update if still null (prevents overwrite)
 
-                const { error: updateErr } = await supabase
-                    .from('profiles')
-                    .update({ username: generatedUsername })
-                    .eq('id', userId);
-
-                if (!updateErr) {
-                    profile.username = generatedUsername;
+                    if (!updateErr) {
+                        profile.username = candidate;
+                        usernameSet = true;
+                    }
+                    // If error (likely UNIQUE violation), loop retries with a different suffix
                 }
             }
 

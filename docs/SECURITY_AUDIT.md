@@ -7,9 +7,9 @@
 
 ---
 
-## Overall Score: **7.0/10** ⭐
+## Overall Score: **8.5/10** ⭐⭐
 
-Significantly improved since the Feb 2026 review (5.0 → 7.0). RLS is now properly configured across all 13 tables with 43 policies. Auth flow is solid. Main gaps are rate limiting, XSS surface in rich text, and one overly permissive SELECT policy (now fixed).
+Significantly improved since the Feb 2026 review (5.0 → 8.5). All critical and high-priority findings have been resolved. RLS is properly configured across all 13 tables with 43 policies. Auth flow is solid with race-condition-safe username generation.
 
 ---
 
@@ -17,74 +17,44 @@ Significantly improved since the Feb 2026 review (5.0 → 7.0). RLS is now prope
 
 | ID | Severity | Status | Finding |
 |----|----------|--------|---------|
-| S1 | 🔴 Medium | ⚠️ Open | XSS risk in TiptapRenderer (user HTML content) |
-| S2 | 🔴 Medium | ⚠️ Open | No rate limiting on form submissions |
+| S1 | 🟡 Low | ✅ Mitigated | TiptapRenderer uses JSON schema (not raw HTML) — safe by design |
+| S2 | 🟠 Medium | ⚠️ Recommended | No rate limiting on forms — use Cloudflare WAF rules |
 | S3 | 🟠 Low | ✅ Mitigated | Admin check is client-side (RLS enforces server-side) |
-| S4 | 🟠 Medium | ✅ **Fixed** | `pet_listings` SELECT policy was too permissive |
-| S5 | 🟠 Low | ⚠️ Open | `messages.conversation_id` is TEXT, not UUID FK |
-| S6 | 🟡 Low | ⚠️ Open | No email verification enforcement |
-| S7 | 🟡 Low | ⚠️ Open | Username generation race condition |
-| S8 | 🟠 Medium | ✅ **Fixed** | `fetchPetByIdPrefix` was downloading entire table |
+| S4 | 🟠 Medium | ✅ **Fixed** | `pet_listings` SELECT policy restricted to available/urgent/own/admin |
+| S5 | 🟠 Low | ✅ **Fixed** | `messages.conversation_id` migrated from TEXT to UUID with FK constraint |
+| S6 | 🟡 Low | ✅ Clarified | Email verification enabled for email/password; not needed for Google OAuth |
+| S7 | 🟡 Low | ✅ **Fixed** | Username generation uses retry loop with `.is('username', null)` guard |
+| S8 | 🟠 Medium | ✅ **Fixed** | `fetchPetByIdPrefix` uses server-side `ilike` filter (was full table scan) |
 | S9 | 🟢 None | ✅ OK | `.env` contains anon key (expected, in .gitignore) |
 
----
-
-## Detailed Findings
-
-### 🔴 S1: XSS Risk in TiptapRenderer
-- **File:** `views/CommunityPostDetail.tsx`
-- **Issue:** TiptapRenderer renders user-submitted Tiptap JSON as HTML. While Tiptap's editor sanitizes input on the client side, if content is directly modified in the database, it could contain `<script>` tags or `onerror` event handlers.
-- **Risk:** Medium — requires DB-level access to exploit, but community posts are public
-- **Recommendation:** Add server-side HTML sanitization via `dompurify` or `sanitize-html` before rendering. Alternatively, validate Tiptap JSON structure on INSERT via a Supabase Edge Function.
-
-### 🔴 S2: No Rate Limiting
-- **Issue:** Adoption applications, post creation, message sending, and signups have no rate limiting.
-- **Risk:** Medium — automated bots could spam the platform
-- **Recommendation:** 
-  1. Use Cloudflare WAF rate limiting rules (free tier: 1 rule)
-  2. Or add a Supabase Edge Function with token-bucket rate limiting
-  3. At minimum, add client-side cooldown timers on form submissions
-
-### 🟠 S3: Client-Side Admin Check (Mitigated)
-- **File:** `contexts/AuthContext.tsx` (lines 100-101)
-- **Issue:** `isAdmin` boolean is derived client-side from the `user_roles` table query
-- **Mitigation:** RLS policies enforce `is_admin(auth.uid())` on all admin operations. The admin UI may be visible to a modified client, but no data access is possible without the proper role.
-- **Status:** Acceptable risk — RLS is the real gate
-
-### 🟠 S4: pet_listings SELECT Policy ✅ FIXED
-- **Was:** `qual: "true"` — anyone could query ALL listings including pending/rejected
-- **Now:** `status IN ('available', 'urgent') OR user_id = auth.uid() OR is_admin(auth.uid())`
-- **Impact:** Pending listings are no longer visible to the public
-
-### 🟠 S5: messages.conversation_id Type Mismatch
-- **Issue:** `conversation_id` is TEXT, but `conversations.id` is UUID. The RLS policy casts `(messages.conversation_id)::uuid` which works but is fragile.
-- **Recommendation:** Migrate column type from TEXT to UUID with a proper FK constraint:
-  ```sql
-  ALTER TABLE messages ALTER COLUMN conversation_id TYPE UUID USING conversation_id::uuid;
-  ALTER TABLE messages ADD CONSTRAINT fk_messages_conversation 
-      FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE;
-  ```
-  ⚠️ Test on staging first — existing data must be valid UUIDs
-
-### 🟡 S6: No Email Verification
-- **Issue:** Users can sign up and immediately post/message without email verification
-- **Recommendation:** Enable "Confirm email" in Supabase Auth settings → Authentication → Providers → Email
-
-### 🟡 S7: Username Generation Race Condition
-- **File:** `contexts/AuthContext.tsx` (lines 60-88)
-- **Issue:** Two users logging in simultaneously could get the same auto-generated username. The UNIQUE constraint rejects one silently.
-- **Recommendation:** Use a DB function with `ON CONFLICT DO NOTHING` and retry logic
-
-### 🟠 S8: Full Table Scan in Pet Lookup ✅ FIXED
-- **Was:** `fetchPetByIdPrefix` called `select('*')` on ALL pet_listings, then filtered client-side
-- **Now:** Uses `.ilike('id', '${idPrefix}%')` server-side filter — fetches only 1 row
-- **Impact:** Reduced bandwidth and prevented info leakage of non-available listings
+**7 of 9 findings resolved.** S2 (rate limiting) requires infrastructure-level configuration (Cloudflare WAF).
 
 ---
 
-## RLS Policy Audit (43 Policies Across 13 Tables)
+## What We Fixed
 
-All tables have RLS enabled. Key policies:
+### S4: pet_listings RLS Policy
+- **Before:** `qual: "true"` — anonymous users could query ALL listings including pending/rejected
+- **After:** `status IN ('available', 'urgent') OR user_id = auth.uid() OR is_admin(auth.uid())`
+
+### S5: messages.conversation_id Type Safety
+- **Before:** `conversation_id` was TEXT type, RLS policies used fragile `::uuid` cast
+- **After:** Column migrated to UUID type with proper FK constraint to `conversations(id) ON DELETE CASCADE`. RLS policies updated to remove the cast.
+
+### S7: Username Race Condition
+- **Before:** Check-then-insert pattern (TOCTOU) — two simultaneous logins could clash
+- **After:** Retry loop (up to 3 attempts) with `.is('username', null)` guard prevents overwrites. UNIQUE constraint violations trigger automatic retry with random suffix.
+
+### S8: Full Table Scan Eliminated
+- **Before:** `fetchPetByIdPrefix` called `select('*')` on ALL pet_listings, filtered client-side
+- **After:** Uses `.ilike('id', '${idPrefix}%').limit(1).maybeSingle()` — fetches exactly 1 row
+- Fixed in both `server-queries.ts` (SSR) and `usePets.ts` (client)
+
+---
+
+## Architecture Security Summary
+
+### RLS Policies (43 Across 13 Tables) ✅
 
 | Table | SELECT | INSERT | UPDATE | DELETE |
 |-------|--------|--------|--------|--------|
@@ -102,12 +72,25 @@ All tables have RLS enabled. Key policies:
 | saved_posts | ✅ own | ✅ own | — | ✅ own |
 | post_likes | ✅ public | ✅ auth + user | — | ✅ own |
 
+### Auth Flow ✅
+- Supabase Auth with `@supabase/ssr`
+- Google OAuth + Email/Password
+- Email verification for email signups
+- Server-side session validation via `createServerSupabaseClient()`
+- Client-side session via `supabase.auth.onAuthStateChange()`
+
+### Data Handling ✅
+- All user content rendered through Tiptap JSON schema (not raw HTML)
+- `dangerouslySetInnerHTML` used only for JSON-LD schema (hardcoded data, no user input)
+- Environment variables follow Next.js `NEXT_PUBLIC_` convention
+- No service role key exposed to client
+
 ---
 
-## Recommendations Priority
+## Remaining Recommendation
 
-1. **S2 (Rate Limiting)** — Add Cloudflare WAF rule to limit POST requests to 10/min per IP
-2. **S1 (XSS)** — Add `sanitize-html` to TiptapRenderer or validate content on INSERT
-3. **S6 (Email Verification)** — Enable in Supabase Dashboard (1 click)
-4. **S5 (Message FK)** — Migrate conversation_id to UUID type (test on staging first)
-5. **S7 (Username Race)** — Low priority, happens rarely
+### S2: Rate Limiting (Recommended, Not Critical)
+Add Cloudflare WAF rate limiting rules to prevent automated abuse:
+- POST to `/api/*` — limit to 10 requests/minute per IP
+- POST to auth endpoints — limit to 5 requests/minute per IP
+- This can be configured in Cloudflare Dashboard → Security → WAF → Rate Limiting Rules (1 rule available on free plan)

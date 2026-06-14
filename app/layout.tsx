@@ -163,12 +163,12 @@ export default function RootLayout({
                                 function gtag(){dataLayer.push(arguments);}
                                 window.gtag = gtag;
                                 gtag('js', new Date());
-                                gtag('config', 'G-FJ0SET7VX9');
+                                gtag('config', 'G-FJ0SET7VX9', { send_page_view: true });
                             }
                             if ('requestIdleCallback' in window) {
-                                requestIdleCallback(initGtag, { timeout: 3000 });
+                                requestIdleCallback(initGtag, { timeout: 5000 });
                             } else {
-                                setTimeout(initGtag, 2000);
+                                setTimeout(initGtag, 4000);
                             }
                         })();
                     `}
