@@ -5,7 +5,18 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: ['/api/', '/profile/', '/admin/'],
+            disallow: [
+                '/api/',
+                '/profile/',
+                '/admin/',
+                '/login',
+                '/signup',
+                '/forgot-password',
+                '/reset-password',
+                '/messages',
+                '/settings',
+                '/list-pet',
+            ],
         },
         sitemap: 'https://adoptdontshop.xyz/sitemap.xml',
     };

@@ -27,8 +27,17 @@ export const metadata: Metadata = {
         template: '%s | AdoptDontShop',
     },
     description:
-        'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
-    keywords: ['pet adoption', 'adopt a pet', 'rescue animals', 'dogs', 'cats', 'adopt dont shop', 'pet adoption india', 'rescue dogs', 'rescue cats'],
+        'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
+    keywords: [
+        'pet adoption India', 'adopt a dog India', 'adopt a cat India',
+        'adopt pet near me', 'rescue dogs for adoption', 'rescue cats for adoption',
+        'indie dog adoption', 'Indian pariah dog adoption', 'stray dog adoption India',
+        'free pet adoption India', 'adopt dont shop', 'puppy adoption near me',
+        'adopt dog Mumbai', 'adopt dog Delhi', 'adopt cat Kolkata',
+        'adopt dog Bangalore', 'adopt cat Pune', 'adopt dog Hyderabad',
+        'adopt cat Chennai', 'animal shelter near me India',
+        'pet adoption Kolkata', 'pet adoption Mumbai',
+    ],
     metadataBase: new URL('https://adoptdontshop.xyz'),
     alternates: {
         canonical: '/',
@@ -38,9 +47,9 @@ export const metadata: Metadata = {
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
-        title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
+        title: 'AdoptDontShop: Adopt Dogs & Cats in India — Free Pet Adoption',
         description:
-            'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
+            'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
         images: [
             {
                 url: 'https://adoptdontshop.xyz/og-image.webp',
@@ -52,8 +61,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
-        description: 'Give a rescue pet a forever home. Browse thousands of dogs, cats, and other animals available for adoption. Join our community of animal lovers!',
+        title: 'AdoptDontShop: Adopt Dogs & Cats in India — Free Pet Adoption',
+        description: 'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
         images: ['https://adoptdontshop.xyz/og-image.webp'],
     },
     robots: {
@@ -127,7 +136,7 @@ const localBusinessSchema = {
         '@type': 'Country',
         name: 'India',
     },
-    priceRange: '$$',
+    priceRange: 'Free',
 };
 
 export default function RootLayout({
@@ -136,7 +145,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
+        <html lang="en-IN" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />

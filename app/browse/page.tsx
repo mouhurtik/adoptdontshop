@@ -5,9 +5,17 @@ import type { Metadata } from 'next';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-    title: 'Browse Pets for Adoption | AdoptDontShop',
-    description: 'Browse dogs, cats, and other rescue animals available for adoption near you. Filter by breed, age, location, and more.',
-    keywords: ['adopt pet near me', 'adopt dog', 'adopt cat', 'rescue animals', 'pet adoption Kolkata', 'adopt pet near Kolkata'],
+    title: 'Adopt Dogs & Cats in India — Browse Rescue Pets | AdoptDontShop',
+    description: 'Browse rescue dogs, cats, and other animals available for free adoption across India. Filter by breed, age, and city — Mumbai, Delhi, Kolkata, Bangalore, Pune & more.',
+    keywords: [
+        'adopt pet near me', 'adopt dog India', 'adopt cat India',
+        'rescue animals India', 'free pet adoption',
+        'adopt dog Mumbai', 'adopt dog Delhi', 'adopt cat Kolkata',
+        'adopt dog Bangalore', 'adopt cat Pune', 'adopt dog Hyderabad',
+        'adopt cat Chennai', 'adopt dog Ahmedabad', 'adopt cat Jaipur',
+        'adopt dog Lucknow', 'indie dog adoption', 'stray dog adoption',
+        'puppy adoption near me', 'kitten adoption India',
+    ],
 };
 
 export default async function BrowsePage() {

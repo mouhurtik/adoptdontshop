@@ -132,11 +132,17 @@ export async function fetchPetBySlugServer(slug: string): Promise<ServerPet | nu
     const supabase = await createServerSupabaseClient();
     const idPrefix = slug.split('-').pop() || '';
 
-    const { data: pets, error } = await supabase.from('pet_listings').select('*').eq('status', 'available');
+    if (!idPrefix) return null;
 
-    if (error || !pets) return null;
-    const pet = pets.find((p) => p.id.startsWith(idPrefix));
-    if (!pet) return null;
+    // Use server-side ilike filter instead of fetching all pets
+    const { data: pet, error } = await supabase
+        .from('pet_listings')
+        .select('*')
+        .ilike('id', `${idPrefix}%`)
+        .limit(1)
+        .maybeSingle();
+
+    if (error || !pet) return null;
 
     return {
         id: pet.id,
@@ -152,6 +158,7 @@ export async function fetchPetBySlugServer(slug: string): Promise<ServerPet | nu
         created_at: pet.created_at,
     };
 }
+
 
 import type { PostCardData } from '@/components/community/PostCard';
 

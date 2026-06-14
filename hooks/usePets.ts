@@ -37,13 +37,17 @@ const fetchPets = async (): Promise<Pet[]> => {
 
 /** Fetch a single pet by matching an ID prefix (slug-based lookup) */
 const fetchPetByIdPrefix = async (idPrefix: string): Promise<Pet | null> => {
+  if (!idPrefix) return null;
+
   const { data, error } = await supabase
     .from('pet_listings')
-    .select('*');
+    .select('*')
+    .ilike('id', `${idPrefix}%`)
+    .limit(1)
+    .maybeSingle();
 
-  if (error) throw error;
-  const found = (data ?? []).find(p => p.id.startsWith(idPrefix));
-  return found ? transformPet(found) : null;
+  if (error || !data) return null;
+  return transformPet(data);
 };
 
 /** Fetch total pet count (head-only query) */

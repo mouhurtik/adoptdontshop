@@ -1,20 +1,34 @@
 import type { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
+// Top Indian cities for SEO landing pages
+const CITY_SLUGS = [
+    'kolkata', 'mumbai', 'delhi', 'bangalore', 'pune',
+    'hyderabad', 'chennai', 'ahmedabad', 'jaipur', 'lucknow',
+];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await createServerSupabaseClient();
     const baseUrl = 'https://adoptdontshop.xyz';
 
     // Static pages (only include canonical URLs, not redirect sources)
     const staticPages = [
-        '', '/browse', '/about', '/community',
-        '/success-stories', '/list-pet',
+        '', '/browse', '/about', '/explore',
+        '/success-stories', '/welcome',
         '/terms', '/privacy-policy',
     ].map(route => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
-        priority: route === '' ? 1 : route === '/community' ? 0.9 : 0.8,
+        priority: route === '' ? 1 : route === '/browse' ? 0.95 : route === '/explore' ? 0.9 : 0.8,
+    }));
+
+    // City landing pages for local SEO
+    const cityPages = CITY_SLUGS.map(city => ({
+        url: `${baseUrl}/adopt-pets-in/${city}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: 0.9,
     }));
 
     // Dynamic pet pages
@@ -43,5 +57,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...staticPages, ...petPages, ...postPages];
+    return [...staticPages, ...cityPages, ...petPages, ...postPages];
 }
