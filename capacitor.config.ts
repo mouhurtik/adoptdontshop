@@ -9,6 +9,7 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://adoptdontshop.xyz',
     cleartext: false, // HTTPS only
+    allowNavigation: ['adoptdontshop.xyz', '*.adoptdontshop.xyz'],
   },
 
   // Android native project lives under mobile/android
@@ -27,11 +28,16 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'LIGHT',
       backgroundColor: '#FFF8F0',
+      overlaysWebView: false,
     },
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
+    },
+    Keyboard: {
+      resize: 'ionic',
     },
   },
 };
 
 export default config;
+

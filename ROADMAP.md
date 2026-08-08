@@ -1,15 +1,15 @@
 # AdoptDontShop — Future Implementations & Housekeeping
 
-**Last Updated:** February 18, 2026
-**Stack:** Next.js 16 (App Router) · Supabase · Tailwind CSS · Cloudflare Pages
+**Last Updated:** August 7, 2026
+**Stack:** Next.js 16 (App Router) · React 19 · Supabase · Tailwind CSS 3 · Cloudflare Pages · Capacitor 8
 **Admin:** mouhurtikr@gmail.com
 
 ---
 
 ## Table of Contents
 
-1. [Project Structure Audit & Cleanup](#1-project-structure-audit--cleanup)
-2. [Critical Bugs & Fixes](#2-critical-bugs--fixes)
+1. [Project Structure](#1-project-structure)
+2. [Bugs & Fixes](#2-bugs--fixes)
 3. [SEO & Performance](#3-seo--performance)
 4. [Feature Implementations](#4-feature-implementations)
 5. [Admin Panel Upgrades](#5-admin-panel-upgrades)
@@ -18,72 +18,27 @@
 
 ---
 
-## 1. Project Structure Audit & Cleanup
+## 1. Project Structure
 
-### Current Issues
+### Completed ✅ (July 2026 cleanup)
 
-The project has leftover artifacts from the React/Vite → Next.js migration. Here's what needs fixing:
+The following dead files/directories from the Vite → Next.js migration have been deleted:
 
-#### Dead Files to Delete
+| Deleted | Reason |
+|---------|--------|
+| `components/Layout.tsx` | Replaced by `app/layout.tsx` + `LayoutShell.tsx` |
+| `components/ProtectedRoute.tsx` | Replaced by `AdminGuard.tsx` |
+| `components/Navbar.tsx` | Replaced by `TopBar.tsx` + `AppSidebar.tsx` |
+| `components/Footer.tsx` | Not used in sidebar-based layout |
+| `components/index.ts` | Unused barrel export |
+| `hooks/index.ts` | Unused barrel export |
+| `constants/` (entire dir) | `config.ts`, `routes.ts`, `index.ts` — all never imported |
+| `data/` (entire dir) | `mockData.ts` from Vite era — all data from Supabase |
+| `components.json` | Pointed to `src/index.css` (Vite path) |
+| `components/ui/use-toast.ts` | Duplicate re-export |
+| `lint.json`, `lint.txt` | One-time lint output files |
 
-| File/Dir | Reason |
-|----------|--------|
-| `components/Layout.tsx` | Dead — replaced by `app/layout.tsx`. Not imported anywhere. |
-| `components/ProtectedRoute.tsx` | Dead — replaced by `AdminGuard.tsx`. Not imported anywhere. |
-| `components/index.ts` | Barrel export, but nobody imports from `@/components`. Delete. |
-| `hooks/index.ts` | Same — nobody imports from `@/hooks`. Direct imports are used. |
-| `constants/index.ts` | Same — nobody imports from `@/constants`. Barrel unused. |
-| `constants/routes.ts` | `ROUTES` object never imported anywhere. Dead code. |
-| `constants/config.ts` | `APP_CONFIG`, `QUERY_CONFIG`, `ANIMAL_TYPES` — never imported. Dead code. |
-| `data/mockData.ts` | Mock pets from Vite era. All data comes from Supabase now. |
-| `components/ui/use-toast.ts` | Duplicate — just re-exports from `hooks/use-toast.ts`. |
-| `components.json` | Points to `src/index.css` (old Vite structure). Broken shadcn config. |
-| `NEXT_TODO.md` | Already in `.gitignore`. If it's committed, remove from tracking. |
-| `CHANGELOG.md` | Empty or stale from migration. Replace with auto-generated or remove. |
-| `docs/CODE_QUALITY_REVIEW.md` | Stale review from old codebase. Outdated. |
-| `docs/architecture/ARCHITECTURE_OVERVIEW.md` | Outdated (references old patterns). |
-| `docs/features/FEATURE_ROADMAP.md` | Superseded by this file. |
-| `github-ruleset-*.json` | Utility files — move to `.github/rulesets/` (see below). |
-| `assets/paw-icon.svg` | Should be in `public/` for static serving, not `assets/`. |
-
-#### Folder Reorganization
-
-**Current (messy hybrid of React + Next.js patterns):**
-```
-components/          ← 14 files + 5 subdirs, mixed concerns
-  Layout.tsx         ← dead
-  ProtectedRoute.tsx ← dead
-  index.ts           ← dead barrel
-  __tests__/         ← tests far from source
-  ui/                ← shadcn primitives + custom widgets mixed
-  home/              ← feature components
-  browse/            ← feature components
-  pet-details/       ← feature components
-  pet-listing/       ← feature components
-views/               ← page-level view components (React pattern)
-constants/           ← entirely unused
-data/                ← entirely mock data (unused)
-```
-
-**Proposed (idiomatic Next.js App Router):**
-```
-app/                 ← routes + route-specific components
-  (marketing)/       ← group: about, sponsors, terms, etc.
-  (pets)/            ← group: browse, pet/[slug]
-  admin/             ← already exists
-  profile/           ← already exists
-components/
-  ui/                ← shadcn primitives only (button, dialog, input, etc.)
-  shared/            ← cross-page: Navbar, Footer, PetCard, ErrorBoundary, LoadingSpinner
-  forms/             ← PetListingForm + sections, AdoptionModal
-config/              ← rename constants/ — only keep what's actually used
-lib/                 ← keep (supabase, utils, imageLoader)
-hooks/               ← keep (remove barrel index.ts)
-types/               ← keep
-utils/               ← keep
-```
-
-**Key principle:** In Next.js App Router, page-level layouts and views belong in `app/`. The `views/` folder is a React SPA pattern — each view should be inlined into its `app/*/page.tsx` or co-located.
+### Remaining Structural Work
 
 #### Move `views/` Into `app/` (Medium Effort)
 
@@ -91,252 +46,232 @@ Each file in `views/` is a 1:1 mapping to an `app/*/page.tsx` that just renders 
 - `app/about/page.tsx` → renders `<AboutUs />` from `views/AboutUs.tsx`
 - `app/browse/page.tsx` → renders `<BrowsePets />` from `views/BrowsePets.tsx`
 
-The Next.js way: move the content directly into or co-locate with the route. The `views/` indirection adds no value. This is a refactor, not urgent, but makes the project more standard.
+The Next.js way: move the content directly into or co-locate with the route. The `views/` indirection adds no value.
 
-#### GitHub Config Files
+#### Current Architecture
 
-Move ruleset JSONs and organize:
 ```
-.github/
-  workflows/ci.yml     ← already exists
-  rulesets/             ← NEW
-    main.json
-    react-backup.json
-  ISSUE_TEMPLATE/       ← future: bug report, feature request templates
-  PULL_REQUEST_TEMPLATE.md ← future
+app/                  ← routes + metadata (server components)
+  (marketing)/        ← about, terms, privacy, welcome
+  (pets)/             ← browse, pet/[slug], list-pet
+  admin/              ← 7 admin sub-routes
+  community/          ← blog post CRUD + detail
+  communities/        ← group listing, detail, create
+  messages/           ← DM messaging
+  profile/            ← settings, my-listings, saved
+  explore/            ← discover page
+  adopt-pets-in/      ← city landing pages (SEO)
+components/
+  ui/                 ← shadcn primitives (button, dialog, tabs, toast, etc.)
+  community/          ← PostCard, TagFilter, TiptapEditor, TrendingSidebar
+  home/               ← HeroSection, FeaturedPets, SearchSection, HomeRightSidebar
+  groups/             ← GroupCard, GroupChat, RoomSidebar
+  messaging/          ← ConversationList, MessageThread
+  browse/             ← BrowseHero, BrowseFilters
+  pet-details/        ← PetDetails, AdoptionModal
+  pet-listing/        ← PetListingForm
+  NativeProvider.tsx  ← Capacitor native bridge context (haptics, dialogs, push)
+  AppSidebar.tsx      ← Desktop left sidebar (persistent, collapsible)
+  TopBar.tsx          ← Mobile top bar
+  BottomNav.tsx       ← Mobile bottom navigation (5 tabs)
+  LayoutShell.tsx     ← Shell wrapper (sidebar + content + deferred modals + NativeProvider)
+contexts/             ← AuthContext, AuthModalContext
+hooks/                ← usePets, useCommunity, useMessages, useGroups, useGroupChat, useFavorites, useFilters
+lib/
+  supabase/           ← client.ts (lazy Proxy singleton), server.ts, server-queries.ts, types.ts
+  capacitor/          ← native.ts (haptics, StatusBar), push-notifications.ts (FCM)
+types/                ← pet.types.ts, auth.types.ts, user.types.ts
+views/                ← 19 page-level 'use client' components (server/client boundary — valid pattern)
+scripts/              ← build-android.cjs, strip-vercel-og.js
 ```
 
 ---
 
-## 2. Critical Bugs & Fixes
+## 2. Bugs & Fixes
 
-### 2.1 Sitemap Hardcodes `pages.dev` URL
-**File:** `app/sitemap.ts`
-**Issue:** `baseUrl` is hardcoded to `https://adoptdontshop.pages.dev` instead of `https://adoptdontshop.xyz`.
-**Fix:** Use an env variable `NEXT_PUBLIC_SITE_URL` or hardcode the custom domain.
+### Fixed ✅ (July 2026)
 
-### 2.2 `components.json` Points to Wrong CSS Path
-**File:** `components.json`
-**Issue:** `tailwind.css` is set to `src/index.css` (Vite structure). Should be `app/globals.css`.
-**Fix:** Update or delete if shadcn CLI isn't being used.
+| Bug | Fix |
+|-----|-----|
+| Sidebar community links pointed to `/groups/{slug}` (404) | Changed to `/communities/{slug}` in `AppSidebar.tsx` |
+| Like count display showed wrong number | Removed broken optimistic math in `PostCard.tsx` — uses server count |
+| Sitemap hardcoded `pages.dev` URL | Fixed to use `adoptdontshop.xyz` |
+| `pet_listings` RLS policy was `qual: "true"` | Restricted to `available/urgent/own/admin` |
+| `messages.conversation_id` was TEXT type | Migrated to UUID with FK constraint |
+| Username generation race condition | Retry loop with `.is('username', null)` guard |
+| `fetchPetByIdPrefix` did full table scan | Uses `.ilike('id', ...)` with `.limit(1)` |
 
-### 2.3 `lib/supabase/server.ts` Still Exists
-**File:** `lib/supabase/server.ts`
-**Issue:** Uses `cookies()` from `next/headers`. Only used by `pet/[slug]/page.tsx` (for SEO metadata) and `sitemap.ts`. These work because they're true server components, but if Cloudflare Workers ever choke on `cookies()`, replace with direct Supabase client (anon key is public anyway for read-only SELECT).
-**Priority:** Monitor — fix if errors appear.
+### Open Bugs
 
-### 2.4 Login/Signup Redirect After Auth
-**Issue:** After signing in at `/login?redirect=/admin`, verify the redirect actually works. The auth flow sets state via `onAuthStateChange` but the redirect logic must be in the login page component.
-**Fix:** Ensure `app/login/page.tsx` reads `searchParams.redirect` and navigates after successful sign-in.
-
-### 2.5 Image Optimization
-**Issue:** `next/image` requires a loader for Cloudflare Pages (no default image optimization). `lib/imageLoader.ts` exists but verify it's configured in `next.config.mjs`.
+| # | Severity | Issue | Location | Fix |
+|---|----------|-------|----------|-----|
+| B1 | ✅ Fixed | `useMarkAsRead` N+1 → parallel `Promise.all` | `useMessages.ts` | Done (Aug 2026) |
+| B2 | ✅ Fixed | `useSendMessage` re-fetches profile → uses AuthContext | `useMessages.ts` | Done (Aug 2026) |
+| B3 | ✅ Fixed | `useStartConversation` 3x profile fetch → single AuthContext | `useMessages.ts` | Done (Aug 2026) |
+| B4 | ✅ Fixed | `useFavorites` useState → React Query with optimistic updates | `useFavorites.ts` | Done (Aug 2026) |
+| B5 | ✅ Fixed | `messages/page.tsx` `force-static` removed | `messages/page.tsx` | Done (Aug 2026) |
+| B6 | 🟢 Low | `AuthModalProvider` not provided in admin routes | `LayoutShell.tsx:49` | Wrap admin layout or guard `useAuthModal()` |
 
 ---
 
 ## 3. SEO & Performance
 
-### 3.1 Structured Data (JSON-LD)
-Add schema.org markup for pet listings:
-```tsx
-// In app/pet/[slug]/page.tsx
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "Adopt Buddy",
-  "description": "...",
-  "image": "...",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
-}
-</script>
-```
+### Completed ✅
 
-### 3.2 Open Graph Images
-Generate dynamic OG images for pet pages using `@vercel/og` or a static fallback image per animal type.
+- [x] JSON-LD structured data: Organization + BlogPosting + WebSite + LocalBusiness schemas
+- [x] Dynamic `generateMetadata()` on pet and community post pages
+- [x] Sitemap with static pages + pet listings + community posts + city pages
+- [x] RSS feed at `/feed.xml` with auto-discovery
+- [x] Canonical URLs on all pages
+- [x] `robots.ts` disallowing admin/profile/auth routes
+- [x] `optimizePackageImports` for 13 heavy libraries
+- [x] Custom `imageLoader.ts` for Supabase Storage transforms
+- [x] Dynamic imports for TipTap, Sonner, BottomNav, AppSidebar
+- [x] `requestIdleCallback` for deferred shell hydration
+- [x] Console removal in production
+- [x] Aggressive cache headers for static assets
 
-### 3.3 `robots.ts` Audit
-Verify `app/robots.ts` disallows `/admin`, `/profile`, `/login`, `/signup` from crawlers.
+### Remaining
 
-### 3.4 Canonical URLs
-Add canonical URLs to all pages to avoid duplicate content issues (especially `pages.dev` vs custom domain).
-
-### 3.5 Performance Metrics
-- Add Web Vitals tracking (Cloudflare Analytics or a lightweight script)
-- Audit Lighthouse score on key pages
-- Lazy-load below-fold images with `loading="lazy"`
+- [ ] **PostCard images use `<img>` not `next/image`** — missing responsive sizes, WebP, lazy loading
+- [ ] **`date-fns` removed but still in `optimizePackageImports`** — clean up config
+- [ ] **Web Vitals tracking** — add Cloudflare Analytics or lightweight script
+- [ ] **TiptapRenderer** could be server-rendered (currently `ssr: false`)
+- [ ] **Browse page pet grid** could use Server Components for initial load (SSR + hydrate for filters)
+- [ ] **LazyMotion** — use `domAnimation` feature bundle for framer-motion (smaller)
 
 ---
 
 ## 4. Feature Implementations
 
-### 4.1 Pet Search (High Priority)
-- Full-text search on pet name, breed, description
-- Supabase `textSearch` or `ilike` patterns
-- URL-synced search params (`/browse?q=golden&type=dog`)
+### Completed ✅
 
-### 4.2 Favorites / Wishlist
-- Save favorite pets (requires auth)
-- `favorites` table in Supabase: `user_id`, `pet_id`, `created_at`
-- Heart icon toggle on PetCard
+- [x] Pet listings CRUD (browse, list, detail, adoption applications)
+- [x] Community posts (Reddit-style feed with tags, likes, comments, saves, views)
+- [x] Rich text editor (TipTap)
+- [x] Direct messaging with realtime subscriptions
+- [x] Groups/Communities (listing, detail, create, join/leave)
+- [x] Group chat (single chat per community)
+- [x] User profiles with stats
+- [x] Admin dashboard (7 sub-routes)
+- [x] Pet favorites/wishlist
+- [x] Auth (email + Google OAuth + email verification)
+- [x] City landing pages for SEO
+- [x] Explore/discover page
+- [x] Capacitor mobile shell
+- [x] Pet search with URL-synced filters
 
-### 4.3 Adoption Applications Dashboard
-- Users can view their submitted applications at `/profile/applications`
-- Status tracking: Pending → Under Review → Approved/Rejected
-- Email notifications via Supabase Edge Functions
+### From UI Redesign Plan — Phase Status
 
-### 4.4 Pet Status Workflow
-- Listing workflow: Draft → Pending Review → Available → Adopted
-- Admin approval before listings go live
-- Auto-expire listings after 90 days
+| Phase | Status | Details |
+|-------|--------|---------|
+| A: Core Layout Restructure | ✅ **Done** | `AppSidebar` + `TopBar` + `BottomNav` replace old Navbar |
+| B: Community Integration | ✅ **Done** | Sidebar shows communities, community pills on feed, links fixed |
+| C: Multi-room Chat | ✅ **Done** | `RoomSidebar` + `useGroupRooms` + `useCreateGroupRoom`. Room name column + unique constraint on DB (Aug 2026) |
+| D: Feed & Post Redesign | ⚠️ **Partial** | PostCard exists but no upvote/downvote, no infinite scroll |
+| E: Mobile Polish | ⚠️ **Partial** | `NativeProvider` with haptics + native dialogs + push notification registration. No PWA service worker yet |
+| F: Native App Shell | ✅ **Done** | Capacitor 8 configured, live-URL WebView, `lib/capacitor/` native bridge, `scripts/build-android.cjs` |
 
-### 4.5 Multi-Image Upload
-- Currently single image per listing
-- Support 3-5 images with a gallery carousel
-- Supabase Storage bucket with signed URLs
+### Pending Features
 
-### 4.6 Contact Form / Inquiry System
-- Allow potential adopters to message caregivers directly
-- `inquiries` table: `from_user_id`, `pet_id`, `message`, `created_at`
-- Notification to caregiver
-
-### 4.7 Location-Based Search
-- Filter pets by city/state
-- Supabase PostGIS extension for distance-based queries (future)
-- Basic dropdown filter for now
-
-### 4.8 Success Stories Submission
-- User-submitted adoption success stories
-- Photo upload + text
-- Admin moderation before publishing
-
-### 4.9 Email Notifications
-- Welcome email on signup
-- Application status change notifications
-- New pet matching saved search criteria
-- Implement via Supabase Edge Functions + Resend/SendGrid
-
-### 4.10 PWA Enhancements
-- `site.webmanifest` exists but needs:
-  - Offline fallback page
-  - Push notification support (future)
-  - Install prompt handling
+| Feature | Priority | Effort |
+|---------|----------|--------|
+| ~~Multi-room chat per community (Phase C)~~ | ✅ Done | — |
+| Infinite scroll / pagination for feed | 🟠 High | 3 hrs |
+| Multi-image upload for pet listings | 🟡 Medium | 4 hrs |
+| Adoption application status tracking | 🟡 Medium | 3 hrs |
+| Email notifications (Supabase Edge Functions + Resend) | 🟡 Medium | 4 hrs |
+| PWA service worker + push notifications | 🟡 Medium | 4 hrs |
+| Firebase setup for Android push (google-services.json) | 🟡 Medium | 1 hr |
+| Success stories submission (user-submitted) | 🟢 Low | 3 hrs |
 
 ---
 
 ## 5. Admin Panel Upgrades
 
-### 5.1 Dashboard Enhancements
-- Charts (weekly signups, listings trend) — use lightweight chart library (e.g., `recharts` or `chart.js`)
-- Activity log showing recent actions
-- Export data to CSV
+### Completed ✅
 
-### 5.2 Listing Moderation Queue
-- Dedicated pending review page with approve/reject/request-changes actions
-- Inline image preview
-- Bulk operations (approve all, reject selected)
+- [x] Dashboard with stats (total pets, users, posts, applications)
+- [x] Listing management (view, edit, delete)
+- [x] User management (view, roles)
+- [x] Post moderation
+- [x] Group management
+- [x] Message oversight
+- [x] Application review
 
-### 5.3 User Management
-- View user profiles and their listings
-- Ban/suspend users
-- Assign listings to users (for the `user_id = null` listings)
-- Role management (admin, moderator, shelter)
+### Remaining
 
-### 5.4 Content Management
-- Edit static page content (About, Terms, Privacy) from admin
-- Manage sponsors list
-- Manage success stories
-
-### 5.5 Analytics Dashboard
-- Page views, unique visitors (from Cloudflare Analytics API)
-- Most viewed pets
-- Application conversion rates
+- [ ] **Charts/graphs** — weekly signups, listings trend (use lightweight chart lib)
+- [ ] **Activity log** showing recent admin actions
+- [ ] **Export to CSV** for listings, users, applications
+- [ ] **Bulk operations** — approve/reject multiple listings at once
+- [ ] **Content management** — edit static pages from admin
 
 ---
 
 ## 6. DevOps & Infrastructure
 
-### 6.1 Environment Configuration
-- [ ] Move `NEXT_PUBLIC_SITE_URL` to Cloudflare env vars
-- [ ] Ensure `.env.example` is up-to-date
-- [ ] Add `SUPABASE_SERVICE_ROLE_KEY` as secret for Edge Functions (never in client)
+### Completed ✅
 
-### 6.2 CI/CD Improvements
-- [ ] Add `npm run build` check to CI (currently only `next build`, not `cf:build`)
-- [ ] Add bundle size check (fail if worker exceeds 2.8 MiB — buffer below 3 MiB limit)
-- [ ] Cache `node_modules` in GitHub Actions for faster builds
-- [ ] Add Playwright E2E tests for critical flows (login, browse, adopt)
+- [x] Cloudflare Pages deployment via `@opennextjs/cloudflare`
+- [x] GitHub Actions CI (lint + build)
+- [x] Bundle size within 3 MiB limit (see `docs/DEPLOYMENT_FIXES.md`)
+- [x] `.npmrc` with `force=true` for cross-platform deps
+- [x] `strip-vercel-og.js` backup script for emergency bundle reduction
+- [x] Husky + lint-staged pre-commit hooks
 
-### 6.3 Monitoring
-- [ ] Cloudflare Workers analytics for error rates
-- [ ] Supabase dashboard monitoring for RLS violations
-- [ ] Uptime monitoring (e.g., Cloudflare Health Checks on custom domain)
+### Remaining
 
-### 6.4 Database
-- [ ] Supabase database backups (auto-enabled on Pro, manual on Free)
-- [ ] Add database indexes on `pet_listings.status`, `pet_listings.animal_type`
-- [ ] Run `supabase db diff` to keep migration files in sync
-
-### 6.5 Staging Environment
-- [ ] Create `develop` branch for staging
-- [ ] Cloudflare preview deployments for PRs (already supported via branch builds)
-- [ ] Separate Supabase project for staging (optional)
+- [ ] Add bundle size check to CI (fail if worker exceeds 2.8 MiB)
+- [ ] Cache `node_modules` in GitHub Actions
+- [ ] Playwright E2E tests for critical flows
+- [ ] Cloudflare WAF rate limiting (see `docs/SECURITY_AUDIT.md` S2)
+- [ ] Database indexes on `pet_listings.status`, `pet_listings.animal_type`
+- [ ] Staging environment (separate Supabase project + branch)
+- [ ] Uptime monitoring via Cloudflare Health Checks
 
 ---
 
 ## 7. Code Quality & DX
 
-### 7.1 Test Coverage
-Current: 8 test files, 55 tests. Missing coverage for:
-- [ ] Auth flows (login, signup, logout)
-- [ ] Admin pages (dashboard, listings, users)
-- [ ] Pet details page rendering
-- [ ] Form validation (PetListingForm)
-- [ ] API/Supabase query mocking
-- [ ] E2E tests with Playwright
+### Completed ✅
 
-### 7.2 TypeScript Strictness
-- [ ] Enable `strict: true` in tsconfig.json (currently partial)
-- [ ] Fix any `any` types in codebase
-- [ ] Ensure all Supabase queries use generated types from `lib/supabase/types.ts`
+- [x] `strict: true` in `tsconfig.json`
+- [x] ESLint flat config with `eslint .` (not `next lint`)
+- [x] Prettier + `.prettierignore`
+- [x] Vitest setup with `vitest.config.ts`
+- [x] Security audit (8.5/10 — see `docs/SECURITY_AUDIT.md`)
 
-### 7.3 Code Formatting
-- [ ] `.prettierrc` and `.prettierignore` exist but verify all files are formatted
-- [ ] Add `prettier --check` to CI pipeline
-- [ ] Consider `lint-staged` running prettier too (currently only eslint)
+### Remaining
 
-### 7.4 Documentation
-- [ ] Update `README.md` with current architecture (remove Vite references)
-- [ ] Add `CONTRIBUTING.md` setup instructions for Next.js + Supabase
-- [ ] API documentation for Supabase tables and RLS policies
-- [ ] Component storybook or documentation page (future)
-
-### 7.5 Accessibility
-- [ ] Audit with axe-core or Lighthouse accessibility
-- [ ] Ensure all images have alt text
-- [ ] Keyboard navigation for modals, dropdowns, sidebar
-- [ ] ARIA labels on interactive elements
-- [ ] Color contrast check on the playful theme
+| Task | Priority | Effort |
+|------|----------|--------|
+| **Regenerate `lib/supabase/types.ts`** from live DB | 🔴 Critical | 5 min |
+| ~~**Convert `useFavorites` to React Query**~~ | ✅ Done | — |
+| ~~**Fix messaging N+1 and redundant profile fetches** (B1-B3)~~ | ✅ Done | — |
+| **`views/` → `components/pages/`** rename (cosmetic, valid pattern) | 🟢 Low | 30 min |
+| **Remove `HomeSidebar.tsx`** if replaced by `HomeRightSidebar.tsx` | 🟡 Medium | 10 min |
+| **Install `@capacitor/keyboard`** (npm hanging on Windows) | 🟡 Medium | 1 min |
+| **Increase test coverage** — auth, admin, forms, E2E | 🟡 Medium | 4 hrs |
+| **Accessibility audit** — axe-core, keyboard nav, ARIA labels | 🟢 Low | 3 hrs |
+| **Write current architecture doc** | 🟢 Low | 1 hr |
 
 ---
 
-## Priority Matrix
+## Priority Matrix (August 2026)
 
 | Priority | Task | Effort |
 |----------|------|--------|
-| 🔴 Critical | Fix sitemap URL (2.1) | 5 min |
-| 🔴 Critical | Delete dead files (1) | 15 min |
-| 🟠 High | Structured data / JSON-LD (3.1) | 1 hr |
-| 🟠 High | Pet search (4.1) | 3 hrs |
-| 🟠 High | Favorites system (4.2) | 3 hrs |
-| 🟡 Medium | Move views/ into app/ (1) | 2 hrs |
-| 🟡 Medium | Admin charts (5.1) | 3 hrs |
-| 🟡 Medium | Multi-image upload (4.5) | 4 hrs |
-| 🟡 Medium | Test coverage increase (7.1) | 4 hrs |
-| 🟢 Low | Success stories submission (4.8) | 3 hrs |
-| 🟢 Low | PWA enhancements (4.10) | 2 hrs |
-| 🟢 Low | Playwright E2E (6.2) | 4 hrs |
-| 🟢 Low | Storybook (7.4) | 6 hrs |
+| 🔴 Critical | Regenerate Supabase types (7) | 5 min |
+| 🟠 High | Infinite scroll for feed (4) | 3 hrs |
+| 🟡 Medium | Multi-image upload (4) | 4 hrs |
+| 🟡 Medium | Admin charts (5) | 3 hrs |
+| 🟡 Medium | Email notifications (4) | 4 hrs |
+| 🟡 Medium | Firebase setup for Android push | 1 hr |
+| 🟡 Medium | Test coverage increase (7) | 4 hrs |
+| 🟢 Low | PWA service worker (4) | 4 hrs |
+| 🟢 Low | Accessibility audit (7) | 3 hrs |
+| 🟢 Low | Playwright E2E (6) | 4 hrs |
 
 ---
 
@@ -346,6 +281,8 @@ Current: 8 test files, 55 tests. Missing coverage for:
 - **No middleware** — all auth is client-side via `AuthContext`. Don't recreate middleware.
 - **Server components** can use `lib/supabase/server.ts` for SEO (metadata, sitemap) but avoid `cookies()` for auth — it's flaky on CF Workers.
 - **`@opennextjs/cloudflare`** is the adapter. Build with `npx opennextjs-cloudflare build`. Don't use `next export`.
-- Run `npx vitest --run` after changes. All 55 tests must pass.
+- **Supabase types** are stale — many hooks use `as unknown as` casts. Regenerate with `supabase gen types typescript`.
+- **Layout model**: `LayoutShell.tsx` wraps all non-admin routes with `AppSidebar` (desktop) + `TopBar` (mobile) + `BottomNav` (mobile). Admin routes have their own layout.
+- Run `npx vitest --run` after changes.
 - Run `npx next build` to verify. Check for TypeScript errors.
 - Lint: `npm run lint` (eslint with `--max-warnings 0` in pre-commit hook).

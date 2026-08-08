@@ -1,23 +1,25 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, ArrowLeft, Users } from 'lucide-react';
+import { Send, Loader2, ArrowLeft, Users, Hash } from 'lucide-react';
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import type { Message } from '@/hooks/useMessages';
 import {
-    useGroupConversation,
     useGroupMessages,
     useSendGroupMessage,
-    useCreateGroupConversation,
     useGroupMessageRealtime,
 } from '@/hooks/useGroupChat';
 import { useGroupMembers } from '@/hooks/useGroups';
-import { useAuth } from '@/contexts/AuthContext';
+
 
 interface GroupChatProps {
     groupId: string;
     groupName: string;
     groupAvatarUrl?: string | null;
+    /** Specific room conversation ID — if provided, renders that room's messages */
+    conversationId?: string | null;
+    /** Room name to display in header */
+    roomName?: string;
     onBack?: () => void;
 }
 
@@ -44,21 +46,19 @@ function groupByDate(messages: Message[]): { label: string; messages: Message[] 
     return groups;
 }
 
-const GroupChat = ({ groupId, groupName, groupAvatarUrl, onBack }: GroupChatProps) => {
-    const { user } = useAuth();
+const GroupChat = ({ groupId, groupName, groupAvatarUrl, conversationId, roomName = 'General', onBack }: GroupChatProps) => {
+
     const [input, setInput] = useState('');
     const bottomRef = useRef<HTMLDivElement>(null);
     const prevLengthRef = useRef(0);
 
-    // Hooks
-    const { data: conversation, isLoading: loadingConv } = useGroupConversation(groupId);
-    const { data: messages = [], isLoading: loadingMessages } = useGroupMessages(conversation?.id || null);
+    // Hooks — use passed conversationId directly
+    const { data: messages = [], isLoading: loadingMessages } = useGroupMessages(conversationId || null);
     const { data: members } = useGroupMembers(groupId);
     const sendMessage = useSendGroupMessage();
-    const createConversation = useCreateGroupConversation();
 
     // Realtime
-    useGroupMessageRealtime(conversation?.id || null);
+    useGroupMessageRealtime(conversationId || null);
 
     // Auto-scroll on new messages
     useEffect(() => {
@@ -71,29 +71,13 @@ const GroupChat = ({ groupId, groupName, groupAvatarUrl, onBack }: GroupChatProp
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const content = input.trim();
-        if (!content || sendMessage.isPending) return;
+        if (!content || sendMessage.isPending || !conversationId) return;
 
-        let convId = conversation?.id;
-
-        // Create conversation if it doesn't exist
-        if (!convId) {
-            const memberIds = members?.map(m => m.user_id) || (user ? [user.id] : []);
-            const newConv = await createConversation.mutateAsync({
-                groupId,
-                groupName,
-                groupAvatarUrl,
-                memberIds,
-            });
-            convId = newConv.id;
-        }
-
-        if (convId) {
-            sendMessage.mutate({ conversationId: convId, content });
-            setInput('');
-        }
+        sendMessage.mutate({ conversationId, content });
+        setInput('');
     };
 
-    const isLoading = loadingConv || loadingMessages;
+    const isLoading = loadingMessages;
     const dateGroups = groupByDate(messages);
 
     return (
@@ -118,7 +102,10 @@ const GroupChat = ({ groupId, groupName, groupAvatarUrl, onBack }: GroupChatProp
                     )}
                 </div>
                 <div className="min-w-0 flex-1">
-                    <p className="font-bold text-gray-800 text-sm truncate">{groupName}</p>
+                    <p className="font-bold text-gray-800 text-sm truncate flex items-center gap-1.5">
+                        <Hash className="w-3.5 h-3.5 text-gray-400" />
+                        {roomName.toLowerCase()}
+                    </p>
                     <p className="text-[11px] text-gray-400 flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         {members?.length || 0} members
@@ -128,17 +115,23 @@ const GroupChat = ({ groupId, groupName, groupAvatarUrl, onBack }: GroupChatProp
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-gradient-to-b from-playful-cream/20 to-white">
-                {isLoading ? (
+                {!conversationId ? (
+                    <div className="text-center py-12">
+                        <Hash className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <p className="text-gray-500 text-sm font-medium">No room selected</p>
+                        <p className="text-xs text-gray-400 mt-1">Select a channel to start chatting</p>
+                    </div>
+                ) : isLoading ? (
                     <div className="flex items-center justify-center py-12">
                         <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="text-center py-12">
                         <div className="w-16 h-16 bg-playful-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Users className="w-8 h-8 text-playful-teal" />
+                            <Hash className="w-8 h-8 text-playful-teal" />
                         </div>
                         <p className="text-gray-500 text-sm mb-2 font-medium">
-                            Start chatting with the group!
+                            Welcome to #{roomName.toLowerCase()}!
                         </p>
                         <p className="text-xs text-gray-400">
                             Be the first to send a message 💬
@@ -207,15 +200,15 @@ const GroupChat = ({ groupId, groupName, groupAvatarUrl, onBack }: GroupChatProp
             >
                 <input
                     type="text"
-                    placeholder="Message the group..."
+                    placeholder={conversationId ? `Message #${roomName.toLowerCase()}...` : 'Select a channel...'}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 px-4 py-2.5 rounded-full bg-playful-cream/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-playful-teal/30 focus:border-playful-teal text-sm"
-                    disabled={sendMessage.isPending || createConversation.isPending}
+                    disabled={!conversationId || sendMessage.isPending}
                 />
                 <button
                     type="submit"
-                    disabled={!input.trim() || sendMessage.isPending}
+                    disabled={!input.trim() || sendMessage.isPending || !conversationId}
                     className="p-2.5 rounded-full bg-playful-teal text-white hover:bg-playful-teal/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
                 >
                     {sendMessage.isPending ? (

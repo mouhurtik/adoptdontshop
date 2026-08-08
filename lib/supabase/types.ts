@@ -136,27 +136,42 @@ export type Database = {
       conversations: {
         Row: {
           created_at: string | null
+          group_avatar_url: string | null
+          group_id: string | null
+          group_name: string | null
           id: string
+          is_group_chat: boolean
           last_message: string | null
           last_message_at: string | null
           participant_ids: string[]
           pet_listing_id: string | null
+          room_name: string | null
         }
         Insert: {
           created_at?: string | null
+          group_avatar_url?: string | null
+          group_id?: string | null
+          group_name?: string | null
           id?: string
+          is_group_chat?: boolean
           last_message?: string | null
           last_message_at?: string | null
           participant_ids: string[]
           pet_listing_id?: string | null
+          room_name?: string | null
         }
         Update: {
           created_at?: string | null
+          group_avatar_url?: string | null
+          group_id?: string | null
+          group_name?: string | null
           id?: string
+          is_group_chat?: boolean
           last_message?: string | null
           last_message_at?: string | null
           participant_ids?: string[]
           pet_listing_id?: string | null
+          room_name?: string | null
         }
         Relationships: [
           {
@@ -494,7 +509,9 @@ export type Database = {
           badge: string | null
           bio: string | null
           created_at: string | null
+          device_platform: string | null
           display_name: string | null
+          fcm_token: string | null
           id: string
           location: string | null
           organization_name: string | null
@@ -509,7 +526,9 @@ export type Database = {
           badge?: string | null
           bio?: string | null
           created_at?: string | null
+          device_platform?: string | null
           display_name?: string | null
+          fcm_token?: string | null
           id: string
           location?: string | null
           organization_name?: string | null
@@ -524,7 +543,9 @@ export type Database = {
           badge?: string | null
           bio?: string | null
           created_at?: string | null
+          device_platform?: string | null
           display_name?: string | null
+          fcm_token?: string | null
           id?: string
           location?: string | null
           organization_name?: string | null

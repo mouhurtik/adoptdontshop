@@ -1,49 +1,35 @@
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-export const useFavorites = () => {
-    const { user, isAuthenticated } = useAuth();
-    const [favorites, setFavorites] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+/** Fetch the user's favorited pet IDs */
+function useFavoritesQuery(userId: string | undefined) {
+    return useQuery({
+        queryKey: ['favorites', userId],
+        queryFn: async (): Promise<string[]> => {
+            const { data, error } = await supabase
+                .from('pet_favorites')
+                .select('pet_id')
+                .eq('user_id', userId!);
 
-    useEffect(() => {
-        if (!isAuthenticated || !user) {
-            setFavorites([]);
-            setIsLoading(false);
-            return;
-        }
+            if (error) throw error;
+            return (data || []).map((f: { pet_id: string }) => f.pet_id);
+        },
+        enabled: !!userId,
+    });
+}
 
-        const fetchFavorites = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('pet_favorites')
-                    .select('pet_id')
-                    .eq('user_id', user.id);
+/** Toggle a pet favorite with optimistic update and auto-rollback */
+function useToggleFavorite() {
+    const queryClient = useQueryClient();
+    const { user } = useAuth();
 
-                if (error) throw error;
-                setFavorites(data.map((f: { pet_id: string }) => f.pet_id));
-            } catch (err) {
-                console.error('Error fetching favorites:', err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    return useMutation({
+        mutationFn: async ({ petId, isFavorited }: { petId: string; isFavorited: boolean }) => {
+            if (!user) throw new Error('Must be logged in');
 
-        fetchFavorites();
-    }, [user, isAuthenticated]);
-
-    const toggleFavorite = async (petId: string) => {
-        if (!isAuthenticated || !user) return;
-
-        const isFavorited = favorites.includes(petId);
-
-        // Optimistic update
-        setFavorites(prev =>
-            isFavorited ? prev.filter(id => id !== petId) : [...prev, petId]
-        );
-
-        try {
             if (isFavorited) {
                 const { error } = await supabase
                     .from('pet_favorites')
@@ -56,13 +42,49 @@ export const useFavorites = () => {
                     .insert({ user_id: user.id, pet_id: petId });
                 if (error) throw error;
             }
-        } catch (err) {
-            console.error('Error toggling favorite:', err);
-            // Revert optimistic update
-            setFavorites(prev =>
-                isFavorited ? [...prev, petId] : prev.filter(id => id !== petId)
+        },
+        onMutate: async ({ petId, isFavorited }) => {
+            // Cancel outgoing refetches so they don't overwrite our optimistic update
+            await queryClient.cancelQueries({ queryKey: ['favorites', user?.id] });
+
+            // Snapshot the previous value
+            const previous = queryClient.getQueryData<string[]>(['favorites', user?.id]);
+
+            // Optimistically update the cache
+            queryClient.setQueryData<string[]>(['favorites', user?.id], (old = []) =>
+                isFavorited ? old.filter(id => id !== petId) : [...old, petId]
             );
-        }
+
+            return { previous };
+        },
+        onError: (_err, _vars, context) => {
+            // Rollback to snapshot on error
+            if (context?.previous) {
+                queryClient.setQueryData(['favorites', user?.id], context.previous);
+            }
+        },
+        onSettled: () => {
+            // Refetch to ensure server state is in sync
+            queryClient.invalidateQueries({ queryKey: ['favorites', user?.id] });
+        },
+    });
+}
+
+/**
+ * Drop-in replacement for the old useState/useEffect-based useFavorites.
+ * Same API: { favorites, toggleFavorite, isLoading }
+ */
+export const useFavorites = () => {
+    const { user, isAuthenticated } = useAuth();
+    const { data: favorites = [], isLoading } = useFavoritesQuery(
+        isAuthenticated ? user?.id : undefined
+    );
+    const mutation = useToggleFavorite();
+
+    const toggleFavorite = (petId: string) => {
+        if (!isAuthenticated || !user) return;
+        const isFavorited = favorites.includes(petId);
+        mutation.mutate({ petId, isFavorited });
     };
 
     return { favorites, toggleFavorite, isLoading };

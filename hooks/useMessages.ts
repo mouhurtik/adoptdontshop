@@ -110,7 +110,7 @@ export function useConversationMessages(conversationId: string | null) {
 /** Send a message in an existing conversation */
 export function useSendMessage() {
     const queryClient = useQueryClient();
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
 
     return useMutation({
         mutationFn: async ({
@@ -122,13 +122,7 @@ export function useSendMessage() {
         }) => {
             if (!user) throw new Error('Must be logged in');
 
-            // Get user display name
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('display_name')
-                .eq('id', user.id)
-                .single();
-
+            // Use profile from AuthContext — no extra DB fetch
             const senderName = profile?.display_name || user.email || 'User';
 
             // Insert message
@@ -165,7 +159,7 @@ export function useSendMessage() {
 /** Start a new conversation (or return existing one) */
 export function useStartConversation() {
     const queryClient = useQueryClient();
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
 
     return useMutation({
         mutationFn: async ({
@@ -178,6 +172,9 @@ export function useStartConversation() {
             if (!user) throw new Error('Must be logged in');
             if (recipientId === user.id) throw new Error('Cannot message yourself');
 
+            // Use profile from AuthContext — single source, no extra DB fetches
+            const senderName = profile?.display_name || user.email || 'User';
+
             // Check if conversation already exists between these users
             const { data: existing } = await supabase
                 .from('conversations')
@@ -188,16 +185,10 @@ export function useStartConversation() {
                 // Send message in existing conversation
                 const convId = existing[0].id;
 
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('display_name')
-                    .eq('id', user.id)
-                    .single();
-
                 await supabase.from('messages').insert({
                     conversation_id: convId,
                     sender_id: user.id,
-                    sender_name: profile?.display_name || user.email || 'User',
+                    sender_name: senderName,
                     content: initialMessage,
                     message_type: 'text',
                     participants: [user.id, recipientId],
@@ -229,16 +220,10 @@ export function useStartConversation() {
             if (convError) throw convError;
 
             // Send first message
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('display_name')
-                .eq('id', user.id)
-                .single();
-
             const { error: msgError } = await supabase.from('messages').insert({
                 conversation_id: newConvo.id,
                 sender_id: user.id,
-                sender_name: profile?.display_name || user.email || 'User',
+                sender_name: senderName,
                 content: initialMessage,
                 message_type: 'text',
                 participants: [user.id, recipientId],
@@ -263,25 +248,38 @@ export function useMarkAsRead() {
     return useCallback(async (conversationId: string) => {
         if (!user) return;
 
-        // Get messages not read by user
+        // Get IDs of messages not read by user
         const { data: unread } = await supabase
             .from('messages')
-            .select('id, read_by')
+            .select('id')
             .eq('conversation_id', conversationId)
             .not('sender_id', 'eq', user.id)
             .not('read_by', 'cs', JSON.stringify([user.id]));
 
         if (!unread || unread.length === 0) return;
 
-        // Update each to add user to read_by
-        for (const msg of unread) {
-            const currentReadBy = (msg.read_by as string[]) || [];
-            if (!currentReadBy.includes(user.id)) {
-                await supabase
-                    .from('messages')
-                    .update({ read_by: [...currentReadBy, user.id] })
-                    .eq('id', msg.id);
-            }
+        // Batch update: fire all updates concurrently instead of sequentially (N+1 → parallel)
+        // For DMs with 2 participants, read_by is typically [sender_id],
+        // so we append the current user to mark as read.
+        const unreadIds = unread.map(m => m.id);
+
+        // Fetch read_by for each unread message in one query
+        const { data: messagesWithReadBy } = await supabase
+            .from('messages')
+            .select('id, read_by')
+            .in('id', unreadIds);
+
+        if (messagesWithReadBy && messagesWithReadBy.length > 0) {
+            await Promise.all(
+                messagesWithReadBy.map(msg => {
+                    const currentReadBy = (msg.read_by as unknown as string[]) || [];
+                    if (currentReadBy.includes(user.id)) return Promise.resolve();
+                    return supabase
+                        .from('messages')
+                        .update({ read_by: [...currentReadBy, user.id] })
+                        .eq('id', msg.id);
+                })
+            );
         }
 
         // Refresh queries

@@ -149,10 +149,10 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         {communities.map(community => (
                             <Link
                                 key={community.id}
-                                href={`/groups/${community.slug}`}
+                                href={`/communities/${community.slug}`}
                                 title={collapsed ? community.name : undefined}
                                 className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-2.5 ${collapsed ? 'px-2 py-2' : 'px-2.5 py-2'} rounded-xl text-sm transition-all duration-200 ${
-                                    pathname === `/groups/${community.slug}`
+                                    pathname === `/communities/${community.slug}`
                                         ? 'bg-playful-teal/10 text-playful-teal font-semibold'
                                         : 'text-gray-600 hover:bg-gray-50 hover:text-playful-text'
                                 }`}

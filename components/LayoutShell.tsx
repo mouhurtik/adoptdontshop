@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import TopBar from '@/components/TopBar';
 import { AuthModalProvider } from '@/contexts/AuthModalContext';
+import { NativeProvider } from '@/components/NativeProvider';
 
 // Lazy-load heavy components that aren't needed on initial paint
 const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
@@ -57,8 +58,9 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     // Messages — uses standard layout with sidebar (removed early return)
 
     return (
+        <NativeProvider>
         <AuthModalProvider>
-        <div className="min-h-screen bg-playful-cream">
+        <div className="min-h-screen bg-playful-cream" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
             {/* Desktop: Persistent left sidebar — lazy-loaded, hidden on mobile via CSS */}
             {shellReady && (
                 <AppSidebar
@@ -89,5 +91,6 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
             {shellReady && <AuthModal />}
         </div>
         </AuthModalProvider>
+        </NativeProvider>
     );
 }

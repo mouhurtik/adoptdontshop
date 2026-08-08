@@ -168,7 +168,7 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
                             title={liked ? 'Unlike' : 'Like'}
                         >
                             <Heart className={`h-4 w-4 transition-all ${liked ? 'fill-current' : ''}`} />
-                            <span className="font-medium">{post.like_count + (liked ? (post.like_count === 0 ? 1 : 0) : 0)}</span>
+                            <span className="font-medium">{post.like_count}</span>
                         </button>
                         <span className="flex items-center gap-1 text-xs">
                             <MessageCircle className="h-3.5 w-3.5" /> {post.comment_count}

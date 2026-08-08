@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Users, MessageCircle, FileText, Info, ArrowLeft, Lock, PenSquare, Crown, Shield, Star } from 'lucide-react';
@@ -9,7 +9,9 @@ import PrimaryButton from '@/components/ui/PrimaryButton';
 import { PostCardData } from '@/components/community/PostCard';
 import PostCardList from '@/components/community/PostCardList';
 import GroupChat from '@/components/groups/GroupChat';
+import RoomSidebar from '@/components/groups/RoomSidebar';
 import { useGroupDetail, useGroupMembers, useGroupPosts, useIsMember, useJoinGroup, useLeaveGroup, GROUP_CATEGORIES } from '@/hooks/useGroups';
+import { useGroupRooms, useCreateGroupRoom, useCreateGroupConversation, type GroupConversation } from '@/hooks/useGroupChat';
 import { useAuth } from '@/contexts/AuthContext';
 
 type Tab = 'posts' | 'chat' | 'members' | 'about';
@@ -34,18 +36,59 @@ interface GroupDetailProps {
 const GroupDetail = ({ slug }: GroupDetailProps) => {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<Tab>('posts');
+    const [activeRoom, setActiveRoom] = useState<GroupConversation | null>(null);
     const { user } = useAuth();
 
     const { data: group, isLoading: loadingGroup } = useGroupDetail(slug);
     const { data: members } = useGroupMembers(group?.id);
     const { data: posts } = useGroupPosts(group?.id);
     const { data: membership } = useIsMember(group?.id);
+    const { data: rooms = [] } = useGroupRooms(group?.id);
+    const createRoom = useCreateGroupRoom();
+    const createDefaultRoom = useCreateGroupConversation();
     const joinGroup = useJoinGroup();
     const leaveGroup = useLeaveGroup();
 
     const isMember = !!membership;
     const isOwner = membership?.role === 'owner';
+    const isAdmin = isOwner || membership?.role === 'admin';
     const categoryInfo = GROUP_CATEGORIES.find(c => c.value === group?.category);
+
+    // Auto-select first room when rooms load, or create default General room
+    useEffect(() => {
+        if (!group || !isMember) return;
+        if (rooms.length > 0 && !activeRoom) {
+            setActiveRoom(rooms[0]);
+        } else if (rooms.length === 0 && isOwner && !createDefaultRoom.isPending) {
+            // Auto-create General room for new groups
+            const memberIds = members?.map(m => m.user_id) || (user ? [user.id] : []);
+            createDefaultRoom.mutate({
+                groupId: group.id,
+                groupName: group.name,
+                groupAvatarUrl: group.avatar_url,
+                memberIds,
+            });
+        }
+    }, [rooms, group, isMember, isOwner, activeRoom, members, user, createDefaultRoom]);
+
+    // Update activeRoom reference when rooms refresh
+    useEffect(() => {
+        if (activeRoom && rooms.length > 0) {
+            const updated = rooms.find(r => r.id === activeRoom.id);
+            if (updated) setActiveRoom(updated);
+        }
+    }, [rooms, activeRoom]);
+
+    const handleCreateRoom = (roomName: string) => {
+        if (!group || !members) return;
+        createRoom.mutate({
+            groupId: group.id,
+            groupName: group.name,
+            groupAvatarUrl: group.avatar_url,
+            roomName,
+            memberIds: members.map(m => m.user_id),
+        });
+    };
 
     const handleJoinLeave = () => {
         if (!user) { router.push('/login'); return; }
@@ -248,11 +291,44 @@ const GroupDetail = ({ slug }: GroupDetailProps) => {
                     {activeTab === 'chat' && (
                         <div>
                             {isMember ? (
-                                <GroupChat
-                                    groupId={group.id}
-                                    groupName={group.name}
-                                    groupAvatarUrl={group.avatar_url}
-                                />
+                                <div className="flex gap-4">
+                                    {/* Room Sidebar — hidden on mobile, shown as overlay */}
+                                    <div className="hidden md:block w-56 flex-shrink-0">
+                                        <RoomSidebar
+                                            rooms={rooms}
+                                            activeRoomId={activeRoom?.id || null}
+                                            onSelectRoom={setActiveRoom}
+                                            onCreateRoom={handleCreateRoom}
+                                            isCreating={createRoom.isPending}
+                                            canCreate={isAdmin}
+                                        />
+                                    </div>
+                                    {/* Chat Area */}
+                                    <div className="flex-1 min-w-0">
+                                        {/* Mobile room selector */}
+                                        <div className="md:hidden mb-3">
+                                            <select
+                                                value={activeRoom?.id || ''}
+                                                onChange={(e) => {
+                                                    const room = rooms.find(r => r.id === e.target.value);
+                                                    if (room) setActiveRoom(room);
+                                                }}
+                                                className="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-sm font-medium text-playful-text focus:outline-none focus:ring-2 focus:ring-playful-teal/30"
+                                            >
+                                                {rooms.map(r => (
+                                                    <option key={r.id} value={r.id}># {r.room_name.toLowerCase()}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <GroupChat
+                                            groupId={group.id}
+                                            groupName={group.name}
+                                            groupAvatarUrl={group.avatar_url}
+                                            conversationId={activeRoom?.id}
+                                            roomName={activeRoom?.room_name || 'General'}
+                                        />
+                                    </div>
+                                </div>
                             ) : (
                                 <div className="text-center py-16 bg-white rounded-[2rem] shadow-soft">
                                     <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />

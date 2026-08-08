@@ -14,6 +14,7 @@ export interface GroupConversation {
     group_name: string;
     group_avatar_url: string | null;
     is_group_chat: boolean;
+    room_name: string;
     last_message: string | null;
     last_message_at: string | null;
     participant_ids: string[];
@@ -22,43 +23,51 @@ export interface GroupConversation {
 
 // ─── Hooks ─────────────────────────────────────────────────
 
-/** Get or create a group chat conversation for a group */
-export function useGroupConversation(groupId: string | undefined) {
+/** Get all chat rooms for a group */
+export function useGroupRooms(groupId: string | undefined) {
     const { user } = useAuth();
 
     return useQuery({
-        queryKey: ['group-conversation', groupId],
-        queryFn: async (): Promise<GroupConversation | null> => {
-            // Cast to any because group_id/is_group_chat columns are added by migration
+        queryKey: ['group-rooms', groupId],
+        queryFn: async (): Promise<GroupConversation[]> => {
             const { data, error } = await supabase
                 .from('conversations')
                 .select('*')
                 .eq('group_id' as string, groupId!)
                 .eq('is_group_chat' as string, true)
-                .maybeSingle();
+                .order('created_at', { ascending: true });
 
             if (error) throw error;
-            if (data) {
-                const conv = data as Record<string, unknown>;
+            return (data ?? []).map(c => {
+                const conv = c as Record<string, unknown>;
                 return {
                     id: conv.id as string,
                     group_id: conv.group_id as string,
                     group_name: (conv.group_name as string) || 'Group Chat',
                     group_avatar_url: conv.group_avatar_url as string | null,
                     is_group_chat: true,
+                    room_name: (conv.room_name as string) || 'General',
                     last_message: conv.last_message as string | null,
                     last_message_at: conv.last_message_at as string | null,
                     participant_ids: conv.participant_ids as string[],
                 };
-            }
-            return null;
+            });
         },
         enabled: !!groupId && !!user,
     });
 }
 
-/** Create a group chat conversation (called when first message is sent) */
-export function useCreateGroupConversation() {
+/** Get a single group conversation (kept for backward compat — returns first room) */
+export function useGroupConversation(groupId: string | undefined) {
+    const { data: rooms, ...rest } = useGroupRooms(groupId);
+    return {
+        data: rooms?.[0] ?? null,
+        ...rest,
+    };
+}
+
+/** Create a new chat room in a group */
+export function useCreateGroupRoom() {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -66,19 +75,21 @@ export function useCreateGroupConversation() {
             groupId,
             groupName,
             groupAvatarUrl,
+            roomName,
             memberIds,
         }: {
             groupId: string;
             groupName: string;
             groupAvatarUrl?: string | null;
+            roomName: string;
             memberIds: string[];
         }) => {
-            // Use RPC or raw insert with cast — columns added by migration
             const insertPayload = {
                 group_id: groupId,
                 is_group_chat: true,
                 group_name: groupName,
                 group_avatar_url: groupAvatarUrl || null,
+                room_name: roomName,
                 participant_ids: memberIds,
                 last_message: null,
                 last_message_at: new Date().toISOString(),
@@ -94,6 +105,40 @@ export function useCreateGroupConversation() {
             return data;
         },
         onSuccess: (_, vars) => {
+            queryClient.invalidateQueries({ queryKey: ['group-rooms', vars.groupId] });
+            queryClient.invalidateQueries({ queryKey: ['group-conversation', vars.groupId] });
+            queryClient.invalidateQueries({ queryKey: ['group-conversations'] });
+        },
+    });
+}
+
+/** Create a group chat conversation (backward compat — creates default "General" room) */
+export function useCreateGroupConversation() {
+    const createRoom = useCreateGroupRoom();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({
+            groupId,
+            groupName,
+            groupAvatarUrl,
+            memberIds,
+        }: {
+            groupId: string;
+            groupName: string;
+            groupAvatarUrl?: string | null;
+            memberIds: string[];
+        }) => {
+            return createRoom.mutateAsync({
+                groupId,
+                groupName,
+                groupAvatarUrl,
+                roomName: 'General',
+                memberIds,
+            });
+        },
+        onSuccess: (_, vars) => {
+            queryClient.invalidateQueries({ queryKey: ['group-rooms', vars.groupId] });
             queryClient.invalidateQueries({ queryKey: ['group-conversation', vars.groupId] });
             queryClient.invalidateQueries({ queryKey: ['group-conversations'] });
         },
@@ -128,7 +173,7 @@ export function useGroupMessages(conversationId: string | null) {
 /** Send a message in a group chat */
 export function useSendGroupMessage() {
     const queryClient = useQueryClient();
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
 
     return useMutation({
         mutationFn: async ({
@@ -140,12 +185,7 @@ export function useSendGroupMessage() {
         }) => {
             if (!user) throw new Error('Must be logged in');
 
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('display_name')
-                .eq('id', user.id)
-                .single();
-
+            // Use profile from AuthContext — no extra DB fetch
             const senderName = profile?.display_name || user.email || 'User';
 
             const { error: msgError } = await supabase.from('messages').insert({
@@ -171,7 +211,7 @@ export function useSendGroupMessage() {
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['group-messages', variables.conversationId] });
             queryClient.invalidateQueries({ queryKey: ['group-conversations'] });
-            queryClient.invalidateQueries({ queryKey: ['group-conversation'] });
+            queryClient.invalidateQueries({ queryKey: ['group-rooms'] });
         },
     });
 }
@@ -199,6 +239,7 @@ export function useGroupConversations() {
                     group_name: (conv.group_name as string) || 'Group Chat',
                     group_avatar_url: conv.group_avatar_url as string | null,
                     is_group_chat: true,
+                    room_name: (conv.room_name as string) || 'General',
                     last_message: conv.last_message as string | null,
                     last_message_at: conv.last_message_at as string | null,
                     participant_ids: conv.participant_ids as string[],
@@ -234,6 +275,7 @@ export function useGroupMessageRealtime(conversationId: string | null) {
                 () => {
                     queryClient.invalidateQueries({ queryKey: ['group-messages', conversationId] });
                     queryClient.invalidateQueries({ queryKey: ['group-conversations'] });
+                    queryClient.invalidateQueries({ queryKey: ['group-rooms'] });
                 }
             )
             .subscribe();
