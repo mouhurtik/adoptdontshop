@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install
@@ -78,6 +79,7 @@ jobs:
         with:
           node-version: '22.x'
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install
@@ -103,6 +105,7 @@ jobs:
         with:
           node-version: '22.x'
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Run security audit
         run: pnpm audit --audit-level=moderate || true
