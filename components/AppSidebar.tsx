@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-    Home, Compass, PawPrint, MessageCircle,
-    Plus, LogIn, LogOut, Shield, ChevronsLeft, ChevronsRight
+    Home, MapPin, PawPrint, HeartHandshake, ShoppingBag, MessageCircle,
+    Plus, LogIn, LogOut, Shield, ChevronsLeft, ChevronsRight, Compass
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUnreadCount } from '@/hooks/useMessages';
@@ -65,8 +65,10 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
 
     const mainNav = [
         { name: 'Home', icon: Home, path: '/', badge: 0 },
-        { name: 'Explore', icon: Compass, path: '/explore', badge: 0 },
         { name: 'Browse Pets', icon: PawPrint, path: '/browse', badge: 0 },
+        { name: 'Paw Map', icon: MapPin, path: '/map', badge: 0 },
+        { name: 'Fundraisers', icon: HeartHandshake, path: '/fundraisers', badge: 0 },
+        { name: 'Pet Shop', icon: ShoppingBag, path: '/shop', badge: 0 },
         { name: 'Messages', icon: MessageCircle, path: '/messages', badge: unreadCount },
     ];
 
@@ -87,7 +89,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         <PawPrint className="h-5 w-5 fill-current" />
                     </div>
                     {!collapsed && (
-                        <span className="text-lg font-heading font-black tracking-tight text-playful-text whitespace-nowrap">
+                        <span className="text-lg font-heading font-bold tracking-tight text-playful-text whitespace-nowrap">
                             Adopt<span className="text-playful-coral">Dont</span>Shop
                         </span>
                     )}

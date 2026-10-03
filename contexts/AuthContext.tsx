@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import type { User, AuthState, AuthContextValue, Profile, UserRole } from '@/types';
 
@@ -47,8 +47,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     /**
      * Load user profile and roles from database
+     * @param isCancelled checked before every state write — prevents a stale
+     * load (e.g. sign-out mid-flight) from writing data into cleared state
      */
-    const loadProfileAndRoles = useCallback(async (userId: string) => {
+    const loadProfileAndRoles = useCallback(async (userId: string, isCancelled?: () => boolean) => {
         try {
             // Fetch profile
             const { data: profile } = await supabase
@@ -97,6 +99,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             const roles = (roleRows || []).map(r => r.role).filter(Boolean) as string[];
             const isAdmin = roles.includes('admin');
+
+            if (isCancelled?.()) return;
 
             setAuthState(prev => ({
                 ...prev,
@@ -156,7 +160,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const thisLoadId = ++profileLoadId;
             try {
                 if (cancelled) return;
-                await loadProfileAndRoles(user.id);
+                await loadProfileAndRoles(user.id, () => cancelled);
             } catch {
                 // Non-critical — profile/roles fetch failed
             }
@@ -190,7 +194,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     /**
      * Sign in with email and password
      */
-    const signIn = async (email: string, password: string): Promise<void> => {
+    const signIn = useCallback(async (email: string, password: string): Promise<void> => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
         try {
@@ -216,12 +220,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }));
             throw err;
         }
-    };
+    }, []);
 
     /**
      * Sign up with email and password
      */
-    const signUp = async (email: string, password: string, metadata?: Record<string, unknown>): Promise<void> => {
+    const signUp = useCallback(async (email: string, password: string, metadata?: Record<string, unknown>): Promise<void> => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
         try {
@@ -253,12 +257,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }));
             throw err;
         }
-    };
+    }, []);
 
     /**
      * Sign out
      */
-    const signOut = async (): Promise<void> => {
+    const signOut = useCallback(async (): Promise<void> => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
         try {
@@ -286,12 +290,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }));
             throw err;
         }
-    };
+    }, []);
 
     /**
      * Reset password
      */
-    const resetPassword = async (email: string): Promise<void> => {
+    const resetPassword = useCallback(async (email: string): Promise<void> => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
         try {
@@ -321,16 +325,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }));
             throw err;
         }
-    };
+    }, []);
 
-    const value: AuthContextValue = {
+    const value: AuthContextValue = useMemo(() => ({
         ...authState,
         signIn,
         signUp,
         signOut,
         resetPassword,
         refreshProfile,
-    };
+    }), [authState, signIn, signUp, signOut, resetPassword, refreshProfile]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -2,13 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, PawPrint, MessageSquare, FileText, ChevronLeft, ChevronRight, Menu, ClipboardList, UsersRound, MessageCircle } from 'lucide-react';
+import {
+    LayoutDashboard, Users, PawPrint, MessageSquare, FileText, ChevronLeft,
+    ChevronRight, Menu, ClipboardList, UsersRound, MessageCircle, HeartHandshake, MapPin, ShoppingBag, Coins
+} from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/users', label: 'Users', icon: Users },
     { href: '/admin/listings', label: 'Listings', icon: PawPrint },
+    { href: '/admin/fundraisers', label: 'Fundraisers', icon: HeartHandshake },
+    { href: '/admin/sightings', label: 'Map Sightings', icon: MapPin },
+    { href: '/admin/shop', label: 'Store Products', icon: ShoppingBag },
+    { href: '/admin/pawcoins', label: 'PawCoins', icon: Coins },
     { href: '/admin/applications', label: 'Applications', icon: ClipboardList },
     { href: '/admin/posts', label: 'Posts', icon: FileText },
     { href: '/admin/messages', label: 'Messages', icon: MessageSquare },

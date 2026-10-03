@@ -13,7 +13,7 @@ interface TrendingSidebarProps {
 }
 
 const TrendingSidebar = ({ activeTag, onTagChange }: TrendingSidebarProps) => {
-    const { data: trendingPosts } = useCommunityPosts({ sort: 'hot', limit: 5 });
+    const { data: trendingPosts } = useCommunityPosts({ sort: 'hot', limit: 8 });
 
     return (
         <aside className="hidden xl:block w-[300px] flex-shrink-0 space-y-6 sticky top-8 self-start">

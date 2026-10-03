@@ -39,9 +39,6 @@ export const metadata: Metadata = {
         'pet adoption Kolkata', 'pet adoption Mumbai',
     ],
     metadataBase: new URL('https://adoptdontshop.xyz'),
-    alternates: {
-        canonical: '/',
-    },
     openGraph: {
         type: 'website',
         locale: 'en_IN',
@@ -148,8 +145,7 @@ export default function RootLayout({
         <html lang="en-IN" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
             <head>
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
-                <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
-                <link rel="preconnect" href="https://uibsmaizlrekfooryrwq.supabase.co" crossOrigin="anonymous" />
+                <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://uibsmaizlrekfooryrwq.supabase.co'} crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
                 <Script id="google-analytics" strategy="lazyOnload">
                     {`

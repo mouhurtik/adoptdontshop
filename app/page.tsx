@@ -12,6 +12,7 @@ export const metadata: Metadata = {
         'rescue animals', 'pet community India', 'adopt dont shop',
         'indie dog adoption', 'free pet adoption',
     ],
+    alternates: { canonical: '/' },
 };
 
 export default async function HomePage() {

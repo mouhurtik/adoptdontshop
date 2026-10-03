@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any -- Supabase generated types lag behind new RPCs; casts are narrow and temporary */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useCallback, useRef } from 'react';
@@ -24,11 +25,12 @@ export interface Message extends MessageRow {
 // ─── Fetch Helpers ─────────────────────────────────────────
 
 async function fetchConversations(userId: string): Promise<Conversation[]> {
-    // Fetch conversations
+    // Fetch conversations — bounded to prevent unbounded payload growth (PERF-1)
     const { data: convos, error } = await supabase
         .from('conversations')
         .select('*')
-        .order('last_message_at', { ascending: false });
+        .order('last_message_at', { ascending: false })
+        .limit(50);
 
     if (error) throw error;
     if (!convos || convos.length === 0) return [];
@@ -53,17 +55,33 @@ async function fetchConversations(userId: string): Promise<Conversation[]> {
         }
     }
 
+    // Count real unread messages per conversation: messages sent by someone
+    // else whose `read_by` array does not include me. (`conversations` has no
+    // read-tracking column — the previous cast read a non-existent field and
+    // always produced 0.)
+    const unreadMap: Record<string, number> = {};
+    const { data: msgRows } = await supabase        .from('messages')
+        .select('conversation_id, sender_id, read_by')
+        .in('conversation_id', convos.map(c => c.id))
+        .limit(2000);
+    for (const m of msgRows || []) {
+        if (m.sender_id === userId) continue;
+        const readBy = Array.isArray(m.read_by) ? (m.read_by as string[]) : [];
+        if (!readBy.includes(userId)) {
+            unreadMap[m.conversation_id] = (unreadMap[m.conversation_id] || 0) + 1;
+        }
+    }
+
     return convos.map(c => {
         const otherId = (c.participant_ids as string[]).find(id => id !== userId);
         const otherProfile = otherId ? profileMap[otherId] : undefined;
-        const readBy = (c as unknown as { read_by?: string[] }).read_by;
 
         return {
             ...c,
             participant_ids: c.participant_ids as string[],
             other_participant_name: otherProfile?.name || 'User',
             other_participant_avatar: otherProfile?.avatar ?? undefined,
-            unread_count: readBy && !readBy.includes(userId) ? 1 : 0,
+            unread_count: unreadMap[c.id] || 0,
         };
     });
 }
@@ -74,7 +92,8 @@ async function fetchMessages(conversationId: string, userId: string): Promise<Me
         .select('*')
         .eq('conversation_id', conversationId)
         .eq('is_deleted', false)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: true })
+        .limit(100);
 
     if (error) throw error;
     return (data ?? []).map(m => ({
@@ -175,64 +194,36 @@ export function useStartConversation() {
             // Use profile from AuthContext — single source, no extra DB fetches
             const senderName = profile?.display_name || user.email || 'User';
 
-            // Check if conversation already exists between these users
-            const { data: existing } = await supabase
-                .from('conversations')
-                .select('id')
-                .contains('participant_ids', [user.id, recipientId]);
+            // Atomic get-or-create via RPC — handles duplicate-creation race (BUG-9)
+            const { data: convId, error: rpcError } = await (supabase.rpc as any)('get_or_create_conversation', {
+                p_other_id: recipientId,
+                p_initial_message: initialMessage,
+            });
+            if (rpcError) throw rpcError;
+            if (!convId) throw new Error('Failed to get conversation');
 
-            if (existing && existing.length > 0) {
-                // Send message in existing conversation
-                const convId = existing[0].id;
-
-                await supabase.from('messages').insert({
-                    conversation_id: convId,
-                    sender_id: user.id,
-                    sender_name: senderName,
-                    content: initialMessage,
-                    message_type: 'text',
-                    participants: [user.id, recipientId],
-                    read_by: [user.id],
-                });
-
-                await supabase
-                    .from('conversations')
-                    .update({
-                        last_message: initialMessage.substring(0, 100),
-                        last_message_at: new Date().toISOString(),
-                    })
-                    .eq('id', convId);
-
-                return convId;
-            }
-
-            // Create new conversation
-            const { data: newConvo, error: convError } = await supabase
-                .from('conversations')
-                .insert({
-                    participant_ids: [user.id, recipientId],
-                    last_message: initialMessage.substring(0, 100),
-                    last_message_at: new Date().toISOString(),
-                })
-                .select('id')
-                .single();
-
-            if (convError) throw convError;
-
-            // Send first message
+            // Insert the initial message (RPC does not insert messages)
             const { error: msgError } = await supabase.from('messages').insert({
-                conversation_id: newConvo.id,
+                conversation_id: convId as string,
                 sender_id: user.id,
                 sender_name: senderName,
                 content: initialMessage,
                 message_type: 'text',
-                participants: [user.id, recipientId],
-                read_by: [user.id],
-            });
-
+                participants: [user.id, recipientId] as unknown as any,
+                read_by: [user.id] as unknown as any,
+            } as any);
             if (msgError) throw msgError;
 
-            return newConvo.id;
+            // Refresh last_message (covers both existing and newly-created cases)
+            await supabase
+                .from('conversations')
+                .update({
+                    last_message: initialMessage.substring(0, 100),
+                    last_message_at: new Date().toISOString(),
+                })
+                .eq('id', convId as string);
+
+            return convId as string;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['conversations'] });
@@ -240,49 +231,20 @@ export function useStartConversation() {
     });
 }
 
-/** Mark all unread messages in a conversation as read by the current user */
+/** Mark all unread messages in a conversation as read — atomic server-side (BUG-8) */
 export function useMarkAsRead() {
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
     return useCallback(async (conversationId: string) => {
         if (!user) return;
-
-        // Get IDs of messages not read by user
-        const { data: unread } = await supabase
-            .from('messages')
-            .select('id')
-            .eq('conversation_id', conversationId)
-            .not('sender_id', 'eq', user.id)
-            .not('read_by', 'cs', JSON.stringify([user.id]));
-
-        if (!unread || unread.length === 0) return;
-
-        // Batch update: fire all updates concurrently instead of sequentially (N+1 → parallel)
-        // For DMs with 2 participants, read_by is typically [sender_id],
-        // so we append the current user to mark as read.
-        const unreadIds = unread.map(m => m.id);
-
-        // Fetch read_by for each unread message in one query
-        const { data: messagesWithReadBy } = await supabase
-            .from('messages')
-            .select('id, read_by')
-            .in('id', unreadIds);
-
-        if (messagesWithReadBy && messagesWithReadBy.length > 0) {
-            await Promise.all(
-                messagesWithReadBy.map(msg => {
-                    const currentReadBy = (msg.read_by as unknown as string[]) || [];
-                    if (currentReadBy.includes(user.id)) return Promise.resolve();
-                    return supabase
-                        .from('messages')
-                        .update({ read_by: [...currentReadBy, user.id] })
-                        .eq('id', msg.id);
-                })
-            );
+        const { error } = await (supabase.rpc as any)('mark_conversation_read', {
+            p_conversation_id: conversationId,
+        });
+        if (error) {
+            console.error('[useMarkAsRead] rpc failed:', error.message);
+            return;
         }
-
-        // Refresh queries
         queryClient.invalidateQueries({ queryKey: ['messages', conversationId] });
         queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
         queryClient.invalidateQueries({ queryKey: ['conversations'] });

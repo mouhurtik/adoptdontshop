@@ -8,6 +8,7 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
 import { TAG_LABELS, TAG_COLORS } from '@/components/community/PostCard';
+import { serializeJsonLd } from '@/lib/utils';
 import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment, useSavePost, useUserSavedPost, useRelatedPosts } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -119,7 +120,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
+                    __html: serializeJsonLd({
                         '@context': 'https://schema.org',
                         '@type': 'BlogPosting',
                         headline: post.title,
@@ -143,12 +144,12 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                         },
                     }),
                 }}
-            />
+                />
             {/* BreadcrumbList structured data for search navigation */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
+                    __html: serializeJsonLd({
                         '@context': 'https://schema.org',
                         '@type': 'BreadcrumbList',
                         itemListElement: [

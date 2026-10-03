@@ -26,6 +26,8 @@ const fetchPets = async (): Promise<Pet[]> => {
       .from('pet_listings')
       .select('*')
       .eq('status', 'available')
+      .order('created_at', { ascending: false })
+      .limit(100)
       .abortSignal(controller.signal);
 
     if (error) throw error;

@@ -44,16 +44,36 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            setImage(file);
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
+        if (!file) return;
+        const MAX_BYTES = 5 * 1024 * 1024; // 5MB pre-conversion cap (SEC-10)
+        const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+        if (file.size > MAX_BYTES) {
+            toast.error('Image too large — please choose a file under 5 MB');
+            e.target.value = '';
+            return;
         }
+        if (!file.type.startsWith('image/') || (file.type && !allowed.includes(file.type) && !file.type.startsWith('image/'))) {
+            // Advisory: accept="image/*" already filters, but MIME spoofing is common
+            // We allow any image/* but warn on empty type
+            if (!file.type) {
+                toast.error('Could not determine image type — please try a different file');
+                e.target.value = '';
+                return;
+            }
+        }
+        setImage(file);
+        setPreviewUrl(prev => {
+            if (prev) URL.revokeObjectURL(prev);
+            return URL.createObjectURL(file);
+        });
     };
 
     const handleRemoveImage = () => {
         setImage(null);
-        setPreviewUrl(null);
+        setPreviewUrl(prev => {
+            if (prev) URL.revokeObjectURL(prev);
+            return null;
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -176,7 +196,10 @@ const PetListingForm = ({ open = true, onOpenChange = () => { }, isPage = false 
     const resetForm = () => {
         setFormData({ ...INITIAL_FORM_DATA });
         setImage(null);
-        setPreviewUrl(null);
+        setPreviewUrl(prev => {
+            if (prev) URL.revokeObjectURL(prev);
+            return null;
+        });
     };
 
     const formContent = (

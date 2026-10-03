@@ -62,8 +62,8 @@ A modern, open-source pet adoption platform and community hub connecting shelter
 
 ### Prerequisites
 
-- **Node.js** 20+ ([Download](https://nodejs.org/))
-- **npm** 9+ (comes with Node.js)
+- **Node.js** 22 ([Download](https://nodejs.org/)) — CI runs Node 22
+- **pnpm** 9+ (`npm i -g pnpm`)
 - **Git** ([Download](https://git-scm.com/))
 - **Supabase Account** ([supabase.com](https://supabase.com))
 
@@ -72,17 +72,17 @@ A modern, open-source pet adoption platform and community hub connecting shelter
 ```bash
 # Clone the repository
 git clone https://github.com/mouhurtik/adoptdontshop.git
-cd adoptdontshop-website
+cd adoptdontshop
 
-# Install dependencies
-npm install
+# Install dependencies (pnpm only — an npm install creates a different tree)
+pnpm install
 
 # Set up environment variables
 cp .env.example .env.local
 # Edit .env.local with your Supabase credentials
 
 # Start development server
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
@@ -107,16 +107,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ### Available Scripts
 
 ```bash
-npm run dev          # Start dev server (localhost:3000)
-npm run build        # Production build
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # TypeScript check
+pnpm dev             # Start dev server (localhost:3000)
+pnpm build           # Production build
+pnpm start           # Start production server
+pnpm lint            # Run ESLint
+pnpm type-check      # TypeScript check
+pnpm test            # Run Vitest
 
 # Cloudflare Pages
-npm run cf:build     # Build for Cloudflare Workers
-npm run cf:dev       # Local Cloudflare dev
-npm run cf:deploy    # Build + deploy to Cloudflare
+pnpm cf:build        # Build for Cloudflare Workers
+pnpm cf:dev          # Local Cloudflare dev
+pnpm cf:deploy       # Build + deploy to Cloudflare
 ```
 
 ---
@@ -124,45 +125,22 @@ npm run cf:deploy    # Build + deploy to Cloudflare
 ## 📁 Project Structure
 
 ```
-adoptdontshop-website/
-├── app/                    # Next.js App Router (route pages)
-│   ├── layout.tsx          # Root layout (Navbar + Footer + Providers)
-│   ├── page.tsx            # Home page
-│   ├── globals.css         # Global styles
-│   ├── providers.tsx       # Client providers (QueryClient, Auth, etc.)
-│   ├── not-found.tsx       # Custom 404 page
-│   ├── browse/page.tsx
-│   ├── pet/[slug]/page.tsx # Dynamic pet page (SSR + generateMetadata)
-│   ├── about/page.tsx
-│   ├── pet-essentials/page.tsx
-│   ├── success-stories/page.tsx
-│   ├── sponsors/page.tsx
-│   ├── list-pet/page.tsx
-│   ├── terms/page.tsx
-│   └── privacy-policy/page.tsx
-├── views/                  # Page-level view components
-├── components/             # Reusable UI components
-│   ├── ui/                 # shadcn/ui primitives
-│   ├── home/               # Home page sections
-│   ├── browse/             # Browse components
-│   ├── pet-details/        # Pet detail sections
-│   ├── pet-listing/        # Listing form sections
-│   ├── Navbar.tsx
-│   └── Footer.tsx
-├── hooks/                  # Custom React hooks
-├── contexts/               # React Context providers
-├── lib/                    # Utilities
-│   ├── supabase/client.ts  # Browser Supabase client
-│   ├── supabase/server.ts  # Server Supabase client (SSR)
-│   └── imageLoader.ts      # Cloudflare image loader
-├── types/                  # TypeScript type definitions
-├── constants/              # App constants
-├── utils/                  # Utility functions
-├── public/                 # Static assets
-├── next.config.mjs         # Next.js configuration
-├── tailwind.config.ts      # Tailwind CSS configuration
-├── wrangler.toml           # Cloudflare Workers config
-└── open-next.config.ts     # OpenNext adapter config
+adoptdontshop/
+├── app/                    # Next.js App Router — route + metadata per segment
+│   ├── layout.tsx          # Root layout (Providers + LayoutShell + JSON-LD)
+│   ├── providers.tsx       # QueryClient + Auth + Sonner
+│   ├── page.tsx            # Home feed (SSR via server-queries)
+│   ├── browse/  pet/[slug]/  about/  welcome/  explore/  community/[slug]/ ...
+│   ├── communities/  adopt-pets-in/[city]/  user/[id]/  messages/  profile/ ...
+│   ├── admin/              # 7 admin sub-routes (separate layout)
+│   ├── sitemap.ts  robots.ts  feed.xml/  not-found.tsx
+├── views/                  # Page-level 'use client' views (1:1 with app routes)
+├── components/
+│   ├── ui/                 # shadcn primitives (button, dialog, tabs, sonner…)
+│   ├── home/  browse/  community/  groups/  messaging/  pet-details/  pet-listing/
+│   ├── AppSidebar.tsx  TopBar.tsx  BottomNav.tsx  LayoutShell.tsx
+├── hooks/  contexts/  lib/supabase/  types/  utils/  supabase/migrations/  docs/
+├── mobile/  email-templates/  scripts/  public/  next.config.mjs  wrangler.toml
 ```
 
 ---
@@ -180,14 +158,14 @@ The app is deployed to Cloudflare Pages via `@opennextjs/cloudflare`:
 3. Add environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NODE_VERSION` = `20`
+   - `NODE_VERSION` = `22`
 4. Add compatibility flag: `nodejs_compat`
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)

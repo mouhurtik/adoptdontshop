@@ -26,7 +26,6 @@
   "dependencies": {
     "@capacitor/android": "^8.2.0",
     "@capacitor/app": "^8.0.1",
-    "@capacitor/cli": "^8.2.0",
     "@capacitor/core": "^8.2.0",
     "@capacitor/haptics": "^8.0.1",
     "@capacitor/push-notifications": "^8.0.2",
@@ -35,7 +34,6 @@
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
-    "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.49.4",
@@ -51,10 +49,12 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.5.0",
     "html2canvas": "^1.4.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.462.0",
     "next": "^16.1.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-leaflet": "^5.0.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
@@ -66,6 +66,7 @@
     "safari 17"
   ],
   "devDependencies": {
+    "@capacitor/cli": "^8.2.0",
     "@eslint/js": "^9.39.2",
     "@opennextjs/cloudflare": "^1.16.5",
     "@tailwindcss/typography": "^0.5.15",
@@ -73,10 +74,10 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^22.5.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@types/sharp": "^0.31.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
     "autoprefixer": "^10.4.20",
@@ -102,9 +103,5 @@
       "eslint --max-warnings 0"
     ]
   },
-  "overrides": {
-    "picomatch": "4.0.2",
-    "zod-validation-error": "4.0.1",
-    "ws": "8.18.3"
-  }
+  "packageManager": "pnpm@9.12.3"
 }

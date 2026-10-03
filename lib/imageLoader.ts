@@ -11,10 +11,15 @@ interface ImageLoaderProps {
 export default function imageLoader({ src, width, quality }: ImageLoaderProps): string {
     // Only transform Supabase Storage URLs
     if (src.includes('supabase.co/storage/')) {
-        const url = new URL(src);
-        url.searchParams.set('width', String(width));
-        url.searchParams.set('quality', String(quality || 75));
-        return url.toString();
+        try {
+            const url = new URL(src);
+            url.searchParams.set('width', String(width));
+            url.searchParams.set('quality', String(quality || 75));
+            return url.toString();
+        } catch {
+            // Malformed src — degrade to the original instead of crashing render
+            return src;
+        }
     }
 
     // Return all other URLs as-is
@@ -22,7 +27,7 @@ export default function imageLoader({ src, width, quality }: ImageLoaderProps): 
 }
 
 // Helper: returns optimized URL with width/quality params for Supabase images
-// Used by PostCard and PostCardServer for consistent image handling
+// Used by PostCard / PostCardList for consistent image handling
 export function getOptimizedImageUrl(src: string, width?: number, quality?: number): string {
     if (!width || !src.includes('supabase.co/storage/')) return src;
 

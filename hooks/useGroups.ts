@@ -67,6 +67,7 @@ export function useGroups(category?: string, search?: string) {
                 query = query.ilike('name', `%${search.trim()}%`);
             }
 
+            query = query.limit(50);
             const { data, error } = await query;
             if (error) throw error;
             return (data || []) as unknown as Group[];
@@ -100,7 +101,8 @@ export function useGroupMembers(groupId: string | undefined) {
                 .from('group_members')
                 .select('*')
                 .eq('group_id', groupId!)
-                .order('joined_at', { ascending: true });
+                .order('joined_at', { ascending: true })
+                .limit(100);
 
             if (error) throw error;
             if (!members || members.length === 0) return [];
@@ -291,7 +293,8 @@ export function useGroupPosts(groupId: string | undefined) {
                 .select('id, title, slug, content_text, featured_image_url, tags, like_count, comment_count, view_count, created_at, author_id')
                 .eq('group_id', groupId!)
                 .eq('status', 'published')
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false })
+                .limit(50);
 
             if (error) throw error;
 

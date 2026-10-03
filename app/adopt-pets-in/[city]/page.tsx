@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { serializeJsonLd } from '@/lib/utils';
+import { generatePetSlug } from '@/utils/slugUtils';
 
 // City config — slug, display name, and location patterns to match in DB
 const CITIES: Record<string, { name: string; state: string; patterns: string[] }> = {
@@ -31,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!cityInfo) return { title: 'City Not Found' };
 
     return {
-        title: `Adopt Dogs & Cats in ${cityInfo.name} — Free Pet Adoption | AdoptDontShop`,
+        title: `Adopt Dogs & Cats in ${cityInfo.name} — Free Pet Adoption`,
         description: `Find rescue dogs, cats, and pets available for free adoption in ${cityInfo.name}, ${cityInfo.state}. Browse ${cityInfo.name} shelter animals, indie dogs, and kittens looking for forever homes.`,
         keywords: [
             `adopt dog ${cityInfo.name}`, `adopt cat ${cityInfo.name}`,
@@ -57,14 +59,16 @@ export default async function CityAdoptionPage({ params }: Props) {
     const cityInfo = CITIES[city];
     if (!cityInfo) notFound();
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
 
     // Match pets whose location contains any of the city's patterns (case-insensitive)
-    const { data: allPets } = await supabase
-        .from('pet_listings')
-        .select('id, pet_name, breed, age, location, image_url, animal_type, status, slug')
-        .eq('status', 'available')
-        .order('created_at', { ascending: false });
+    const { data: allPets } = supabase
+        ? await supabase
+              .from('pet_listings')
+              .select('id, pet_name, breed, age, location, image_url, animal_type, status, slug')
+              .eq('status', 'available')
+              .order('created_at', { ascending: false })
+        : { data: null };
 
     const pets = (allPets || []).filter((pet) =>
         cityInfo.patterns.some((pattern) =>
@@ -88,7 +92,7 @@ export default async function CityAdoptionPage({ params }: Props) {
                 name: `Adopt ${pet.pet_name}`,
                 description: `${pet.breed || pet.animal_type || 'Rescue pet'} available for adoption in ${pet.location}`,
                 image: pet.image_url || undefined,
-                url: `https://adoptdontshop.xyz/pet/${pet.slug || pet.pet_name?.toLowerCase().replace(/\s+/g, '-') + '-' + pet.id.slice(0, 8)}`,
+                url: `https://adoptdontshop.xyz/pet/${generatePetSlug(pet.pet_name ?? '', pet.id)}`,
                 offers: {
                     '@type': 'Offer',
                     price: '0',
@@ -103,7 +107,7 @@ export default async function CityAdoptionPage({ params }: Props) {
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
             />
             <div className="min-h-screen bg-playful-cream">
                 <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8 lg:py-12">

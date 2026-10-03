@@ -2,12 +2,11 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/toaster';
 import dynamic from 'next/dynamic';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { useState } from 'react';
 
-// Lazy-load Sonner — only needed when a toast is triggered, not on initial paint
+// Lazy-load Sonner — the single toast system (Radix toast removed, see AUDIT_Aug2026.md DEBT-2)
 const Sonner = dynamic(
     () => import('@/components/ui/sonner').then((mod) => ({ default: mod.Toaster })),
     { ssr: false }
@@ -31,7 +30,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
                 <TooltipProvider>
-                    <Toaster />
                     <Sonner />
                     {children}
                 </TooltipProvider>

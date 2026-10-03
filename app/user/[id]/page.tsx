@@ -60,8 +60,10 @@ export default function PublicProfilePage() {
     const [activeTab, setActiveTab] = useState<'pets' | 'posts' | 'favorites' | 'liked_posts'>('pets');
     const [copied, setCopied] = useState(false);
 
-    // Privacy: which tabs to show for this user
-    const _privacy = profile?.privacy_settings ?? { show_favorites: false, show_posts: true, show_likes: true };
+    // Privacy: respect the owner's settings; default is restrictive until an RLS fix ships
+    const privacy = profile?.privacy_settings ?? { show_favorites: false, show_posts: true, show_likes: false };
+    const canShowFavorites = privacy.show_favorites === true;
+    const canShowLikes = privacy.show_likes === true;
 
     const handleShare = async () => {
         const shareUrl = `https://adoptdontshop.xyz/${profile?.username || userId}`;
@@ -107,6 +109,9 @@ export default function PublicProfilePage() {
             if (profileData) {
                 setProfile(profileData);
                 const uid = profileData.id;
+                const ps = (profileData.privacy_settings ?? {}) as { show_favorites?: boolean; show_likes?: boolean };
+                const canShowFavoritesNow = ps.show_favorites === true;
+                const canShowLikesNow = ps.show_likes === true;
 
                 // Fetch pet listings
                 const { data: petsData } = await supabase
@@ -127,26 +132,30 @@ export default function PublicProfilePage() {
 
                 if (postsData) setPosts(postsData);
 
-                // Fetch favorite pets
-                const { data: favoriteData } = await supabase
-                    .from('pet_favorites')
-                    .select('pet_listings:pet_id(id, pet_name, animal_type, breed, image_url, status, created_at)')
-                    .eq('user_id', uid) as { data: { pet_listings: PetListing }[] | null };
+                // Fetch favorite pets — skip when the owner hides them
+                if (canShowFavoritesNow) {
+                    const { data: favoriteData } = await supabase
+                        .from('pet_favorites')
+                        .select('pet_listings:pet_id(id, pet_name, animal_type, breed, image_url, status, created_at)')
+                        .eq('user_id', uid) as { data: { pet_listings: PetListing }[] | null };
 
-                if (favoriteData) {
-                    const favorites = favoriteData.map(f => f.pet_listings).filter(Boolean);
-                    setFavoritePets(favorites);
+                    if (favoriteData) {
+                        const favorites = favoriteData.map(f => f.pet_listings).filter(Boolean);
+                        setFavoritePets(favorites);
+                    }
                 }
 
-                // Fetch liked posts
-                const { data: likedData } = await supabase
-                    .from('post_likes')
-                    .select('community_posts:post_id(id, title, slug, tags, like_count, comment_count, created_at, featured_image_url)')
-                    .eq('user_id', uid) as { data: { community_posts: CommunityPost }[] | null };
+                // Fetch liked posts — skip when the owner hides likes
+                if (canShowLikesNow) {
+                    const { data: likedData } = await supabase
+                        .from('post_likes')
+                        .select('community_posts:post_id(id, title, slug, tags, like_count, comment_count, created_at, featured_image_url)')
+                        .eq('user_id', uid) as { data: { community_posts: CommunityPost }[] | null };
 
-                if (likedData) {
-                    const liked = likedData.map(l => l.community_posts).filter(Boolean);
-                    setLikedPosts(liked);
+                    if (likedData) {
+                        const liked = likedData.map(l => l.community_posts).filter(Boolean);
+                        setLikedPosts(liked);
+                    }
                 }
             }
 
@@ -295,34 +304,42 @@ export default function PublicProfilePage() {
                             <FileText className="w-4 h-4" />
                             Posts ({posts.length})
                         </button>
-                        <button
-                            onClick={() => setActiveTab('favorites')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'favorites'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Bookmark className="w-4 h-4" />
-                            Favorites ({favoritePets.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('liked_posts')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'liked_posts'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Heart className="w-4 h-4" />
-                            Likes ({likedPosts.length})
-                        </button>
+                        {canShowFavorites && (
+                            <button
+                                onClick={() => setActiveTab('favorites')}
+                                className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'favorites'
+                                    ? 'bg-playful-coral text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    }`}
+                            >
+                                <Bookmark className="w-4 h-4" />
+                                Favorites ({favoritePets.length})
+                            </button>
+                        )}
+                        {canShowLikes && (
+                            <button
+                                onClick={() => setActiveTab('liked_posts')}
+                                className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'liked_posts'
+                                    ? 'bg-playful-coral text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                    }`}
+                            >
+                                <Heart className="w-4 h-4" />
+                                Likes ({likedPosts.length})
+                            </button>
+                        )}
                     </div>
                 </ScrollReveal>
 
-                {/* Tab Content */}
+                {/* Tab Content — Favorites/Likes hidden when the owner set them private */}
                 {activeTab === 'pets' && <PetsGrid pets={pets} />}
                 {activeTab === 'posts' && <PostsList posts={posts} />}
-                {activeTab === 'favorites' && <FavoritePetsGrid pets={favoritePets} />}
-                {activeTab === 'liked_posts' && <LikedPostsList posts={likedPosts} />}
+                {activeTab === 'favorites' && (canShowFavorites ? <FavoritePetsGrid pets={favoritePets} /> : (
+                    <div className="bg-white rounded-[2rem] p-12 shadow-soft text-center"><p className="text-gray-400 font-bold">This user's favorites are private</p></div>
+                ))}
+                {activeTab === 'liked_posts' && (canShowLikes ? <LikedPostsList posts={likedPosts} /> : (
+                    <div className="bg-white rounded-[2rem] p-12 shadow-soft text-center"><p className="text-gray-400 font-bold">This user's liked posts are private</p></div>
+                ))}
             </div>
         </div>
     );

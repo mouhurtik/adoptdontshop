@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Eye } from 'lucide-react';
 import { useLikePost, useUserLiked } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatTimeAgo } from '@/lib/formatTimeAgo';
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
     success_story: { bg: 'bg-green-100', text: 'text-green-700' },
@@ -53,7 +54,7 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
         ? post.content_text.slice(0, 140) + '...'
         : post.content_text;
 
-    const timeAgo = getTimeAgo(post.created_at);
+    const timeAgo = formatTimeAgo(post.created_at);
     const authorName = post.author?.display_name || 'Anonymous';
     const authorInitial = authorName.charAt(0).toUpperCase();
 
@@ -182,23 +183,6 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
         </article>
     );
 };
-
-function getTimeAgo(dateStr: string): string {
-    const now = Date.now();
-    const then = new Date(dateStr).getTime();
-    const seconds = Math.floor((now - then) / 1000);
-
-    if (seconds < 60) return 'just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}d ago`;
-    const weeks = Math.floor(days / 7);
-    if (weeks < 4) return `${weeks}w ago`;
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 export { TAG_COLORS, TAG_LABELS };
 export default PostCard;

@@ -585,6 +585,325 @@ export type Database = {
           },
         ]
       }
+      fundraiser_supporters: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          donor_name: string | null
+          fundraiser_id: string
+          id: string
+          is_anonymous: boolean | null
+          message: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          donor_name?: string | null
+          fundraiser_id: string
+          id?: string
+          is_anonymous?: boolean | null
+          message?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          donor_name?: string | null
+          fundraiser_id?: string
+          id?: string
+          is_anonymous?: boolean | null
+          message?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fundraiser_supporters_fundraiser_id_fkey"
+            columns: ["fundraiser_id"]
+            isOneToOne: false
+            referencedRelation: "fundraisers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fundraisers: {
+        Row: {
+          category: string
+          city: string | null
+          created_at: string | null
+          creator_id: string | null
+          currency: string | null
+          deadline: string | null
+          description: string | null
+          description_text: string | null
+          id: string
+          image_url: string | null
+          is_urgent: boolean | null
+          payment_details: string | null
+          payment_qr_url: string | null
+          payment_upi: string | null
+          raised_amount: number | null
+          slug: string
+          status: string | null
+          supporter_count: number | null
+          target_amount: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          city?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          currency?: string | null
+          deadline?: string | null
+          description?: string | null
+          description_text?: string | null
+          id?: string
+          image_url?: string | null
+          is_urgent?: boolean | null
+          payment_details?: string | null
+          payment_qr_url?: string | null
+          payment_upi?: string | null
+          raised_amount?: number | null
+          slug: string
+          status?: string | null
+          supporter_count?: number | null
+          target_amount: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          city?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          currency?: string | null
+          deadline?: string | null
+          description?: string | null
+          description_text?: string | null
+          id?: string
+          image_url?: string | null
+          is_urgent?: boolean | null
+          payment_details?: string | null
+          payment_qr_url?: string | null
+          payment_upi?: string | null
+          raised_amount?: number | null
+          slug?: string
+          status?: string | null
+          supporter_count?: number | null
+          target_amount?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      pawcoin_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          reason: string
+          reference_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          reason: string
+          reference_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          reason?: string
+          reference_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sighting_confirmations: {
+        Row: {
+          created_at: string | null
+          id: string
+          sighting_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          sighting_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          sighting_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sighting_confirmations_sighting_id_fkey"
+            columns: ["sighting_id"]
+            isOneToOne: false
+            referencedRelation: "street_animal_sightings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_products: {
+        Row: {
+          affiliate_source: string | null
+          affiliate_url: string
+          badge: string | null
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          original_price: string | null
+          pawcoins_reward: number | null
+          pet_type: string
+          price_display: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          affiliate_source?: string | null
+          affiliate_url: string
+          badge?: string | null
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          original_price?: string | null
+          pawcoins_reward?: number | null
+          pet_type: string
+          price_display?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          affiliate_source?: string | null
+          affiliate_url?: string
+          badge?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          original_price?: string | null
+          pawcoins_reward?: number | null
+          pet_type?: string
+          price_display?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      street_animal_sightings: {
+        Row: {
+          animal_type: string
+          city: string | null
+          confirmation_count: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_sterilized: boolean | null
+          is_vaccinated: boolean | null
+          last_confirmed_at: string | null
+          latitude: number
+          location_name: string | null
+          longitude: number
+          name: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+          vaccination_notes: string | null
+        }
+        Insert: {
+          animal_type: string
+          city?: string | null
+          confirmation_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_sterilized?: boolean | null
+          is_vaccinated?: boolean | null
+          last_confirmed_at?: string | null
+          latitude: number
+          location_name?: string | null
+          longitude: number
+          name?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vaccination_notes?: string | null
+        }
+        Update: {
+          animal_type?: string
+          city?: string | null
+          confirmation_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_sterilized?: boolean | null
+          is_vaccinated?: boolean | null
+          last_confirmed_at?: string | null
+          latitude?: number
+          location_name?: string | null
+          longitude?: number
+          name?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vaccination_notes?: string | null
+        }
+        Relationships: []
+      }
+      user_pawcoins: {
+        Row: {
+          balance: number | null
+          created_at: string | null
+          id: string
+          total_earned: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          balance?: number | null
+          created_at?: string | null
+          id?: string
+          total_earned?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          balance?: number | null
+          created_at?: string | null
+          id?: string
+          total_earned?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -611,6 +930,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_pawcoins: {
+        Args: {
+          p_amount: number
+          p_reason: string
+          p_reference_id?: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       increment_view_count: { Args: { post_id: string }; Returns: undefined }
       is_admin: { Args: { check_user_id: string }; Returns: boolean }
     }

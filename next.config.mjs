@@ -15,33 +15,11 @@ const nextConfig = {
     },
     async headers() {
         return [
+            // Only hashed Next.js assets get immutable — public files like
+            // /favicon.ico, /og-image.webp, /images/hero-dogs.webp are mutable (DEBT PERF-8)
             {
-                source: '/:path*.svg',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.jpg',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.jpeg',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.png',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.webp',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.gif',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-            },
-            {
-                source: '/:path*.ico',
-                headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+                source: '/favicon.ico',
+                headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }],
             },
             {
                 source: '/:path*.woff2',
@@ -65,6 +43,29 @@ const nextConfig = {
                 source: '/_next/static/:path*',
                 headers: [
                     { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+                ],
+            },
+            // Hardening headers (CSP in report-only first to avoid breaking TipTap/GTM — SEC-8)
+            {
+                source: '/:path*',
+                headers: [
+                    { key: 'X-Frame-Options', value: 'DENY' },
+                    { key: 'X-Content-Type-Options', value: 'nosniff' },
+                    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+                    { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+                    { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+                    {
+                        key: 'Content-Security-Policy-Report-Only',
+                        value: [
+                            "default-src 'self'",
+                            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://*.supabase.co",
+                            "style-src 'self' 'unsafe-inline'",
+                            "img-src 'self' data: blob: https://*.supabase.co https://www.google-analytics.com",
+                            "font-src 'self' data:",
+                            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com",
+                            "frame-ancestors 'none'",
+                        ].join('; '),
+                    },
                 ],
             },
         ];

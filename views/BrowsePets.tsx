@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { usePets } from '@/hooks/usePets';
 import { useFilters } from '@/hooks/useFilters';
 import PetFilters from '@/components/browse/PetFilters';
@@ -42,6 +42,19 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const petsPerPage = 8;
 
+  // Search input is debounced (250ms) to avoid filtering on every keystroke (PERF-5)
+  const [searchInput, setSearchInput] = useState(filters.searchTerm);
+  useEffect(() => { setSearchInput(filters.searchTerm); }, [filters.searchTerm]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (searchInput !== filters.searchTerm) {
+        updateFilter('searchTerm', searchInput);
+        setCurrentPage(1);
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [searchInput, filters.searchTerm, updateFilter]);
+
   // Handle side effects
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -49,24 +62,37 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
     }
   }, []);
 
-  // Get filtered and sorted pets
-  const filteredAndSortedPets = getFilteredAndSortedPets(pets);
+  // Get filtered and sorted pets (memoized: full filter+sort per keystroke was janky)
+  // getFilteredAndSortedPets only closes over `filters`, so [pets, filters] is complete.
+  const filteredAndSortedPets = useMemo(
+    () => getFilteredAndSortedPets(pets),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pets, filters]
+  );
+
+  // Clamp page if results shrink below the current slice
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedPets.length / petsPerPage));
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(1);
+  }, [currentPage, totalPages]);
 
   // Pagination logic
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = filteredAndSortedPets.slice(indexOfFirstPet, indexOfLastPet);
-  const totalPages = Math.ceil(filteredAndSortedPets.length / petsPerPage);
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle search change
-  const handleSearchChange = (value: string) => {
-    updateFilter('searchTerm', value);
-    setCurrentPage(1); // Reset to first page when searching
+  // Handle filter change (any facet) — narrowed results can shrink totalPages
+  const handleFilterChange = <K extends keyof import('@/types').PetFilters>(
+    key: K,
+    value: import('@/types').PetFilters[K]
+  ) => {
+    updateFilter(key, value);
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   // Handle sort change
@@ -136,8 +162,8 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
                   aria-label="Search pets"
                   placeholder="Search for dogs, cats, or specific breeds..."
                   className="w-full pl-11 pr-4 py-2.5 bg-transparent border-none font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 text-sm md:text-base"
-                  value={filters.searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
               </div>
               <PrimaryButton
@@ -156,7 +182,7 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
         {/* Filters */}
         <PetFilters
           filters={filters}
-          onFilterChange={updateFilter}
+          onFilterChange={handleFilterChange}
           onResetFilters={resetFilters}
           showFilters={showFilters}
           onClose={toggleFilters}

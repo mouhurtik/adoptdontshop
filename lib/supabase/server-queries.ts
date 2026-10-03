@@ -1,4 +1,5 @@
-import { createServerSupabaseClient } from './server';
+import { createPublicSupabaseClient } from './server';
+import { parseSlugId, generatePetSlug } from '@/utils/slugUtils';
 
 export interface ServerPost {
     id: string;
@@ -42,7 +43,8 @@ export async function fetchCommunityPostsServer({
     limit?: number;
     offset?: number;
 } = {}): Promise<ServerPost[]> {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
+    if (!supabase) return [];
 
     let query = supabase
         .from('community_posts')
@@ -103,7 +105,8 @@ export async function fetchCommunityPostsServer({
 }
 
 export async function fetchPetListingsServer(limit = 100): Promise<ServerPet[]> {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
+    if (!supabase) return [];
     const { data, error } = await supabase
         .from('pet_listings')
         .select('*')
@@ -116,7 +119,7 @@ export async function fetchPetListingsServer(limit = 100): Promise<ServerPet[]> 
     return data.map((pet) => ({
         id: pet.id,
         pet_name: pet.pet_name,
-        slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
+        slug: generatePetSlug(pet.pet_name ?? '', pet.id),
         animal_type: pet.animal_type,
         breed: pet.breed,
         age: pet.age,
@@ -129,25 +132,31 @@ export async function fetchPetListingsServer(limit = 100): Promise<ServerPet[]> 
 }
 
 export async function fetchPetBySlugServer(slug: string): Promise<ServerPet | null> {
-    const supabase = await createServerSupabaseClient();
-    const idPrefix = slug.split('-').pop() || '';
+    const supabase = createPublicSupabaseClient();
+    if (!supabase) return null;
+    const idPrefix = parseSlugId(slug);
 
-    if (!idPrefix) return null;
+    if (!idPrefix || idPrefix === slug) return null;
 
-    // Use server-side ilike filter instead of fetching all pets
+    // Public SEO surface: only publicly-visible listings resolve here.
     const { data: pet, error } = await supabase
         .from('pet_listings')
         .select('*')
         .ilike('id', `${idPrefix}%`)
+        .in('status', ['available', 'urgent'])
         .limit(1)
         .maybeSingle();
 
-    if (error || !pet) return null;
+    if (error) {
+        console.error('[fetchPetBySlugServer] query failed:', error.message);
+        return null;
+    }
+    if (!pet) return null;
 
     return {
         id: pet.id,
         pet_name: pet.pet_name,
-        slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
+        slug: generatePetSlug(pet.pet_name ?? '', pet.id),
         animal_type: pet.animal_type,
         breed: pet.breed,
         age: pet.age,
@@ -193,21 +202,26 @@ export async function fetchCommunityPostBySlugServer(slug: string): Promise<
       })
     | null
 > {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
+    if (!supabase) return null;
     const { data: post, error } = await supabase
         .from('community_posts')
         .select('*')
         .eq('slug', slug)
         .eq('status', 'published')
-        .single();
+        .maybeSingle();
 
-    if (error || !post) return null;
+    if (error) {
+        console.error('[fetchCommunityPostBySlugServer] query failed:', error.message);
+        return null;
+    }
+    if (!post) return null;
 
     const { data: profile } = await supabase
         .from('profiles')
         .select('display_name, avatar_url, username')
         .eq('id', post.author_id)
-        .single();
+        .maybeSingle();
 
     return {
         id: post.id,

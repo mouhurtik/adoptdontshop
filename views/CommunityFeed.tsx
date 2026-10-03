@@ -12,7 +12,7 @@ import TagFilter from '@/components/community/TagFilter';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Lazy-load components not needed for mobile LCP
+// Lazy-load components not needed for initial LCP
 const PostCardList = dynamic(() => import('@/components/community/PostCardList'), { ssr: false });
 const TrendingSidebar = dynamic(() => import('@/components/community/TrendingSidebar'), { ssr: false });
 const HomeRightSidebar = dynamic(() => import('@/components/home/HomeRightSidebar'), { ssr: false });
@@ -59,15 +59,12 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
     });
 
     return (
-        <>
         <div className={`${isHome ? 'pt-4 lg:pt-6' : 'pt-4 lg:pt-8'} pb-16 bg-playful-cream min-h-screen`}>
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
                 {isHome ? (
-                    /* Home: visually hidden H1 for SEO — the feed IS the page content */
-                    <h1 className="sr-only">AdoptDontShop — Pet Adoption & Community Portal</h1>
+                    <h1 className="sr-only">The AdoptDontShop Community — Free Rescue Pet Adoption & Animal Care India</h1>
                 ) : (
-                    /* Full Hero for standalone /community page (if accessed via other means) */
                     <div className="text-center mb-10 lg:mb-16 relative">
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-playful-coral/20 rounded-full blur-3xl -z-10"></div>
                         <Badge variant="secondary" className="mb-4 bg-playful-yellow text-playful-text hover:bg-playful-yellow/80 hidden md:inline-flex">
@@ -86,155 +83,157 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                     </div>
                 )}
 
-                {/* Controls Bar — rendered without ScrollReveal to avoid framer-motion overhead */}
-                <div className="mb-8">
-                    <div className="flex flex-row items-center justify-between gap-3 relative z-40">
-                        {/* Tag Filters */}
-                        <div className="flex-shrink-0">
-                            <TagFilter activeTag={activeTag} onTagChange={setActiveTag} />
-                        </div>
+                {/* Controls Bar */}
+                        <div className="mb-8">
+                            <div className="flex flex-row items-center justify-between gap-3 relative z-40">
+                                <div className="flex-shrink-0">
+                                    <TagFilter activeTag={activeTag} onTagChange={setActiveTag} />
+                                </div>
 
-                        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-                            {/* Sort Dropdown */}
-                            <div className="relative" ref={sortDropdownRef}>
-                                <button
-                                    onClick={() => setIsSortOpen(!isSortOpen)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-playful-cream rounded-full text-sm font-bold text-playful-text shadow-sm hover:border-playful-yellow/50 transition-colors"
-                                >
-                                    {SORT_OPTIONS.find(o => o.value === sort)?.icon}
-                                    {SORT_OPTIONS.find(o => o.value === sort)?.label}
-                                    <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                <div
-                                    className={`absolute top-full mt-1.5 right-0 z-50 w-[130px] bg-white border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] rounded-[1.25rem] p-1.5 origin-top-right transition-all duration-150 ease-out ${
-                                        isSortOpen
-                                            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
-                                            : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
-                                    }`}
-                                >
-                                    {SORT_OPTIONS.map(option => (
+                                <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                                    {/* Sort Dropdown */}
+                                    <div className="relative" ref={sortDropdownRef}>
                                         <button
-                                            key={option.value}
-                                            onClick={() => { setSort(option.value); setIsSortOpen(false); }}
-                                            className="w-full text-left px-3 py-2.5 rounded-xl transition-colors duration-150 flex items-center justify-between group hover:bg-playful-cream/50"
+                                            onClick={() => setIsSortOpen(!isSortOpen)}
+                                            className="flex items-center gap-2 px-3 md:px-4 py-2 bg-white rounded-xl md:rounded-2xl border border-gray-200 text-xs md:text-sm font-bold text-playful-text hover:border-playful-coral transition-colors shadow-soft"
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <span className={`${sort === option.value ? 'text-playful-text' : 'text-gray-500'}`}>{option.icon}</span>
-                                                <span className={`text-sm font-bold ${sort === option.value ? 'text-playful-coral' : 'text-gray-600 group-hover:text-playful-text'}`}>
-                                                    {option.label}
-                                                </span>
-                                            </div>
-                                            {sort === option.value && <div className="w-1.5 h-1.5 rounded-full bg-playful-coral" />}
+                                            {SORT_OPTIONS.find(o => o.value === sort)?.icon}
+                                            <span className="hidden sm:inline">{SORT_OPTIONS.find(o => o.value === sort)?.label}</span>
+                                            <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
                                         </button>
-                                    ))}
+
+                                        {isSortOpen && (
+                                            <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                                {SORT_OPTIONS.map(option => (
+                                                    <button
+                                                        key={option.value}
+                                                        onClick={() => {
+                                                            setSort(option.value);
+                                                            setIsSortOpen(false);
+                                                        }}
+                                                        className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs md:text-sm font-bold transition-colors ${
+                                                            sort === option.value
+                                                                ? 'text-playful-coral bg-playful-cream/50'
+                                                                : 'text-gray-600 hover:text-playful-text hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        {option.icon}
+                                                        {option.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* View Mode Toggle */}
+                                    <div className="hidden sm:flex items-center bg-white rounded-2xl border border-gray-200 p-1 shadow-soft">
+                                        <button
+                                            onClick={() => setViewMode('grid')}
+                                            className={`p-1.5 rounded-xl transition-colors ${
+                                                viewMode === 'grid'
+                                                    ? 'bg-playful-coral text-white'
+                                                    : 'text-gray-400 hover:text-playful-text'
+                                            }`}
+                                            title="Grid View"
+                                        >
+                                            <LayoutGrid className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => setViewMode('list')}
+                                            className={`p-1.5 rounded-xl transition-colors ${
+                                                viewMode === 'list'
+                                                    ? 'bg-playful-coral text-white'
+                                                    : 'text-gray-400 hover:text-playful-text'
+                                            }`}
+                                            title="List View"
+                                        >
+                                            <List className="h-4 w-4" />
+                                        </button>
+                                    </div>
+
+                                    {/* Write CTA on standalone page */}
+                                    {!isHome && isAuthenticated && (
+                                        <Link href="/community/write" prefetch={false} className="hidden md:block">
+                                            <PrimaryButton size="md" className="shadow-lg hover:shadow-xl">
+                                                <PenSquare className="h-4 w-4 mr-2" />
+                                                Write
+                                            </PrimaryButton>
+                                        </Link>
+                                    )}
                                 </div>
                             </div>
-
-                            {/* View Toggle */}
-                            <div className="hidden md:flex items-center bg-white border-2 border-playful-cream rounded-full p-0.5 shadow-sm">
-                                <button
-                                    onClick={() => setViewMode('grid')}
-                                    className={`p-1.5 rounded-full transition-all duration-200 ${viewMode === 'grid' ? 'bg-playful-coral text-white shadow-sm' : 'text-gray-400 hover:text-playful-text'}`}
-                                    title="Grid view"
-                                >
-                                    <LayoutGrid className="h-4 w-4" />
-                                </button>
-                                <button
-                                    onClick={() => setViewMode('list')}
-                                    className={`p-1.5 rounded-full transition-all duration-200 ${viewMode === 'list' ? 'bg-playful-coral text-white shadow-sm' : 'text-gray-400 hover:text-playful-text'}`}
-                                    title="List view"
-                                >
-                                    <List className="h-4 w-4" />
-                                </button>
-                            </div>
-
-                            {/* Write CTA (only on standalone page or hidden on home since we have the bar) */}
-                            {!isHome && isAuthenticated && (
-                                <Link href="/community/write" prefetch={false} className="hidden md:block">
-                                    <PrimaryButton size="md" className="shadow-lg hover:shadow-xl">
-                                        <PenSquare className="h-4 w-4 mr-2" />
-                                        Write
-                                    </PrimaryButton>
-                                </Link>
-                            )}
                         </div>
-                    </div>
-                </div>
 
-                {/* Posts Grid + Sidebar Layout */}
-                <div className="flex gap-8">
-                    {/* Main Content */}
-                    <div className="flex-1 min-w-0">
-                        {isLoading ? (
-                            <div className="flex flex-col gap-5">
-                                {[...Array(4)].map((_, i) => (
-                                    <div key={i} className={`bg-white animate-pulse shadow-soft ${viewMode === 'grid' ? 'rounded-[2rem] h-80' : 'rounded-2xl h-28'}`} />
-                                ))}
-                            </div>
-                        ) : error ? (
-                            <div className="text-center py-16">
-                                <p className="text-xl font-bold text-red-500 mb-2">Something went wrong</p>
-                                <p className="text-gray-500">Please try again later.</p>
-                            </div>
-                        ) : posts && posts.length > 0 ? (
-                            viewMode === 'grid' ? (
-                                <div className="flex flex-col gap-5">
-                                    {posts.map((post, index) => (
-                                        <div key={post.id} className="w-full">
-                                            <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />
+                        {/* Posts Grid + Sidebar Layout */}
+                        <div className="flex gap-8">
+                            <div className="flex-1 min-w-0">
+                                {isLoading ? (
+                                    <div className="flex flex-col gap-5">
+                                        {[...Array(4)].map((_, i) => (
+                                            <div key={i} className={`bg-white animate-pulse shadow-soft ${viewMode === 'grid' ? 'rounded-[2rem] h-80' : 'rounded-2xl h-28'}`} />
+                                        ))}
+                                    </div>
+                                ) : error ? (
+                                    <div className="text-center py-16">
+                                        <p className="text-xl font-bold text-red-500 mb-2">Something went wrong</p>
+                                        <p className="text-gray-500">Please try again later.</p>
+                                    </div>
+                                ) : posts && posts.length > 0 ? (
+                                    viewMode === 'grid' ? (
+                                        <div className="flex flex-col gap-5">
+                                            {posts.map((post, index) => (
+                                                <div key={post.id} className="w-full">
+                                                    <PostCard post={post} priority={index === 0 && !!post.featured_image_url} />
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="flex flex-col gap-4">
-                                    {posts.map((post) => (
-                                        <div key={post.id} className="w-full">
-                                            <PostCardList post={post} />
+                                    ) : (
+                                        <div className="flex flex-col gap-4">
+                                            {posts.map((post) => (
+                                                <div key={post.id} className="w-full">
+                                                    <PostCardList post={post} />
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            )
-                        ) : (
-                            <div className="text-center py-20">
-                                <div className="bg-playful-yellow p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full shadow-lg text-white transform -rotate-6">
-                                    <PenSquare className="h-12 w-12" />
-                                </div>
-                                <h2 className="text-3xl font-heading font-black text-playful-text mb-4">
-                                    No posts yet!
-                                </h2>
-                                <p className="text-xl text-gray-500 font-medium mb-8 max-w-md mx-auto">
-                                    Be the first to share something with the community.
-                                </p>
-                                {isAuthenticated ? (
-                                    <Link href="/community/write" prefetch={false}>
-                                        <PrimaryButton size="lg" className="text-lg px-10">
-                                            <PenSquare className="h-5 w-5 mr-2" />
-                                            Write the First Post
-                                        </PrimaryButton>
-                                    </Link>
+                                    )
                                 ) : (
-                                    <Link href="/login" prefetch={false}>
-                                        <PrimaryButton size="lg" className="text-lg px-10">
-                                            Sign In to Post
-                                        </PrimaryButton>
-                                    </Link>
+                                    <div className="text-center py-20">
+                                        <div className="bg-playful-yellow p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full shadow-lg text-white transform -rotate-6">
+                                            <PenSquare className="h-12 w-12" />
+                                        </div>
+                                        <h2 className="text-3xl font-heading font-black text-playful-text mb-4">
+                                            No posts yet!
+                                        </h2>
+                                        <p className="text-xl text-gray-500 font-medium mb-8 max-w-md mx-auto">
+                                            Be the first to share something with the community.
+                                        </p>
+                                        {isAuthenticated ? (
+                                            <Link href="/community/write" prefetch={false}>
+                                                <PrimaryButton size="lg" className="text-lg px-10">
+                                                    <PenSquare className="h-5 w-5 mr-2" />
+                                                    Write the First Post
+                                                </PrimaryButton>
+                                            </Link>
+                                        ) : (
+                                            <Link href="/login" prefetch={false}>
+                                                <PrimaryButton size="lg" className="text-lg px-10">
+                                                    Sign In to Post
+                                                </PrimaryButton>
+                                            </Link>
+                                        )}
+                                    </div>
                                 )}
                             </div>
-                        )}
-                    </div>
 
-                    {/* Sidebar — HomeSidebar on homepage, TrendingSidebar on standalone */}
-                    {isHome ? (
-                        <HomeRightSidebar />
-                    ) : (
-                        <TrendingSidebar activeTag={activeTag} onTagChange={setActiveTag} />
-                    )}
-
-                </div>
+                            {/* Sidebar */}
+                            {isHome ? (
+                                <HomeRightSidebar />
+                            ) : (
+                                <TrendingSidebar activeTag={activeTag} onTagChange={setActiveTag} />
+                            )}
+                        </div>
             </div>
         </div>
-        </>
     );
 };
 

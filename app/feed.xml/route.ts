@@ -1,28 +1,54 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/server';
+
+/** Escape text for safe interpolation into XML element/attribute positions. */
+function escapeXml(value: string): string {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
+/** Escape text for a CDATA section (a literal `]]>` would terminate it early). */
+function escapeCdata(value: string): string {
+    return value.replace(/\]\]>/g, ']]&gt;');
+}
 
 export async function GET() {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createPublicSupabaseClient();
     const baseUrl = 'https://adoptdontshop.xyz';
 
-    const { data: posts } = await supabase
-        .from('community_posts')
-        .select('title, slug, content_text, featured_image_url, created_at')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false })
-        .limit(50);
+    const { data: posts } = supabase
+        ? await supabase
+              .from('community_posts')
+              .select('title, slug, content_text, featured_image_url, created_at')
+              .eq('status', 'published')
+              .order('created_at', { ascending: false })
+              .limit(50)
+        : { data: null };
 
     const items = (posts || []).map(post => {
         const description = post.content_text
             ? post.content_text.replace(/[#*_[\]<>]/g, '').substring(0, 300).trim()
             : '';
+        // Only emit enclosures for https URLs on our storage host
+        let enclosure = '';
+        if (
+            post.featured_image_url &&
+            post.featured_image_url.startsWith('https://') &&
+            post.featured_image_url.includes('.supabase.co/storage/')
+        ) {
+            enclosure = `<enclosure url="${escapeXml(post.featured_image_url)}" type="image/jpeg" />`;
+        }
         return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
-      <link>${baseUrl}/community/${post.slug}</link>
-      <guid isPermaLink="true">${baseUrl}/community/${post.slug}</guid>
-      <description><![CDATA[${description}]]></description>
+      <title><![CDATA[${escapeCdata(post.title)}]]></title>
+      <link>${baseUrl}/community/${encodeURIComponent(post.slug)}</link>
+      <guid isPermaLink="true">${baseUrl}/community/${encodeURIComponent(post.slug)}</guid>
+      <description><![CDATA[${escapeCdata(description)}]]></description>
       <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
-      ${post.featured_image_url ? `<enclosure url="${post.featured_image_url}" type="image/jpeg" />` : ''}
+      ${enclosure}
     </item>`;
     }).join('\n');
 

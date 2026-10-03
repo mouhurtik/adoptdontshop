@@ -267,6 +267,25 @@ function OurStoryTab() {
                     </a>
                 </div>
             </ScrollReveal>
+
+            {/* Impact & Support CTA */}
+            <ScrollReveal mode="fade-up" width="100%">
+                <div className="mt-12 bg-gradient-to-r from-playful-coral to-amber-500 rounded-[2.5rem] p-8 md:p-10 text-white shadow-xl text-center">
+                    <h3 className="text-2xl md:text-3xl font-heading font-black mb-2">
+                        Help Keep AdoptDontShop 100% Free
+                    </h3>
+                    <p className="text-xs md:text-sm text-white/90 max-w-xl mx-auto mb-6">
+                        We are a grassroots animal initiative connecting rescuers and adopters across India. View our live impact metrics and explore ways to partner or support.
+                    </p>
+                    <Link
+                        href="/support-us"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-playful-coral font-bold text-sm shadow-md hover:bg-white/95 transition-all"
+                    >
+                        <Heart className="w-4 h-4 fill-current" />
+                        <span>View Live Impact & Support</span>
+                    </Link>
+                </div>
+            </ScrollReveal>
         </div>
     );
 }

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createPublicSupabaseClient } from '@/lib/supabase/server';
+import { generatePetSlug } from '@/utils/slugUtils';
 
 // Top Indian cities for SEO landing pages
 const CITY_SLUGS = [
@@ -7,20 +8,20 @@ const CITY_SLUGS = [
     'hyderabad', 'chennai', 'ahmedabad', 'jaipur', 'lucknow',
 ];
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const supabase = await createServerSupabaseClient();
-    const baseUrl = 'https://adoptdontshop.xyz';
+// Static pages (only include canonical URLs, not redirect sources)
+const STATIC_ROUTES = [
+    '', '/browse', '/map', '/fundraisers', '/shop', '/support-us',
+    '/about', '/success-stories', '/welcome',
+    '/terms', '/privacy-policy',
+];
 
-    // Static pages (only include canonical URLs, not redirect sources)
-    const staticPages = [
-        '', '/browse', '/about', '/explore',
-        '/success-stories', '/welcome',
-        '/terms', '/privacy-policy',
-    ].map(route => ({
+function staticEntries(): MetadataRoute.Sitemap {
+    const baseUrl = 'https://adoptdontshop.xyz';
+    const staticPages = STATIC_ROUTES.map(route => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
-        priority: route === '' ? 1 : route === '/browse' ? 0.95 : route === '/explore' ? 0.9 : 0.8,
+        priority: route === '' ? 1 : (route === '/browse' || route === '/map' || route === '/fundraisers') ? 0.95 : 0.8,
     }));
 
     // City landing pages for local SEO
@@ -31,24 +32,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
     }));
 
+    return [...staticPages, ...cityPages];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const supabase = createPublicSupabaseClient();
+    if (!supabase) {
+        console.error('[sitemap] database unavailable — emitting static pages only');
+        return staticEntries();
+    }
+    const baseUrl = 'https://adoptdontshop.xyz';
+
     // Dynamic pet pages
-    const { data: pets } = await supabase
+    const { data: pets, error: petsError } = await supabase
         .from('pet_listings')
-        .select('slug, updated_at')
+        .select('id, pet_name, updated_at')
         .eq('status', 'available');
+    if (petsError) {
+        console.error('[sitemap] pet_listings query failed:', petsError.message);
+    }
 
     const petPages = (pets || []).map(pet => ({
-        url: `${baseUrl}/pet/${pet.slug}`,
+        url: `${baseUrl}/pet/${generatePetSlug(pet.pet_name ?? '', pet.id)}`,
         lastModified: new Date(pet.updated_at),
         changeFrequency: 'daily' as const,
         priority: 0.9,
     }));
 
     // Dynamic community post pages
-    const { data: posts } = await supabase
+    const { data: posts, error: postsError } = await supabase
         .from('community_posts')
         .select('slug, updated_at')
         .eq('status', 'published');
+    if (postsError) {
+        console.error('[sitemap] community_posts query failed:', postsError.message);
+    }
 
     const postPages = (posts || []).map(post => ({
         url: `${baseUrl}/community/${post.slug}`,
@@ -57,5 +75,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...staticPages, ...cityPages, ...petPages, ...postPages];
+    // Dynamic fundraiser pages
+    const { data: fundraisers } = await supabase
+        .from('fundraisers')
+        .select('slug, updated_at')
+        .eq('status', 'active');
+
+    const fundraiserPages = (fundraisers || []).map(f => ({
+        url: `${baseUrl}/fundraisers/${f.slug}`,
+        lastModified: new Date(f.updated_at || Date.now()),
+        changeFrequency: 'daily' as const,
+        priority: 0.85,
+    }));
+
+    return [...staticEntries(), ...petPages, ...postPages, ...fundraiserPages];
 }

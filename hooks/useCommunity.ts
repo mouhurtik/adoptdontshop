@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import type { Json } from '@/lib/supabase/types';
 import { useAuth } from '@/contexts/AuthContext';
@@ -99,6 +100,29 @@ export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offse
 
 // Fetch single post by slug
 export function useCommunityPost(slug: string) {
+    // Count a view once per mount per post — not on every query refetch
+    // (refocus/reconnect would otherwise inflate the counter).
+    const countedRef = useRef(false);
+
+    useEffect(() => {
+        if (!slug || countedRef.current) return;
+        countedRef.current = true;
+
+        supabase
+            .from('community_posts')
+            .select('id')
+            .eq('slug', slug)
+            .eq('status', 'published')
+            .maybeSingle()
+            .then(({ data }) => {
+                if (data?.id) {
+                    supabase
+                        .rpc('increment_view_count', { post_id: data.id })
+                        .then(() => { }, () => { });
+                }
+            });
+    }, [slug]);
+
     return useQuery({
         queryKey: ['community-post', slug],
         queryFn: async () => {
@@ -117,9 +141,6 @@ export function useCommunityPost(slug: string) {
                 .select('display_name, avatar_url, username')
                 .eq('id', post.author_id)
                 .single();
-
-            // Increment view count (fire & forget)
-            supabase.rpc('increment_view_count', { post_id: post.id }).then(() => { });
 
             return {
                 ...post,

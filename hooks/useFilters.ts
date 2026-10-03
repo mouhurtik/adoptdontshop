@@ -7,10 +7,15 @@ export type AgeOption = PetFilters['selectedAge'];
 export type TypeOption = PetFilters['selectedType'];
 export type SortOption = PetFilters['sortBy'];
 
+const VALID_TYPES: readonly string[] = ['Dog', 'Cat', 'Bird', 'Small Pet'];
+
+const parseTypeParam = (value?: string): TypeOption =>
+  value && VALID_TYPES.includes(value) ? (value as TypeOption) : 'all';
+
 export const useFilters = (initialSearch?: string, initialType?: string) => {
   const [filters, setFilters] = useState<PetFilters>({
     searchTerm: initialSearch || '',
-    selectedType: (initialType as TypeOption) || 'all',
+    selectedType: parseTypeParam(initialType),
     selectedAge: 'all',
     showUrgentOnly: false,
     sortBy: 'newest'
@@ -25,7 +30,7 @@ export const useFilters = (initialSearch?: string, initialType?: string) => {
     }
 
     if (initialType && initialType !== 'all') {
-      setFilters(prev => ({ ...prev, selectedType: initialType as TypeOption }));
+      setFilters(prev => ({ ...prev, selectedType: parseTypeParam(initialType) }));
     }
   }, [initialSearch, initialType]);
 
