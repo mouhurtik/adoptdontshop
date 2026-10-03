@@ -58,3 +58,6 @@ mobile/android/app/release/
 *.jks
 # google-services.json contains Firebase keys — add manually per machine
 mobile/android/app/google-services.json
+
+# Impeccable skill: self-contained binary is auto-downloaded by the launcher on first run
+.agents/skills/impeccable/scripts/bin/
