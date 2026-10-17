@@ -3,11 +3,15 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
+type SmoothScrollProps = {
+    feel?: 'browse' | 'feed';
+};
+
 /**
  * Adds desktop-style inertial scrolling to browsing surfaces without taking
  * over touch scrolling or users who prefer reduced motion.
  */
-export default function SmoothScroll() {
+export default function SmoothScroll({ feel = 'browse' }: SmoothScrollProps) {
     useEffect(() => {
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         const finePointer = window.matchMedia('(pointer: fine)');
@@ -16,10 +20,10 @@ export default function SmoothScroll() {
 
         const lenis = new Lenis({
             autoRaf: true,
-            duration: 0.85,
+            duration: feel === 'feed' ? 0.68 : 0.85,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            wheelMultiplier: 0.95,
+            wheelMultiplier: feel === 'feed' ? 0.9 : 0.95,
             touchMultiplier: 1,
         });
 
@@ -33,7 +37,7 @@ export default function SmoothScroll() {
             reducedMotion.removeEventListener('change', handleMotionPreferenceChange);
             lenis.destroy();
         };
-    }, []);
+    }, [feel]);
 
     return null;
 }

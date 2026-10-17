@@ -11,6 +11,7 @@ import PostCard from '@/components/community/PostCard';
 import TagFilter from '@/components/community/TagFilter';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+import SmoothScroll from '@/components/ui/SmoothScroll';
 
 // Lazy-load components not needed for mobile LCP
 const PostCardList = dynamic(() => import('@/components/community/PostCardList'), { ssr: false });
@@ -60,6 +61,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
 
     return (
         <>
+        <SmoothScroll feel="feed" />
         <div className={`${isHome ? 'pt-4 lg:pt-6' : 'pt-4 lg:pt-8'} pb-16 bg-playful-cream min-h-screen`}>
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}

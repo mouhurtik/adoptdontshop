@@ -112,7 +112,7 @@ const BrowsePets = ({ initialPets, initialPage = 1, initialTotalPets }: BrowsePe
       <SmoothScroll />
       <div className="min-h-screen bg-playful-cream pb-20">
       {/* Compact Header */}
-      <div className="pt-4 lg:pt-6 pb-0 relative overflow-hidden">
+      <div className="hidden pt-4 md:block lg:pt-6 pb-0 relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12 relative z-10">
           <ScrollReveal mode="fade-up" width="100%">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">

@@ -174,15 +174,25 @@ describe('desktop navigation', () => {
 });
 
 describe('mobile top bar', () => {
-  it('keeps the home link named without duplicating route context', () => {
-    mocks.pathname.mockReturnValue('/messages');
-    const { rerender } = render(<TopBar />);
+  it.each([
+    ['/explore', 'Explore'],
+    ['/browse', 'Browse Pets'],
+    ['/messages', 'Messages'],
+    ['/user/alex', 'Profile'],
+    ['/profile', 'Profile'],
+    ['/pet/buddy-123', 'Meet Buddy'],
+    ['/login', 'Login'],
+    ['/community', 'Community'],
+    ['/communities', 'Explore'],
+    ['/about', 'About'],
+    ['/welcome', 'Welcome'],
+    ['/list-pet', 'List a Pet'],
+    ['/signup', 'Sign Up'],
+  ])('shows the %s route context as %s beside the accessible home link', (pathname, label) => {
+    mocks.pathname.mockReturnValue(pathname);
+    render(<TopBar />);
 
     expect(screen.getByRole('link', { name: 'AdoptDontShop home' })).toHaveAttribute('href', '/');
-    expect(screen.queryByText('Messages')).not.toBeInTheDocument();
-
-    mocks.pathname.mockReturnValue('/pet/buddy-123');
-    rerender(<TopBar />);
-    expect(screen.queryByText('Meet Buddy')).not.toBeInTheDocument();
+    expect(screen.getByText(label)).toBeInTheDocument();
   });
 });

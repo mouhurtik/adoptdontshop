@@ -56,14 +56,14 @@ const ExplorePage = () => {
 
     return (
         <>
-        <SmoothScroll />
+        <SmoothScroll feel="feed" />
         <div className="pt-4 lg:pt-6 pb-16 bg-playful-cream min-h-screen">
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 <div className="flex gap-8">
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
                         {/* Header */}
-                        <ScrollReveal mode="fade-up" width="100%">
+                        <ScrollReveal mode="fade-up" width="100%" className="hidden md:block">
                             <div className="mb-5">
                                 <h1 className="text-2xl md:text-3xl font-heading font-black text-playful-text flex items-center gap-2">
                                     <span className="bg-purple-300/80 px-4 py-1.5 rounded-2xl flex items-center gap-2">
