@@ -1,12 +1,16 @@
 import BrowsePets from '@/views/BrowsePets';
-import { fetchPetListingsServer } from '@/lib/supabase/server-queries';
+import { fetchPetListingsPageServer, serverPetToPet } from '@/lib/supabase/server-queries';
+import { BROWSE_PAGE_SIZE } from '@/lib/browse-pagination';
 import type { Metadata } from 'next';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-    title: 'Adopt Dogs & Cats in India — Browse Rescue Pets | AdoptDontShop',
+    title: 'Adopt Dogs & Cats in India — Browse Rescue Pets',
     description: 'Browse rescue dogs, cats, and other animals available for free adoption across India. Filter by breed, age, and city — Mumbai, Delhi, Kolkata, Bangalore, Pune & more.',
+    alternates: {
+        canonical: '/browse',
+    },
     keywords: [
         'adopt pet near me', 'adopt dog India', 'adopt cat India',
         'rescue animals India', 'free pet adoption',
@@ -19,15 +23,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BrowsePage() {
-    const serverPets = await fetchPetListingsServer(100);
-    const initialPets = serverPets.map((p) => ({
-        ...p,
-        name: p.pet_name,
-        type: p.animal_type ?? undefined,
-        age: p.age || 'Unknown',
-        urgent: p.status === 'urgent',
-        image: p.image_url ?? undefined,
-    })) as unknown as import('@/types/pet.types').Pet[];
+    const { pets: serverPets, total } = await fetchPetListingsPageServer(1, BROWSE_PAGE_SIZE);
+    const initialPets = serverPets.map(serverPetToPet);
 
-    return <BrowsePets initialPets={initialPets} />;
+    return <BrowsePets initialPets={initialPets} initialPage={1} initialTotalPets={total} />;
 }

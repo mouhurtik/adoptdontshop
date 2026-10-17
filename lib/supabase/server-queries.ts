@@ -1,4 +1,6 @@
 import { createServerSupabaseClient } from './server';
+import type { Pet } from '@/types/pet.types';
+import type { Tables } from './types';
 
 export interface ServerPost {
     id: string;
@@ -30,6 +32,29 @@ export interface ServerPet {
     status: string;
     created_at: string;
 }
+
+const mapPetListing = (pet: Tables<'pet_listings'>): ServerPet => ({
+    id: pet.id,
+    pet_name: pet.pet_name,
+    slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
+    animal_type: pet.animal_type,
+    breed: pet.breed,
+    age: pet.age,
+    location: pet.location,
+    description: pet.description,
+    image_url: pet.image_url,
+    status: pet.status,
+    created_at: pet.created_at,
+});
+
+export const serverPetToPet = (pet: ServerPet): Pet => ({
+    ...pet,
+    name: pet.pet_name,
+    type: pet.animal_type ?? undefined,
+    age: pet.age || 'Unknown',
+    urgent: pet.status === 'urgent',
+    image: pet.image_url ?? undefined,
+}) as unknown as Pet;
 
 export async function fetchCommunityPostsServer({
     tag = 'all',
@@ -113,19 +138,28 @@ export async function fetchPetListingsServer(limit = 100): Promise<ServerPet[]> 
 
     if (error || !data) return [];
 
-    return data.map((pet) => ({
-        id: pet.id,
-        pet_name: pet.pet_name,
-        slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
-        animal_type: pet.animal_type,
-        breed: pet.breed,
-        age: pet.age,
-        location: pet.location,
-        description: pet.description,
-        image_url: pet.image_url,
-        status: pet.status,
-        created_at: pet.created_at,
-    }));
+    return data.map(mapPetListing);
+}
+
+export async function fetchPetListingsPageServer(
+    page: number,
+    limit: number,
+): Promise<{ pets: ServerPet[]; total: number }> {
+    const supabase = await createServerSupabaseClient();
+    const offset = (page - 1) * limit;
+    const { data, error, count } = await supabase
+        .from('pet_listings')
+        .select('*', { count: 'exact' })
+        .eq('status', 'available')
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+    if (error || !data) return { pets: [], total: count ?? 0 };
+
+    return {
+        pets: data.map(mapPetListing),
+        total: count ?? 0,
+    };
 }
 
 export async function fetchPetBySlugServer(slug: string): Promise<ServerPet | null> {

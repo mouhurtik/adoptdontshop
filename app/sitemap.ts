@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { BROWSE_PAGE_SIZE, getBrowsePageHref } from '@/lib/browse-pagination';
 
 // Top Indian cities for SEO landing pages
 const CITY_SLUGS = [
@@ -22,6 +23,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : route === '/browse' ? 0.95 : route === '/explore' ? 0.9 : 0.8,
     }));
+
+    const { count: availablePetCount } = await supabase
+        .from('pet_listings')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'available');
+
+    const browsePageCount = Math.ceil((availablePetCount ?? 0) / BROWSE_PAGE_SIZE);
+    const browsePagePages = Array.from(
+        { length: Math.max(0, browsePageCount - 1) },
+        (_, index) => {
+            const page = index + 2;
+            return {
+                url: `${baseUrl}${getBrowsePageHref(page)}`,
+                lastModified: new Date(),
+                changeFrequency: 'daily' as const,
+                priority: 0.9,
+            };
+        },
+    );
 
     // City landing pages for local SEO
     const cityPages = CITY_SLUGS.map(city => ({
@@ -57,5 +77,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...staticPages, ...cityPages, ...petPages, ...postPages];
+    return [...staticPages, ...browsePagePages, ...cityPages, ...petPages, ...postPages];
 }

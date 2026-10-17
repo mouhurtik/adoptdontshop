@@ -9,12 +9,15 @@ import { Search, Filter, PawPrint } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import SmoothScroll from '@/components/ui/SmoothScroll';
+import { BROWSE_PAGE_SIZE } from '@/lib/browse-pagination';
 
 interface BrowsePetsProps {
   initialPets?: import('@/types/pet.types').Pet[];
+  initialPage?: number;
+  initialTotalPets?: number;
 }
 
-const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
+const BrowsePets = ({ initialPets, initialPage = 1, initialTotalPets }: BrowsePetsProps) => {
   // Get URL parameters
   const getUrlParams = () => {
     if (typeof window === 'undefined') return { search: '', type: 'all' };
@@ -29,7 +32,7 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
   const { search: initialSearch, type: initialType } = getUrlParams();
 
   // Custom hooks for data management
-  const { pets, isLoading, error } = usePets(initialPets);
+  const { pets, isLoading, error, isFetchedAfterMount } = usePets(initialPets);
   const {
     filters,
     showFilters,
@@ -40,8 +43,11 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
   } = useFilters(initialSearch, initialType);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const petsPerPage = 8;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  useEffect(() => {
+    setCurrentPage(initialPage);
+  }, [initialPage]);
 
   // Handle side effects
   useEffect(() => {
@@ -54,15 +60,16 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
   const filteredAndSortedPets = getFilteredAndSortedPets(pets);
 
   // Pagination logic
-  const indexOfLastPet = currentPage * petsPerPage;
-  const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = filteredAndSortedPets.slice(indexOfFirstPet, indexOfLastPet);
-  const totalPages = Math.ceil(filteredAndSortedPets.length / petsPerPage);
-
-  const paginate = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const hasFetchedFullCollection = !initialPets || isFetchedAfterMount;
+  const totalPetCount = hasFetchedFullCollection
+    ? filteredAndSortedPets.length
+    : initialTotalPets ?? filteredAndSortedPets.length;
+  const totalPages = Math.max(1, Math.ceil(totalPetCount / BROWSE_PAGE_SIZE));
+  const indexOfLastPet = currentPage * BROWSE_PAGE_SIZE;
+  const indexOfFirstPet = indexOfLastPet - BROWSE_PAGE_SIZE;
+  const currentPets = hasFetchedFullCollection
+    ? filteredAndSortedPets.slice(indexOfFirstPet, indexOfLastPet)
+    : filteredAndSortedPets;
 
   // Handle search change
   const handleSearchChange = (value: string) => {
@@ -171,7 +178,6 @@ const BrowsePets = ({ initialPets }: BrowsePetsProps) => {
           isLoading={isLoading}
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={paginate}
           sortBy={filters.sortBy}
           onSortChange={handleSortChange}
         />

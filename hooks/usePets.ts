@@ -64,13 +64,14 @@ const fetchPetCount = async (): Promise<number> => {
 
 /** Hook to fetch all pets — cached, auto-refetches on window focus */
 export const usePets = (initialData?: Pet[]) => {
-  const { data: pets = [], isLoading, error } = useQuery({
+  const { data: pets = [], isLoading, error, isFetchedAfterMount } = useQuery({
     queryKey: ['pets'],
     queryFn: fetchPets,
     initialData,
+    initialDataUpdatedAt: initialData ? 0 : undefined,
   });
 
-  return { pets, isLoading, error: error?.message ?? null };
+  return { pets, isLoading, error: error?.message ?? null, isFetchedAfterMount };
 };
 
 /** Hook to fetch a single pet by slug ID prefix */

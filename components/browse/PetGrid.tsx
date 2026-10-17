@@ -12,7 +12,6 @@ interface PetGridProps {
   isLoading: boolean;
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
   sortBy: string;
   onSortChange: (sort: string) => void;
 }
@@ -22,7 +21,6 @@ const PetGrid = ({
   isLoading,
   currentPage,
   totalPages,
-  onPageChange,
   sortBy,
   onSortChange,
 }: PetGridProps) => {
@@ -157,7 +155,7 @@ const PetGrid = ({
       </div>
 
       {totalPages > 1 && (
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
       )}
     </div>
   );
