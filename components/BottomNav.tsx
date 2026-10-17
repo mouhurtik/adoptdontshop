@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { Home, Compass, PawPrint, MessageCircle, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
+const tabClasses = 'flex h-14 min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-playful-teal-text';
+
 export default function BottomNav() {
     const pathname = usePathname();
     const { isAuthenticated, profile, user } = useAuth();
@@ -45,23 +47,25 @@ export default function BottomNav() {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-            <div className="bg-white border-t border-gray-100 shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-                <div className="flex items-stretch justify-around pb-[env(safe-area-inset-bottom,0px)]">
+        <nav aria-label="Mobile navigation" className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+            <div className="bg-white border-t border-gray-100 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+                <div className="flex h-16 items-center gap-1 px-2">
                     {tabs.map(tab => (
                         <Link
                             key={tab.name}
                             href={tab.href}
                             prefetch={false}
-                            className={`flex flex-col items-center justify-center flex-1 py-2.5 transition-colors ${
-                                tab.active ? 'text-playful-coral' : 'text-gray-500 active:text-gray-600'
+                            aria-current={tab.active ? 'page' : undefined}
+                            className={`${tabClasses} ${
+                                tab.active ? 'bg-playful-coral/10 text-playful-coral-text' : 'text-gray-600 hover:bg-playful-cream active:bg-playful-coral/5'
                             }`}
                         >
                             <tab.icon
+                                aria-hidden="true"
                                 className="h-[22px] w-[22px]"
-                                strokeWidth={tab.active ? 2.4 : 1.8}
+                                strokeWidth={2}
                             />
-                            <span className={`text-[10px] mt-0.5 ${tab.active ? 'font-bold' : 'font-medium'}`}>
+                            <span className={`text-xs leading-4 ${tab.active ? 'font-bold' : 'font-semibold'}`}>
                                 {tab.name}
                             </span>
                         </Link>
@@ -71,20 +75,21 @@ export default function BottomNav() {
                     <Link
                         href={isAuthenticated ? `/user/${profile?.username || user?.id}` : '/login'}
                         prefetch={false}
-                        className={`flex flex-col items-center justify-center flex-1 py-2.5 transition-colors ${
-                            meActive ? 'text-playful-coral' : 'text-gray-500 active:text-gray-600'
+                        aria-current={meActive ? 'page' : undefined}
+                        className={`${tabClasses} ${
+                            meActive ? 'bg-playful-coral/10 text-playful-coral-text' : 'text-gray-600 hover:bg-playful-cream active:bg-playful-coral/5'
                         }`}
                     >
                         {isAuthenticated ? (
-                            <div className={`w-[22px] h-[22px] rounded-full flex items-center justify-center text-[10px] font-bold ${
-                                meActive ? 'bg-playful-coral text-white' : 'bg-gray-200 text-gray-500'
+                            <div aria-hidden="true" className={`w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs font-bold ${
+                                meActive ? 'bg-playful-coral/15 text-playful-coral-text' : 'bg-gray-100 text-gray-600'
                             }`}>
                                 {displayInitial}
                             </div>
                         ) : (
-                            <LogIn className="h-[22px] w-[22px]" strokeWidth={meActive ? 2.4 : 1.8} />
+                            <LogIn aria-hidden="true" className="h-[22px] w-[22px]" strokeWidth={2} />
                         )}
-                        <span className={`text-[10px] mt-0.5 ${meActive ? 'font-bold' : 'font-medium'}`}>
+                        <span className={`text-xs leading-4 ${meActive ? 'font-bold' : 'font-semibold'}`}>
                             {isAuthenticated ? 'Me' : 'Login'}
                         </span>
                     </Link>

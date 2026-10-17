@@ -56,10 +56,27 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
     const timeAgo = getTimeAgo(post.created_at);
     const authorName = post.author?.display_name || 'Anonymous';
     const authorInitial = authorName.charAt(0).toUpperCase();
-
-    const handleCardClick = () => {
-        router.push(`/community/${post.slug}`);
-    };
+    const authorDetails = (
+        <>
+            {post.author?.avatar_url ? (
+                <img
+                    src={post.author.avatar_url}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 flex-shrink-0 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/10"
+                />
+            ) : (
+                <span aria-hidden="true" className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-playful-teal/10 text-xs font-bold text-playful-teal-text">
+                    {authorInitial}
+                </span>
+            )}
+            <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold text-gray-700">{authorName}</span>
+                <time dateTime={post.created_at} className="block text-xs font-medium text-gray-600">{timeAgo}</time>
+            </span>
+        </>
+    );
 
     const handleLike = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -72,26 +89,29 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
 
     return (
         <article
-            onClick={handleCardClick}
-            className="group bg-white rounded-[2rem] shadow-soft border-2 border-transparent hover:border-playful-coral/20 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full flex flex-col cursor-pointer"
+            className="group/post flex h-full flex-col rounded-[2rem] border border-playful-text/10 bg-white p-2 shadow-soft transition-[border-color,box-shadow,transform] duration-200 ease-out hover:border-playful-coral/30 hover:shadow-md motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none"
         >
             {/* Featured Image */}
             {post.featured_image_url && (
-                <div className="aspect-[16/9] overflow-hidden">
+                <Link
+                    href={`/community/${post.slug}`}
+                    aria-label={`Read ${post.title}`}
+                    className="block aspect-[16/9] overflow-hidden rounded-[1.5rem] bg-playful-cream outline outline-1 -outline-offset-1 outline-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text"
+                >
                     <img
                         src={post.featured_image_url}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover/post:scale-[1.02]"
                         loading={priority ? "eager" : "lazy"}
                         decoding="async"
                         {...(priority ? { fetchPriority: "high" as const } : {})}
                         width={658}
                         height={370}
                     />
-                </div>
+                </Link>
             )}
 
-            <div className="p-6 flex flex-col flex-1">
+            <div className="flex flex-1 flex-col px-4 pb-3 pt-4 sm:px-5 sm:pb-4">
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-3">
                     {post.tags.map(tag => {
@@ -108,73 +128,56 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-heading font-bold text-playful-text mb-2 group-hover:text-playful-coral transition-colors line-clamp-2">
-                    {post.title}
+                <h3 className="mb-2 font-heading text-xl font-extrabold leading-snug text-playful-text">
+                    <Link
+                        href={`/community/${post.slug}`}
+                        className="block min-h-11 rounded-lg py-1 transition-colors duration-150 hover:text-playful-coral-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none"
+                    >
+                        <span className="line-clamp-2 break-words">{post.title}</span>
+                    </Link>
                 </h3>
 
                 {/* Preview */}
-                <p className="text-gray-500 font-medium text-sm leading-relaxed mb-4 flex-1">
+                <p className="mb-5 flex-1 break-words text-sm font-medium leading-relaxed text-gray-600">
                     {preview}
                 </p>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-playful-text/10 pt-3">
                     {/* Author */}
                     {post.author_id ? (
                         <Link
                             href={`/user/${post.author?.username || post.author_id}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                            className="flex min-h-11 min-w-0 max-w-full items-center gap-2 rounded-lg transition-colors duration-150 hover:bg-playful-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none"
                         >
-                            {post.author?.avatar_url ? (
-                                <img
-                                    src={post.author.avatar_url}
-                                    alt={authorName}
-                                    className="w-7 h-7 rounded-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-7 h-7 rounded-full bg-playful-teal text-white flex items-center justify-center text-xs font-bold">
-                                    {authorInitial}
-                                </div>
-                            )}
-                            <span className="text-sm font-medium text-gray-600 hover:text-playful-coral transition-colors">{authorName}</span>
-                            <span className="text-xs text-gray-400">· {timeAgo}</span>
+                            {authorDetails}
                         </Link>
                     ) : (
-                        <div className="flex items-center gap-2">
-                            {post.author?.avatar_url ? (
-                                <img
-                                    src={post.author.avatar_url}
-                                    alt={authorName}
-                                    className="w-7 h-7 rounded-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-7 h-7 rounded-full bg-playful-teal text-white flex items-center justify-center text-xs font-bold">
-                                    {authorInitial}
-                                </div>
-                            )}
-                            <span className="text-sm font-medium text-gray-600">{authorName}</span>
-                            <span className="text-xs text-gray-400">· {timeAgo}</span>
+                        <div className="flex min-h-11 min-w-0 max-w-full items-center gap-2">
+                            {authorDetails}
                         </div>
                     )}
 
                     {/* Stats with interactive like */}
-                    <div className="flex items-center gap-3 text-gray-400">
+                    <div className="flex items-center gap-3 text-gray-600">
                         <button
+                            type="button"
                             onClick={handleLike}
-                            className={`flex items-center gap-1 text-xs transition-all duration-200 hover:scale-110 active:scale-95 ${
-                                liked ? 'text-red-500' : 'text-gray-400 hover:text-red-400'
+                            aria-label={`${liked ? 'Unlike' : 'Like'} ${post.title}`}
+                            aria-pressed={!!liked}
+                            className={`flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors duration-150 hover:bg-playful-cream hover:text-playful-coral-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none ${
+                                liked ? 'text-playful-coral-text' : 'text-gray-600'
                             }`}
                             title={liked ? 'Unlike' : 'Like'}
                         >
-                            <Heart className={`h-4 w-4 transition-all ${liked ? 'fill-current' : ''}`} />
-                            <span className="font-medium">{post.like_count}</span>
+                            <Heart aria-hidden="true" className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
+                            <span className="font-semibold tabular-nums">{post.like_count}</span>
                         </button>
-                        <span className="flex items-center gap-1 text-xs">
-                            <MessageCircle className="h-3.5 w-3.5" /> {post.comment_count}
+                        <span aria-label={`${post.comment_count} comments`} className="flex items-center gap-1.5 text-xs font-medium tabular-nums">
+                            <MessageCircle aria-hidden="true" className="h-4 w-4" /> {post.comment_count}
                         </span>
-                        <span className="flex items-center gap-1 text-xs">
-                            <Eye className="h-3.5 w-3.5" /> {post.view_count}
+                        <span aria-label={`${post.view_count} views`} className="flex items-center gap-1.5 text-xs font-medium tabular-nums">
+                            <Eye aria-hidden="true" className="h-4 w-4" /> {post.view_count}
                         </span>
                     </div>
                 </div>

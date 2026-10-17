@@ -2,9 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { Heart, MapPin } from 'lucide-react';
-import PrimaryButton from '@/components/ui/PrimaryButton';
 import AuthPromptModal from '@/components/ui/AuthPromptModal';
 import Link from 'next/link';
 import { generatePetSlug } from '@/utils/slugUtils';
@@ -33,6 +31,7 @@ const PetCard = ({ id, name, breed, age, location, image, type, compact = false,
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!isAuthenticated) {
       setShowAuthModal(true);
     } else {
@@ -43,120 +42,72 @@ const PetCard = ({ id, name, breed, age, location, image, type, compact = false,
   const imgSrc = imgError ? '/placeholder.svg' : (image || '/placeholder.svg');
   const petSlug = generatePetSlug(name, id);
 
-  if (compact) {
-    return (
-      <>
-        <Link href={`/pet/${petSlug}`} className="block h-full">
-          <motion.div
-            whileHover={{ y: -6 }}
-            className="group relative bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 border border-gray-100 hover:border-playful-teal/20 h-full"
-          >
-            {/* Compact Image */}
-            <div className="relative h-36 sm:h-44 overflow-hidden bg-gray-100">
-              <Image
-                src={imgSrc}
-                alt={name}
-                width={300}
-                height={300}
-                sizes="(max-width: 640px) 50vw, 25vw"
-                unoptimized
-                priority={priority}
-                loading={priority ? 'eager' : 'lazy'}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                onError={() => setImgError(true)}
-              />
-              <div className="absolute top-2 right-2 z-10">
-                <button onClick={handleFavorite} aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`} className={`p-1.5 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>
-                  <Heart className={`w-3.5 h-3.5 transition-colors ${isFavorited ? 'fill-playful-coral text-playful-coral' : 'text-playful-coral'}`} />
-                </button>
-              </div>
-              <div className="absolute top-2 left-2">
-                <span className="inline-block px-2 py-0.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold text-playful-text shadow-sm">
-                  {type === 'dog' ? '🐶' : type === 'cat' ? '🐱' : '🐾'} {typeof age === 'string' ? age : `${age}yr`}
-                </span>
-              </div>
-            </div>
-
-            {/* Compact Content */}
-            <div className="p-2.5 sm:p-3">
-              <h3 className="text-sm sm:text-base font-heading font-bold text-playful-text group-hover:text-playful-teal transition-colors line-clamp-1">
-                {name}
-              </h3>
-              <div className="flex items-center text-gray-500 mt-0.5">
-                <MapPin className="w-3 h-3 mr-1 text-playful-coral flex-shrink-0" />
-                <span className="text-[11px] sm:text-xs font-medium truncate">{location}</span>
-              </div>
-            </div>
-          </motion.div>
-        </Link>
-
-        <AuthPromptModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          message="Sign in to save your favorite pets and never lose track of them! ❤️"
-        />
-      </>
-    );
-  }
-
   return (
     <>
-      <motion.div
-        whileHover={{ y: -10 }}
-        className="group relative bg-white rounded-[1.5rem] sm:rounded-3xl overflow-hidden shadow-soft hover:shadow-hover transition-all duration-300 border-2 border-transparent hover:border-playful-teal/20 active-scale"
+      <article
+        className={`group/pet relative h-full border border-playful-text/10 bg-white p-2 shadow-soft transition-[border-color,box-shadow,transform] duration-200 ease-out hover:border-playful-teal/30 hover:shadow-md motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none ${compact ? 'rounded-[1.5rem]' : 'rounded-[1.75rem]'}`}
       >
-        {/* Image Container */}
-        <div className="relative h-[360px] sm:h-64 overflow-hidden bg-gray-100">
-          <Image
-            src={imgSrc}
-            alt={name}
-            width={400}
-            height={400}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            unoptimized
-            priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            onError={() => setImgError(true)}
-          />
-          <div className="absolute top-4 right-4 z-10">
-            <button onClick={handleFavorite} aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`} className={`p-3 sm:p-2 backdrop-blur-sm rounded-full shadow-sm hover:bg-playful-coral hover:text-white transition-colors duration-300 group/heart active-scale ${isFavorited ? 'bg-playful-cream border border-playful-coral/20' : 'bg-white/80'}`}>
-              <Heart className={`w-6 h-6 sm:w-5 sm:h-5 transition-colors ${isFavorited ? 'fill-playful-coral text-playful-coral hover:text-white hover:fill-current' : 'text-playful-coral group-hover/heart:fill-current group-hover/heart:text-white'}`} />
-            </button>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full p-4 md:p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-            <span className="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-playful-text shadow-sm">
-              {type === 'dog' ? '🐶' : type === 'cat' ? '🐱' : '🐾'} {breed}
-            </span>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 sm:p-6">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-2xl sm:text-2xl font-heading font-bold text-playful-text group-hover:text-playful-teal transition-colors flex-1 pr-2 line-clamp-1">
-              {name}
-            </h3>
-            <span className="text-xs sm:text-sm font-bold bg-playful-lavender text-playful-text px-2 py-1.5 rounded-lg whitespace-nowrap">
-              {typeof age === 'string' ? age : `${age} yr${age === 1 ? '' : 's'}`}
+        <Link
+          href={`/pet/${petSlug}`}
+          aria-label={`Meet ${name}`}
+          className={`flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text ${compact ? 'rounded-[1rem]' : 'rounded-[1.25rem]'}`}
+        >
+          <div className={`relative aspect-[4/3] overflow-hidden bg-playful-cream outline outline-1 -outline-offset-1 outline-black/10 ${compact ? 'rounded-[1rem]' : 'rounded-[1.25rem]'}`}>
+            <Image
+              src={imgSrc}
+              alt={name}
+              width={compact ? 300 : 400}
+              height={compact ? 300 : 400}
+              sizes={compact ? '(max-width: 640px) 50vw, 25vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw'}
+              unoptimized
+              priority={priority}
+              loading={priority ? 'eager' : 'lazy'}
+              className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover/pet:scale-[1.02]"
+              onError={() => setImgError(true)}
+            />
+            <span className={`absolute inline-block truncate rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-playful-text shadow-sm ${compact ? 'left-2 top-2 max-w-[calc(100%-4rem)]' : 'bottom-3 left-3 max-w-[calc(100%-1.5rem)]'}`}>
+              <span aria-hidden="true">{type === 'dog' ? '🐶' : type === 'cat' ? '🐱' : '🐾'}</span>{' '}
+              {compact ? (typeof age === 'string' ? age : `${age}yr`) : breed}
             </span>
           </div>
 
-          <div className="flex items-center text-gray-500 mb-5 sm:mb-6">
-            <MapPin className="w-4 h-4 mr-1.5 text-playful-coral flex-shrink-0" />
-            <span className="text-sm font-medium truncate">{location}</span>
-          </div>
+          <div className={`flex flex-1 flex-col ${compact ? 'px-1.5 pb-2 pt-3 sm:px-2' : 'px-3 pb-3 pt-4 sm:px-4 sm:pb-4'}`}>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className={`min-w-0 flex-1 font-heading font-extrabold leading-tight text-playful-text transition-colors duration-150 group-hover/pet:text-playful-teal-text motion-reduce:transition-none ${compact ? 'line-clamp-1 text-base sm:text-lg' : 'line-clamp-2 text-2xl'}`}>
+                {name}
+              </h3>
+              {!compact && (
+                <span className="max-w-[45%] rounded-full bg-playful-cream px-2.5 py-1 text-xs font-semibold text-playful-teal-text">
+                  {typeof age === 'string' ? age : `${age} yr${age === 1 ? '' : 's'}`}
+                </span>
+              )}
+            </div>
 
-          <Link href={`/pet/${petSlug}`} className="block">
-            <PrimaryButton
-              variant="secondary"
-              className="w-full group-hover:bg-playful-teal group-hover:text-white py-3 sm:py-2.5 text-[15px] sm:text-base font-bold rounded-xl sm:rounded-full"
-            >
-              Meet {name}
-            </PrimaryButton>
-          </Link>
-        </div>
-      </motion.div>
+            <div className="mt-2 flex items-center gap-1.5 text-gray-600">
+              <MapPin aria-hidden="true" className="h-4 w-4 flex-shrink-0 text-playful-coral-text" />
+              <span className={`truncate font-medium ${compact ? 'text-xs' : 'text-sm'}`}>{location}</span>
+            </div>
+
+            {!compact && (
+              <div className="mt-auto pt-5">
+                <span className="flex min-h-11 items-center justify-center rounded-full bg-playful-teal/10 px-4 py-2.5 text-center font-heading text-sm font-bold text-playful-teal-text transition-colors duration-150 group-hover/pet:bg-playful-teal-text group-hover/pet:text-white motion-reduce:transition-none">
+                  Meet {name}
+                </span>
+              </div>
+            )}
+          </div>
+        </Link>
+
+        <button
+          type="button"
+          onClick={handleFavorite}
+          aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
+          aria-pressed={isFavorited}
+          className={`absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full text-playful-coral-text shadow-sm transition-colors duration-150 hover:bg-playful-coral-text hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none ${isFavorited ? 'bg-playful-cream' : 'bg-white'}`}
+        >
+          <Heart aria-hidden="true" className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
+        </button>
+      </article>
 
       <AuthPromptModal
         isOpen={showAuthModal}

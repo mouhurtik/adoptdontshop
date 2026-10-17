@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Eye } from 'lucide-react';
 import { useLikePost, useUserLiked } from '@/hooks/useCommunity';
@@ -21,8 +22,6 @@ const PostCardList = ({ post }: { post: PostCardData }) => {
     const authorName = post.author?.display_name || 'Anonymous';
     const authorInitial = authorName.charAt(0).toUpperCase();
 
-    const handleClick = () => router.push(`/community/${post.slug}`);
-
     const handleLike = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!user) { router.push('/login'); return; }
@@ -31,23 +30,29 @@ const PostCardList = ({ post }: { post: PostCardData }) => {
 
     return (
         <article
-            onClick={handleClick}
-            className="group bg-white rounded-2xl shadow-soft border-2 border-transparent hover:border-playful-coral/20 transition-all duration-300 hover:shadow-md cursor-pointer flex overflow-hidden"
+            className="group/post flex gap-1 rounded-[1.5rem] border border-playful-text/10 bg-white p-2 shadow-soft transition-[border-color,box-shadow] duration-200 ease-out hover:border-playful-coral/30 hover:shadow-md motion-reduce:transition-none"
         >
             {/* Thumbnail (if image exists) */}
             {post.featured_image_url && (
-                <div className="w-32 md:w-44 flex-shrink-0 overflow-hidden">
+                <Link
+                    href={`/community/${post.slug}`}
+                    aria-label={`Read ${post.title}`}
+                    className="block aspect-[4/5] w-24 flex-shrink-0 self-start overflow-hidden rounded-[1rem] bg-playful-cream outline outline-1 -outline-offset-1 outline-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text sm:aspect-square sm:w-32 md:w-40"
+                >
                     <img
                         src={post.featured_image_url}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover/post:scale-[1.02]"
                         loading="lazy"
+                        decoding="async"
+                        width={176}
+                        height={176}
                     />
-                </div>
+                </Link>
             )}
 
             {/* Content */}
-            <div className="flex-1 p-4 md:p-5 flex flex-col justify-between min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col justify-between px-2 py-1 sm:px-3 sm:py-2">
                 {/* Top: Tags + Title + Preview */}
                 <div>
                     {/* Tags row */}
@@ -57,53 +62,62 @@ const PostCardList = ({ post }: { post: PostCardData }) => {
                             return (
                                 <span
                                     key={tag}
-                                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}
+                                    className={`rounded-full px-2 py-0.5 text-xs font-semibold ${color.bg} ${color.text}`}
                                 >
                                     {TAG_LABELS[tag] || tag}
                                 </span>
                             );
                         })}
-                        <span className="text-[10px] text-gray-400">· {timeAgo}</span>
+                        <time dateTime={post.created_at} className="text-xs font-medium text-gray-600">{timeAgo}</time>
                     </div>
 
-                    <h3 className="text-base md:text-lg font-heading font-bold text-playful-text mb-1 group-hover:text-playful-coral transition-colors line-clamp-1">
-                        {post.title}
+                    <h3 className="mb-1 font-heading text-base font-extrabold leading-snug text-playful-text md:text-lg">
+                        <Link
+                            href={`/community/${post.slug}`}
+                            className="block min-h-11 rounded-lg py-1 transition-colors duration-150 hover:text-playful-coral-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none"
+                        >
+                            <span className="line-clamp-2 break-words">{post.title}</span>
+                        </Link>
                     </h3>
-                    <p className="text-gray-500 text-xs md:text-sm leading-relaxed line-clamp-2 hidden md:block">
+                    <p className="hidden break-words text-sm font-medium leading-relaxed text-gray-600 md:line-clamp-2">
                         {preview}
                     </p>
                 </div>
 
                 {/* Bottom: Author + Stats */}
-                <div className="flex items-center justify-between mt-3">
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                     {/* Author */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex min-h-11 min-w-0 max-w-full items-center gap-2">
                         {post.author?.avatar_url ? (
-                            <img src={post.author.avatar_url} alt={authorName} className="w-5 h-5 rounded-full object-cover" />
+                            <img src={post.author.avatar_url} alt="" width={24} height={24} className="h-6 w-6 flex-shrink-0 rounded-full object-cover outline outline-1 -outline-offset-1 outline-black/10" />
                         ) : (
-                            <div className="w-5 h-5 rounded-full bg-playful-teal text-white flex items-center justify-center text-[9px] font-bold">
+                            <span aria-hidden="true" className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-playful-teal/10 text-xs font-bold text-playful-teal-text">
                                 {authorInitial}
-                            </div>
+                            </span>
                         )}
-                        <span className="text-xs font-medium text-gray-500">{authorName}</span>
+                        <span className="truncate text-xs font-semibold text-gray-700">{authorName}</span>
                     </div>
 
                     {/* Stats */}
-                    <div className="flex items-center gap-3 text-gray-400">
+                    <div className="flex items-center gap-3 text-gray-600">
                         <button
+                            type="button"
                             onClick={handleLike}
-                            className={`flex items-center gap-1 text-xs transition-all duration-200 hover:scale-110 active:scale-95 ${
-                                liked ? 'text-red-500' : 'text-gray-400 hover:text-red-400'
+                            aria-label={`${liked ? 'Unlike' : 'Like'} ${post.title}`}
+                            aria-pressed={!!liked}
+                            className={`flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors duration-150 hover:bg-playful-cream hover:text-playful-coral-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none ${
+                                liked ? 'text-playful-coral-text' : 'text-gray-600'
                             }`}
+                            title={liked ? 'Unlike' : 'Like'}
                         >
-                            <Heart className={`h-3.5 w-3.5 ${liked ? 'fill-current' : ''}`} />
-                            <span className="font-medium">{post.like_count}</span>
+                            <Heart aria-hidden="true" className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
+                            <span className="font-semibold tabular-nums">{post.like_count}</span>
                         </button>
-                        <span className="flex items-center gap-1 text-xs">
-                            <MessageCircle className="h-3.5 w-3.5" /> {post.comment_count}
+                        <span aria-label={`${post.comment_count} comments`} className="flex items-center gap-1.5 text-xs font-medium tabular-nums">
+                            <MessageCircle aria-hidden="true" className="h-4 w-4" /> {post.comment_count}
                         </span>
-                        <span className="flex items-center gap-1 text-xs hidden md:flex">
-                            <Eye className="h-3.5 w-3.5" /> {post.view_count}
+                        <span aria-label={`${post.view_count} views`} className="hidden items-center gap-1.5 text-xs font-medium tabular-nums md:flex">
+                            <Eye aria-hidden="true" className="h-4 w-4" /> {post.view_count}
                         </span>
                     </div>
                 </div>

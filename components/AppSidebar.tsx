@@ -23,6 +23,9 @@ interface AppSidebarProps {
     onToggleCollapse: () => void;
 }
 
+const focusRing = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-playful-teal-text focus-visible:ring-offset-2';
+const colorTransition = 'transition-colors duration-150 motion-reduce:transition-none';
+
 export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarProps) {
     const pathname = usePathname();
     const { user, profile, isAdmin, isAuthenticated, signOut } = useAuth();
@@ -76,19 +79,21 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
 
     return (
         <aside
-            className={`hidden lg:flex flex-col fixed top-0 left-0 h-full bg-white border-r border-gray-100 z-40 transition-all duration-300 ${
+            id="app-sidebar"
+            aria-label="Desktop navigation"
+            className={`hidden lg:flex flex-col fixed top-0 left-0 h-dvh overflow-y-auto overflow-x-hidden bg-white border-r border-gray-100 z-40 motion-safe:transition-[width] motion-safe:duration-200 motion-safe:ease-out ${
                 collapsed ? 'w-[72px]' : 'w-[260px]'
             }`}
         >
             {/* Logo */}
-            <div className={`pt-5 pb-3 flex items-center ${collapsed ? 'px-3 justify-center' : 'px-4 justify-between'}`}>
-                <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-                    <div className="bg-playful-coral text-white p-1.5 rounded-xl rotate-3 group-hover:rotate-6 transition-transform duration-300 shadow-sm">
-                        <PawPrint className="h-5 w-5 fill-current" />
+            <div className={`pt-4 pb-3 flex shrink-0 items-center ${collapsed ? 'px-3 justify-center' : 'px-4 justify-between'}`}>
+                <Link href="/" aria-label="AdoptDontShop home" className={`flex min-h-11 min-w-11 items-center gap-2 rounded-xl group flex-shrink-0 ${collapsed ? 'justify-center' : ''} ${focusRing}`}>
+                    <div className="bg-playful-coral text-white p-1.5 rounded-xl rotate-3 motion-safe:group-hover:rotate-6 motion-safe:transition-transform motion-safe:duration-150 shadow-sm">
+                        <PawPrint aria-hidden="true" className="h-5 w-5 fill-current" strokeWidth={2} />
                     </div>
                     {!collapsed && (
-                        <span className="text-lg font-heading font-black tracking-tight text-playful-text whitespace-nowrap">
-                            Adopt<span className="text-playful-coral">Dont</span>Shop
+                        <span className="text-xl leading-tight font-heading font-black tracking-tight text-playful-text whitespace-nowrap">
+                            Adopt<span className="text-playful-coral-text">Dont</span>Shop
                         </span>
                     )}
                 </Link>
@@ -96,49 +101,52 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
 
 
             {/* Main Navigation */}
-            <nav className="px-2 space-y-0.5">
+            <nav aria-label="Main navigation" className="shrink-0 px-2 space-y-1">
                 {mainNav.map(item => (
                     <Link
                         key={item.name}
                         href={item.path}
                         title={collapsed ? item.name : undefined}
-                        className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 group ${
+                        aria-label={item.badge > 0 ? `${item.name} ${item.badge} unread messages` : item.name}
+                        aria-current={isActive(item.path) ? 'page' : undefined}
+                        className={`relative flex min-h-11 items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold ${colorTransition} ${focusRing} ${
                             isActive(item.path)
-                                ? 'bg-playful-coral/10 text-playful-coral'
+                                ? 'bg-playful-coral/10 text-playful-coral-text'
                                 : 'text-gray-600 hover:bg-gray-50 hover:text-playful-text'
                         }`}
                     >
-                        <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110 ${
-                            isActive(item.path) ? 'text-playful-coral' : 'text-gray-400'
-                        }`} />
-                        {!collapsed && item.name}
+                        <item.icon aria-hidden="true" className="w-5 h-5 flex-shrink-0" strokeWidth={2} />
+                        <span className={collapsed ? 'sr-only' : ''}>{item.name}</span>
+                        {item.badge > 0 && <span className="sr-only">{item.badge} unread messages</span>}
                         {!collapsed && item.badge > 0 && (
-                            <span className="ml-auto min-w-[20px] h-5 flex items-center justify-center bg-playful-coral text-white text-[10px] font-bold rounded-full px-1.5">
+                            <span aria-hidden="true" className="ml-auto min-w-6 h-6 flex items-center justify-center bg-playful-coral-text text-white text-xs font-bold rounded-full px-1.5">
                                 {item.badge > 99 ? '99+' : item.badge}
                             </span>
                         )}
                         {collapsed && item.badge > 0 && (
-                            <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-playful-coral rounded-full" />
+                            <span aria-hidden="true" className="absolute top-2 right-2.5 w-2 h-2 bg-playful-coral-text rounded-full" />
                         )}
                     </Link>
                 ))}
             </nav>
 
             {/* Divider */}
-            <div className="mx-4 my-3 border-t border-gray-100" />
+            <div className="mx-4 my-3 shrink-0 border-t border-gray-100" />
 
             {/* Communities Section */}
-            <div className={`${collapsed ? 'px-2' : 'px-3'} flex-1 overflow-y-auto min-h-0`}>
+            <nav aria-label="Community navigation" className={`${collapsed ? 'px-2' : 'px-3'} flex-1 overflow-y-auto min-h-0 py-1`}>
                 {!collapsed && (
-                    <div className="flex items-center justify-between px-1 mb-2">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Communities</span>
+                    <div className="flex min-h-11 items-center justify-between pl-2.5 mb-1">
+                        <span className="text-xs font-bold text-gray-600">Communities</span>
                         {isAuthenticated && (
                             <Link
                                 href="/communities/create"
-                                className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-playful-teal transition-colors"
+                                aria-current={pathname === '/communities/create' ? 'page' : undefined}
+                                aria-label="Create community"
+                                className={`flex h-11 w-11 items-center justify-center rounded-xl hover:bg-gray-50 text-gray-600 hover:text-playful-teal-text ${colorTransition} ${focusRing}`}
                                 title="Create community"
                             >
-                                <Plus className="w-4 h-4" />
+                                <Plus aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                             </Link>
                         )}
                     </div>
@@ -151,35 +159,36 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                                 key={community.id}
                                 href={`/communities/${community.slug}`}
                                 title={collapsed ? community.name : undefined}
-                                className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-2.5 ${collapsed ? 'px-2 py-2' : 'px-2.5 py-2'} rounded-xl text-sm transition-all duration-200 ${
+                                aria-current={pathname === `/communities/${community.slug}` ? 'page' : undefined}
+                                className={`flex min-h-11 items-center ${collapsed ? 'justify-center' : ''} gap-2.5 ${collapsed ? 'px-2 py-2' : 'px-2.5 py-2'} rounded-xl text-sm ${colorTransition} ${focusRing} ${
                                     pathname === `/communities/${community.slug}`
-                                        ? 'bg-playful-teal/10 text-playful-teal font-semibold'
+                                        ? 'bg-playful-teal/10 text-playful-teal-text font-semibold'
                                         : 'text-gray-600 hover:bg-gray-50 hover:text-playful-text'
                                 }`}
                             >
-                                <div className={`${collapsed ? 'w-8 h-8' : 'w-7 h-7'} rounded-lg overflow-hidden flex-shrink-0`}>
+                                <div aria-hidden="true" className={`${collapsed ? 'w-8 h-8' : 'w-7 h-7'} rounded-lg overflow-hidden flex-shrink-0`}>
                                     {community.avatar_url ? (
                                         <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-playful-teal to-playful-coral flex items-center justify-center text-white text-[10px] font-bold">
+                                        <div className="w-full h-full bg-playful-teal/10 flex items-center justify-center text-playful-teal-text text-xs font-bold">
                                             {community.name.charAt(0)}
                                         </div>
                                     )}
                                 </div>
-                                {!collapsed && <span className="truncate">{community.name}</span>}
+                                <span className={collapsed ? 'sr-only' : 'truncate'}>{community.name}</span>
                             </Link>
                         ))}
                     </div>
                 ) : !collapsed && isAuthenticated ? (
                     <div className="text-center py-4">
-                        <p className="text-xs text-gray-400 mb-2">No communities joined yet</p>
-                        <Link href="/communities" className="text-xs font-bold text-playful-teal hover:underline">
+                        <p className="text-xs leading-5 text-gray-600 mb-1">No communities joined yet</p>
+                        <Link href="/communities" aria-current={pathname === '/communities' ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-playful-teal-text hover:underline ${focusRing}`}>
                             Explore Communities →
                         </Link>
                     </div>
                 ) : !collapsed ? (
                     <div className="text-center py-4">
-                        <p className="text-xs text-gray-400 mb-2">Sign in to join communities</p>
+                        <p className="text-xs leading-5 text-gray-600 mb-2">Sign in to join communities</p>
                     </div>
                 ) : null}
 
@@ -187,26 +196,31 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                 {!collapsed && communities.length > 0 && (
                     <Link
                         href="/communities"
-                        className="flex items-center gap-2 px-2.5 py-2 mt-1 rounded-xl text-xs font-semibold text-gray-400 hover:text-playful-teal hover:bg-gray-50 transition-colors"
+                        aria-current={pathname === '/communities' ? 'page' : undefined}
+                        className={`flex min-h-11 items-center gap-2 px-2.5 py-2 mt-1 rounded-xl text-xs font-semibold text-gray-600 hover:text-playful-teal-text hover:bg-gray-50 ${colorTransition} ${focusRing}`}
                     >
-                        <Compass className="w-4 h-4" />
+                        <Compass aria-hidden="true" className="w-4 h-4 shrink-0" strokeWidth={2} />
                         Explore all communities
                     </Link>
                 )}
-            </div>
+            </nav>
 
             {/* Collapse Toggle */}
-            <div className="px-3 py-2">
+            <div className="shrink-0 px-3 py-2">
                 <button
+                    type="button"
                     onClick={onToggleCollapse}
-                    className={`flex items-center ${collapsed ? 'justify-center w-full' : ''} gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors w-full`}
+                    aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    aria-expanded={!collapsed}
+                    aria-controls="app-sidebar"
+                    className={`flex min-h-11 items-center ${collapsed ? 'justify-center' : ''} gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 hover:text-playful-text w-full ${colorTransition} ${focusRing}`}
                     title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 >
                     {collapsed ? (
-                        <ChevronsRight className="w-4 h-4" />
+                        <ChevronsRight aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                     ) : (
                         <>
-                            <ChevronsLeft className="w-4 h-4" />
+                            <ChevronsLeft aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                             Collapse
                         </>
                     )}
@@ -214,41 +228,44 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
             </div>
 
             {/* Bottom section: User / Login */}
-            <div className="border-t border-gray-100 p-3 mt-auto">
+            <div className="shrink-0 border-t border-gray-100 p-3 mt-auto">
                 {isAuthenticated ? (
                     <div className={collapsed ? 'space-y-2' : 'space-y-1'}>
                         <Link
                             href={`/user/${profile?.username || user?.id}`}
                             title={collapsed ? displayName : undefined}
-                            className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2.5'} px-2.5 py-2 rounded-xl text-sm hover:bg-gray-50 transition-colors`}
+                            aria-label={`View ${displayName}'s profile`}
+                            aria-current={pathname === `/user/${profile?.username || user?.id}` ? 'page' : undefined}
+                            className={`flex min-h-11 items-center ${collapsed ? 'justify-center px-1' : 'gap-2.5 px-2.5'} py-2 rounded-xl text-sm hover:bg-gray-50 ${colorTransition} ${focusRing}`}
                         >
-                            <div className="w-8 h-8 rounded-full bg-playful-coral text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                            <div aria-hidden="true" className="w-8 h-8 rounded-full bg-playful-coral/15 text-playful-coral-text flex items-center justify-center text-sm font-bold flex-shrink-0">
                                 {initials}
                             </div>
                             {!collapsed && (
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-bold text-playful-text truncate">{displayName}</p>
-                                    <p className="text-[10px] text-gray-400 truncate">{user?.email}</p>
+                                    <p className="text-xs text-gray-600 truncate">{user?.email}</p>
                                 </div>
                             )}
                         </Link>
 
                         {!collapsed && (
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-2">
                                 {isAdmin && (
                                     <Link
                                         href="/admin"
-                                        className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-50 hover:text-playful-text transition-colors"
+                                        className={`flex-1 flex min-h-11 items-center justify-center gap-1.5 px-2 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-50 hover:text-playful-text ${colorTransition} ${focusRing}`}
                                     >
-                                        <Shield className="w-3.5 h-3.5" />
+                                        <Shield aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                                         Admin
                                     </Link>
                                 )}
                                 <button
+                                    type="button"
                                     onClick={handleSignOut}
-                                    className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                    className={`flex-1 flex min-h-11 items-center justify-center gap-1.5 px-2 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-red-50 hover:text-red-700 ${colorTransition} ${focusRing}`}
                                 >
-                                    <LogOut className="w-3.5 h-3.5" />
+                                    <LogOut aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                                     Logout
                                 </button>
                             </div>
@@ -256,11 +273,13 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
 
                         {collapsed && (
                             <button
+                                type="button"
                                 onClick={handleSignOut}
                                 title="Logout"
-                                className="flex items-center justify-center w-full p-2 rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                aria-label="Logout"
+                                className={`flex min-h-11 items-center justify-center w-full p-2 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-700 ${colorTransition} ${focusRing}`}
                             >
-                                <LogOut className="w-4 h-4" />
+                                <LogOut aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
                             </button>
                         )}
                     </div>
@@ -268,10 +287,11 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                     <Link
                         href="/login"
                         title={collapsed ? 'Sign In' : undefined}
-                        className={`flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-playful-coral text-white rounded-xl text-sm font-bold hover:bg-playful-coral/90 transition-colors shadow-sm ${collapsed ? '!px-2' : ''}`}
+                        aria-current={pathname === '/login' ? 'page' : undefined}
+                        className={`flex min-h-11 items-center justify-center gap-2 w-full px-4 py-2.5 bg-playful-coral-text text-white rounded-xl text-sm font-bold hover:bg-playful-coral-text/90 shadow-sm ${colorTransition} ${focusRing} ${collapsed ? '!px-2' : ''}`}
                     >
-                        <LogIn className="w-4 h-4" />
-                        {!collapsed && 'Sign In'}
+                        <LogIn aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
+                        <span className={collapsed ? 'sr-only' : ''}>Sign In</span>
                     </Link>
                 )}
             </div>

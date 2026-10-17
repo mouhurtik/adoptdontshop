@@ -6,6 +6,7 @@ import { Search, Compass, ArrowRight, Heart, MessageCircle, PawPrint, TrendingUp
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { useCommunityPosts } from '@/hooks/useCommunity';
 import ExploreSidebar from '@/components/home/HomeSidebar';
+import SmoothScroll from '@/components/ui/SmoothScroll';
 
 const SEARCH_SUGGESTIONS = [
     { emoji: '🐕', label: 'Dogs', query: 'dogs' },
@@ -54,6 +55,8 @@ const ExplorePage = () => {
     });
 
     return (
+        <>
+        <SmoothScroll />
         <div className="pt-4 lg:pt-6 pb-16 bg-playful-cream min-h-screen">
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 <div className="flex gap-8">
@@ -231,6 +234,7 @@ const ExplorePage = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

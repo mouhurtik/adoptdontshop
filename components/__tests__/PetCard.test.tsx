@@ -1,39 +1,31 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import type { ComponentProps } from 'react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 
-// Mock Supabase client (initializes at module load, needs env vars)
-vi.mock('@/lib/supabase/client', () => ({
-  supabase: {
-    auth: { getSession: vi.fn(), onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })) },
-    from: vi.fn(() => ({ select: vi.fn(() => ({ data: [], error: null })) })),
-  },
-  createClient: vi.fn(),
+const mocks = vi.hoisted(() => ({
+  auth: vi.fn(),
+  favorites: vi.fn(),
+  toggleFavorite: vi.fn(),
 }));
 
-// Mock AuthContext
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({
-    user: null,
-    profile: null,
-    isAdmin: false,
-    isAuthenticated: false,
-    signOut: vi.fn(),
-  }),
+  useAuth: mocks.auth,
 }));
 
-// Mock useFavorites
 vi.mock('@/hooks/useFavorites', () => ({
-  useFavorites: () => ({
-    favorites: [],
-    toggleFavorite: vi.fn(),
-  }),
+  useFavorites: mocks.favorites,
 }));
 
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
+vi.mock('@/components/ui/AuthPromptModal', () => ({
+  default: ({ isOpen, message, onClose }: { isOpen: boolean; message: string; onClose: () => void }) => (
+    isOpen ? (
+      <div role="dialog" aria-label="Sign in to save favorites">
+        <p>{message}</p>
+        <button type="button" onClick={onClose}>Close</button>
+      </div>
+    ) : null
+  ),
 }));
 
 // Mock next/image — strip non-DOM props
@@ -46,29 +38,18 @@ vi.mock('next/image', () => ({
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
-}));
-
-// Mock framer-motion to avoid animation issues in tests
-const stripMotionProps = (props: Record<string, unknown>) => {
-  const motionKeys = ['whileHover', 'whileTap', 'initial', 'animate', 'exit', 'transition', 'variants', 'layout', 'layoutId', 'drag', 'dragConstraints', 'onDragEnd'];
-  const cleaned: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(props)) {
-    if (!motionKeys.includes(k)) cleaned[k] = v;
-  }
-  return cleaned;
-};
-
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: Record<string, unknown>) => <div {...stripMotionProps(props)}>{children as React.ReactNode}</div>,
-  },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  default: (props: ComponentProps<'a'>) => <a {...props} />,
 }));
 
 import PetCard from '../PetCard';
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.auth.mockReturnValue({ isAuthenticated: false });
+  mocks.favorites.mockReturnValue({ favorites: [], toggleFavorite: mocks.toggleFavorite });
+});
+
+afterEach(cleanup);
 
 describe('PetCard', () => {
   const mockPet = {
@@ -109,5 +90,78 @@ describe('PetCard', () => {
 
     expect(screen.getByText('Whiskers')).toBeInTheDocument();
     expect(screen.getByText(/Persian/i)).toBeInTheDocument();
+  });
+
+  it.each([false, true])('uses the canonical pet slug without nested controls (compact=%s)', (compact) => {
+    render(<PetCard {...mockPet} id="2c57d18e-ef39-4c68-9f18-d442bc857a11" name="Fluffy's Paw" compact={compact} />);
+
+    const link = screen.getByRole('link', { name: "Meet Fluffy's Paw" });
+    expect(link).toHaveAttribute('href', '/pet/fluffys-paw-2c57d18e');
+    expect(link).toContainElement(screen.getByRole('img', { name: "Fluffy's Paw" }));
+    expect(link.querySelector('button, a')).toBeNull();
+    expect(screen.getByRole('button', { name: "Add Fluffy's Paw to favorites" }).closest('a')).toBeNull();
+  });
+
+  it.each([false, true])('keeps saving independent of the pet link for keyboard users (compact=%s)', async (compact) => {
+    const user = userEvent.setup();
+    mocks.auth.mockReturnValue({ isAuthenticated: true });
+    render(<PetCard {...mockPet} compact={compact} />);
+
+    const link = screen.getByRole('link', { name: 'Meet Buddy' });
+    const linkClick = vi.fn();
+    link.addEventListener('click', linkClick);
+    await user.tab();
+    expect(link).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Add Buddy to favorites' })).toHaveFocus();
+    await user.keyboard('{Enter}');
+
+    expect(mocks.toggleFavorite).toHaveBeenCalledExactlyOnceWith(mockPet.id);
+    expect(linkClick).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it.each([false, true])('opens the auth prompt instead of navigating when saving signed out (compact=%s)', async (compact) => {
+    const user = userEvent.setup();
+    render(<PetCard {...mockPet} compact={compact} />);
+
+    const linkClick = vi.fn();
+    screen.getByRole('link', { name: 'Meet Buddy' }).addEventListener('click', linkClick);
+    await user.click(screen.getByRole('button', { name: 'Add Buddy to favorites' }));
+
+    expect(screen.getByRole('dialog', { name: 'Sign in to save favorites' })).toHaveTextContent('Sign in to save your favorite pets');
+    expect(mocks.toggleFavorite).not.toHaveBeenCalled();
+    expect(linkClick).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('exposes the saved state and keeps the remove action', async () => {
+    const user = userEvent.setup();
+    mocks.auth.mockReturnValue({ isAuthenticated: true });
+    mocks.favorites.mockReturnValue({ favorites: [mockPet.id], toggleFavorite: mocks.toggleFavorite });
+    render(<PetCard {...mockPet} compact />);
+
+    const remove = screen.getByRole('button', { name: 'Remove Buddy from favorites', pressed: true });
+    await user.click(remove);
+    expect(mocks.toggleFavorite).toHaveBeenCalledExactlyOnceWith(mockPet.id);
+  });
+
+  it.each([false, true])('falls back after an image error without changing the pet link (compact=%s)', (compact) => {
+    render(<PetCard {...mockPet} compact={compact} />);
+    const image = screen.getByRole('img', { name: 'Buddy' });
+    expect(image).toHaveAttribute('src', mockPet.image);
+    expect(image).toHaveAttribute('loading', 'lazy');
+
+    fireEvent.error(image);
+
+    expect(image).toHaveAttribute('src', '/placeholder.svg');
+    expect(screen.getByRole('link', { name: 'Meet Buddy' })).toHaveAttribute('href', '/pet/buddy-123');
+  });
+
+  it('keeps priority images eager and handles a missing image', () => {
+    render(<PetCard {...mockPet} image="" priority />);
+    expect(screen.getByRole('img', { name: 'Buddy' })).toHaveAttribute('loading', 'eager');
+    expect(screen.getByRole('img', { name: 'Buddy' })).toHaveAttribute('src', '/placeholder.svg');
   });
 });

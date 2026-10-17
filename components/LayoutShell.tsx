@@ -36,16 +36,6 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
         }
     }, []);
 
-    // Update sidebar width CSS variable when collapse state changes (desktop only)
-    useEffect(() => {
-        if (window.matchMedia('(min-width: 1024px)').matches) {
-            document.documentElement.style.setProperty(
-                '--sidebar-width',
-                `${sidebarCollapsed ? 72 : 260}px`
-            );
-        }
-    }, [sidebarCollapsed]);
-
     // Admin routes use their own layout
     if (isAdminRoute) {
         return (
@@ -60,12 +50,12 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     return (
         <NativeProvider>
         <AuthModalProvider>
-        <div className="min-h-screen bg-playful-cream" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className={`min-h-screen bg-playful-cream [--sidebar-width:0px] ${sidebarCollapsed ? 'lg:[--sidebar-width:72px]' : 'lg:[--sidebar-width:260px]'}`} style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
             {/* Desktop: Persistent left sidebar — lazy-loaded, hidden on mobile via CSS */}
             {shellReady && (
                 <AppSidebar
                     collapsed={sidebarCollapsed}
-                    onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+                    onToggleCollapse={() => setSidebarCollapsed(previous => !previous)}
                 />
             )}
 
@@ -74,10 +64,10 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
 
             {/* Main content area — offset by sidebar on desktop */}
             <main
-                className={`${showBottomNav ? 'pb-20 lg:pb-0' : 'pb-0'} pt-14 lg:pt-0 min-h-screen transition-all duration-300`}
+                className={`${showBottomNav ? 'pb-20 lg:pb-0' : 'pb-0'} pt-14 lg:pt-0 min-h-screen min-w-0 lg:motion-safe:transition-[margin-left] lg:motion-safe:duration-200 lg:motion-safe:ease-out`}
                 style={{ marginLeft: `var(--sidebar-width, 0px)` }}
             >
-                {/* --sidebar-width is set in globals.css: 260px on lg+, 0px on mobile */}
+                {/* Scoped CSS keeps this offset, including fixed descendants, in sync at every breakpoint. */}
                 {children}
             </main>
 
