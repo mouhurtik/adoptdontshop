@@ -192,7 +192,7 @@ function OurStoryTab() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-8">
                     {/* Email Card */}
-                    <a href="mailto:mouhurtikr@gmail.com" 
+                    <a href="mailto:founder@adoptdontshop.xyz"
                        className="relative overflow-hidden group bg-gradient-to-br from-green-50 to-emerald-100/50 rounded-3xl p-6 shadow-sm border border-emerald-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                         <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
                             <Mail className="w-24 h-24 text-emerald-600" />
@@ -202,7 +202,7 @@ function OurStoryTab() {
                                 <Mail className="w-6 h-6" />
                             </div>
                             <p className="text-sm font-bold text-emerald-800/60 uppercase tracking-wider mb-1">Email</p>
-                            <p className="font-bold text-gray-800 truncate">mouhurtikr@gmail.com</p>
+                            <p className="font-bold text-gray-800 truncate">founder@adoptdontshop.xyz</p>
                         </div>
                     </a>
                     
@@ -341,7 +341,7 @@ function PatronsTab() {
                                 <span className="font-bold">Recognition</span>
                             </div>
                         </div>
-                        <a href="mailto:mouhurtikr@gmail.com"
+                        <a href="mailto:founder@adoptdontshop.xyz"
                             className="inline-flex items-center gap-2 bg-white text-playful-coral px-8 py-4 rounded-full font-bold text-lg hover:bg-white/90 transition-all shadow-lg hover:shadow-xl">
                             <Mail className="h-5 w-5" />
                             Get in Touch

@@ -128,7 +128,7 @@ const TermsAndConditions = () => {
               <span className="bg-playful-mint/20 text-green-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">8</span>
               Contact Information
             </h2>
-            <p className="mb-6">If you have any questions about these Terms and Conditions, please contact us at <a href="mailto:mouhurtikr@gmail.com" className="text-playful-teal font-bold hover:underline">mouhurtikr@gmail.com</a>.</p>
+            <p className="mb-6">If you have any questions about these Terms and Conditions, please contact us at <a href="mailto:founder@adoptdontshop.xyz" className="text-playful-teal font-bold hover:underline">founder@adoptdontshop.xyz</a>.</p>
           </div>
 
           <div className="flex justify-center mt-12">

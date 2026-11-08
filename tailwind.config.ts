@@ -22,7 +22,15 @@ export default {
 			}
 		},
 		extend: {
+			backgroundColor: {
+				white: 'rgb(var(--surface) / <alpha-value>)',
+				'playful-coral': 'rgb(var(--coral-fill) / <alpha-value>)',
+				'playful-coral-text': 'rgb(var(--coral-action) / <alpha-value>)',
+				'playful-teal': 'rgb(var(--teal-fill) / <alpha-value>)',
+				'playful-teal-text': 'rgb(var(--teal-action) / <alpha-value>)',
+			},
 			colors: {
+				gray: Object.fromEntries([50,100,200,300,400,500,600,700,800,900,950].map(shade => [shade, `rgb(var(--gray-${shade}) / <alpha-value>)`])),
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -59,14 +67,14 @@ export default {
 				// Playful & Vibrant Theme Colors
 				playful: {
 					coral: '#FF7F50',         // Original — bg, badges, footer
-					'coral-text': '#D4572A',  // AA contrast on white (4.5:1)
+					'coral-text': 'rgb(var(--coral-text) / <alpha-value>)',
 					teal: '#20B2AA',          // Original — bg, footer, badges
-					'teal-text': '#0E7E77',   // AA contrast on white (4.5:1)
+					'teal-text': 'rgb(var(--teal-text) / <alpha-value>)',
 					yellow: '#FFD700',
-					cream: '#FFF8F0',
+					cream: 'rgb(var(--canvas) / <alpha-value>)',
 					lavender: '#E6E6FA',
 					mint: '#98FF98',
-					text: '#2D3436',
+					text: 'rgb(var(--ink) / <alpha-value>)',
 				}
 			},
 			borderRadius: {

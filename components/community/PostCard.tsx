@@ -128,7 +128,7 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-2 font-heading text-xl font-extrabold leading-snug text-playful-text">
+                <h3 className="mb-2 font-heading text-xl font-bold leading-snug text-playful-text">
                     <Link
                         href={`/community/${post.slug}`}
                         className="block min-h-11 rounded-lg py-1 transition-colors duration-150 hover:text-playful-coral-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none"

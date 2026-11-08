@@ -1,6 +1,6 @@
 export const SITE_URL = 'https://adoptdontshop.xyz';
 export const SITE_DESCRIPTION = 'Find rescue pets for adoption in India, share pet-care stories, and connect with caregivers and animal lovers on AdoptDontShop.';
-export const CONTACT_EMAIL = 'mouhurtikr@gmail.com';
+export const CONTACT_EMAIL = 'founder@adoptdontshop.xyz';
 // Change when this public copy is substantively reviewed, never on every build.
 export const PUBLIC_CONTENT_REVIEWED = '2026-11-08';
 export const PUBLIC_CONTENT_REVIEWED_LABEL = '8 November 2026';

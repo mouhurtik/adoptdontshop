@@ -6,6 +6,7 @@ import Providers from './providers';
 import LayoutShell from '@/components/LayoutShell';
 import OptionalTracking from '@/components/analytics/OptionalTracking';
 import { OFFICIAL_SOCIALS, serializeJsonLd, SITE_DESCRIPTION, SITE_URL } from '@/lib/site';
+import { THEME_BOOTSTRAP } from '@/lib/theme';
 
 const quicksand = Quicksand({
     subsets: ['latin'],
@@ -128,6 +129,7 @@ export default function RootLayout({
     return (
         <html lang="en-IN" className={`${quicksand.variable} ${nunito.variable}`} suppressHydrationWarning>
             <head>
+                <script id="theme-init" dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
                 <link rel="preconnect" href="https://uibsmaizlrekfooryrwq.supabase.co" crossOrigin="anonymous" />

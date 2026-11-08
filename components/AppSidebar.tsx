@@ -1,22 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
     Home, Compass, PawPrint, MessageCircle,
-    Plus, LogIn, LogOut, Shield, ChevronsLeft, ChevronsRight
+    ShoppingBag, LogIn, LogOut, Shield, ChevronsLeft, ChevronsRight
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUnreadCount } from '@/hooks/useMessages';
-import { supabase } from '@/lib/supabase/client';
-
-interface Community {
-    id: string;
-    name: string;
-    slug: string;
-    avatar_url: string | null;
-}
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface AppSidebarProps {
     collapsed: boolean;
@@ -30,34 +22,6 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
     const pathname = usePathname();
     const { user, profile, isAdmin, isAuthenticated, signOut } = useAuth();
     const { data: unreadCount = 0 } = useUnreadCount();
-    const [communities, setCommunities] = useState<Community[]>([]);
-
-    // Fetch user's joined communities
-    useEffect(() => {
-        // Sidebar is hidden on mobile — skip API call to save bandwidth + main thread
-        if (!window.matchMedia('(min-width: 1024px)').matches) return;
-        if (!user?.id) return;
-        const fetchCommunities = async () => {
-            const { data: memberships } = await supabase
-                .from('group_members')
-                .select('group_id')
-                .eq('user_id', user.id)
-                .limit(15);
-
-            if (memberships && memberships.length > 0) {
-                const groupIds = memberships.map(m => m.group_id);
-                const { data: groups } = await supabase
-                    .from('groups')
-                    .select('id, name, slug, avatar_url')
-                    .in('id', groupIds)
-                    .order('name');
-
-                if (groups) setCommunities(groups);
-            }
-        };
-        fetchCommunities();
-    }, [user?.id]);
-
     const isActive = (path: string) => {
         if (path === '/') return pathname === '/';
         return pathname.startsWith(path);
@@ -70,6 +34,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
         { name: 'Home', icon: Home, path: '/', badge: 0 },
         { name: 'Explore', icon: Compass, path: '/explore', badge: 0 },
         { name: 'Browse Pets', icon: PawPrint, path: '/browse', badge: 0 },
+        { name: 'Store', icon: ShoppingBag, path: '/store', badge: 0 },
         { name: 'Messages', icon: MessageCircle, path: '/messages', badge: unreadCount },
     ];
 
@@ -92,7 +57,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         <PawPrint aria-hidden="true" className="h-5 w-5 fill-current" strokeWidth={2} />
                     </div>
                     {!collapsed && (
-                        <span className="text-xl leading-tight font-heading font-black tracking-tight text-playful-text whitespace-nowrap">
+                        <span className="text-lg leading-tight font-heading font-bold tracking-tight text-playful-text whitespace-nowrap">
                             Adopt<span className="text-playful-coral-text">Dont</span>Shop
                         </span>
                     )}
@@ -133,77 +98,16 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
             {/* Divider */}
             <div className="mx-4 my-3 shrink-0 border-t border-gray-100" />
 
-            {/* Communities Section */}
-            <nav aria-label="Community navigation" className={`${collapsed ? 'px-2' : 'px-3'} flex-1 overflow-y-auto min-h-0 py-1`}>
-                {!collapsed && (
-                    <div className="flex min-h-11 items-center justify-between pl-2.5 mb-1">
-                        <span className="text-xs font-bold text-gray-600">Communities</span>
-                        {isAuthenticated && (
-                            <Link
-                                href="/communities/create"
-                                aria-current={pathname === '/communities/create' ? 'page' : undefined}
-                                aria-label="Create community"
-                                className={`flex h-11 w-11 items-center justify-center rounded-xl hover:bg-gray-50 text-gray-600 hover:text-playful-teal-text ${colorTransition} ${focusRing}`}
-                                title="Create community"
-                            >
-                                <Plus aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
-                            </Link>
-                        )}
-                    </div>
-                )}
-
-                {communities.length > 0 ? (
-                    <div className="space-y-0.5">
-                        {communities.map(community => (
-                            <Link
-                                key={community.id}
-                                href={`/communities/${community.slug}`}
-                                title={collapsed ? community.name : undefined}
-                                aria-current={pathname === `/communities/${community.slug}` ? 'page' : undefined}
-                                className={`flex min-h-11 items-center ${collapsed ? 'justify-center' : ''} gap-2.5 ${collapsed ? 'px-2 py-2' : 'px-2.5 py-2'} rounded-xl text-sm ${colorTransition} ${focusRing} ${
-                                    pathname === `/communities/${community.slug}`
-                                        ? 'bg-playful-teal/10 text-playful-teal-text font-semibold'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-playful-text'
-                                }`}
-                            >
-                                <div aria-hidden="true" className={`${collapsed ? 'w-8 h-8' : 'w-7 h-7'} rounded-lg overflow-hidden flex-shrink-0`}>
-                                    {community.avatar_url ? (
-                                        <img src={community.avatar_url} alt="" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full bg-playful-teal/10 flex items-center justify-center text-playful-teal-text text-xs font-bold">
-                                            {community.name.charAt(0)}
-                                        </div>
-                                    )}
-                                </div>
-                                <span className={collapsed ? 'sr-only' : 'truncate'}>{community.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                ) : !collapsed && isAuthenticated ? (
-                    <div className="text-center py-4">
-                        <p className="text-xs leading-5 text-gray-600 mb-1">No communities joined yet</p>
-                        <Link href="/communities" aria-current={pathname === '/communities' ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-playful-teal-text hover:underline ${focusRing}`}>
-                            Explore Communities →
-                        </Link>
-                    </div>
-                ) : !collapsed ? (
-                    <div className="text-center py-4">
-                        <p className="text-xs leading-5 text-gray-600 mb-2">Sign in to join communities</p>
-                    </div>
-                ) : null}
-
-                {/* Explore all link */}
-                {!collapsed && communities.length > 0 && (
-                    <Link
-                        href="/communities"
-                        aria-current={pathname === '/communities' ? 'page' : undefined}
-                        className={`flex min-h-11 items-center gap-2 px-2.5 py-2 mt-1 rounded-xl text-xs font-semibold text-gray-600 hover:text-playful-teal-text hover:bg-gray-50 ${colorTransition} ${focusRing}`}
-                    >
-                        <Compass aria-hidden="true" className="w-4 h-4 shrink-0" strokeWidth={2} />
-                        Explore all communities
+            <nav aria-label="Feed topics" className={`${collapsed ? 'px-2' : 'px-3'} flex-1 py-1`}>
+                {!collapsed && <p className="px-2.5 py-3 text-[11px] font-bold uppercase tracking-wider text-gray-500">Topics</p>}
+                {[['discussion', 'Discussion'], ['virtual_adoption', 'Adoption stories'], ['tips', 'Care & advice'], ['lost_found', 'Lost & found']].map(([tag, label]) => (
+                    <Link key={tag} href={`/?tag=${tag}`} title={label} className={`flex min-h-11 items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm text-gray-600 hover:bg-gray-50 ${focusRing}`}>
+                        <span aria-hidden="true" className="w-5 text-center text-playful-teal-text">#</span>
+                        <span className={collapsed ? 'sr-only' : ''}>{label}</span>
                     </Link>
-                )}
+                ))}
             </nav>
+            <div className="px-3"><ThemeToggle compact={collapsed} /></div>
 
             {/* Collapse Toggle */}
             <div className="shrink-0 px-3 py-2">

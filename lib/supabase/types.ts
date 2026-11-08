@@ -611,6 +611,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_user_emails: {
+        Args: { p_user_ids: string[] }
+        Returns: { id: string; email: string | null }[]
+      }
       increment_view_count: { Args: { post_id: string }; Returns: undefined }
       is_admin: { Args: { check_user_id: string }; Returns: boolean }
     }

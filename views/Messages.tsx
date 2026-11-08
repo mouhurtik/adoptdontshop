@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { MessageCircle, PawPrint, ChevronLeft } from 'lucide-react';
 import {
@@ -16,11 +17,19 @@ import MessageThread from '@/components/messaging/MessageThread';
 import PawprintLoader from '@/components/ui/PawprintLoader';
 
 const Messages = () => {
+    const requestedConversation = useSearchParams().get('conversation');
+    const router = useRouter();
     const { isAuthenticated, isLoading: authLoading } = useAuth();
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
     const [showThread, setShowThread] = useState(false); // For mobile toggle
 
     const { data: conversations = [], isLoading: convosLoading } = useConversations();
+    useEffect(() => {
+        if (requestedConversation && conversations.some(conversation => conversation.id === requestedConversation)) {
+            setSelectedConversationId(requestedConversation);
+            setShowThread(true);
+        }
+    }, [requestedConversation, conversations]);
     const { data: messages = [], isLoading: messagesLoading } = useConversationMessages(selectedConversationId);
     const sendMessage = useSendMessage();
 
@@ -33,9 +42,10 @@ const Messages = () => {
 
     const handleSelectConversation = useCallback((id: string) => {
         setSelectedConversationId(id);
+        router.replace(`/messages?conversation=${encodeURIComponent(id)}`);
         setShowThread(true); // Show thread on mobile
         markAsRead(id); // Mark messages as read
-    }, [markAsRead]);
+    }, [markAsRead, router]);
 
     const handleBack = useCallback(() => {
         setShowThread(false);

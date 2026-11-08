@@ -175,7 +175,7 @@ export function usePostComments(postId: string | undefined) {
             // Batch-fetch comment author profiles
             const authorIds = [...new Set((comments || []).map(c => c.author_id))];
             const { data: profiles } = authorIds.length > 0
-                ? await supabase.from('profiles').select('id, display_name, avatar_url').in('id', authorIds)
+                ? await supabase.from('profiles').select('id, display_name, avatar_url, username').in('id', authorIds)
                 : { data: [] };
 
             const profileMap = new Map((profiles || []).map(p => [p.id, p]));

@@ -4,6 +4,10 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 minify = true
 
+[observability]
+enabled = true
+head_sampling_rate = 0.1
+
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"

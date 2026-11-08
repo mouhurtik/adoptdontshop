@@ -176,16 +176,18 @@ export function useStartConversation() {
             const senderName = profile?.display_name || user.email || 'User';
 
             // Check if conversation already exists between these users
-            const { data: existing } = await supabase
+            const { data: existing, error: lookupError } = await supabase
                 .from('conversations')
                 .select('id')
                 .contains('participant_ids', [user.id, recipientId]);
+
+            if (lookupError) throw lookupError;
 
             if (existing && existing.length > 0) {
                 // Send message in existing conversation
                 const convId = existing[0].id;
 
-                await supabase.from('messages').insert({
+                const { error: messageError } = await supabase.from('messages').insert({
                     conversation_id: convId,
                     sender_id: user.id,
                     sender_name: senderName,
@@ -194,6 +196,8 @@ export function useStartConversation() {
                     participants: [user.id, recipientId],
                     read_by: [user.id],
                 });
+
+                if (messageError) throw messageError;
 
                 await supabase
                     .from('conversations')

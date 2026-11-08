@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, PawPrint, MessageCircle, LogIn } from 'lucide-react';
+import { Home, Compass, PawPrint, MessageCircle, ShoppingBag, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const tabClasses = 'flex h-14 min-h-11 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 transition-colors duration-150 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-playful-teal-text';
@@ -38,6 +38,7 @@ export default function BottomNav() {
             icon: PawPrint,
             active: isActive('/browse') || isActive('/pet/'),
         },
+        { name: 'Store', href: '/store', icon: ShoppingBag, active: isActive('/store') },
         {
             name: 'Chat',
             href: '/messages',
@@ -65,7 +66,7 @@ export default function BottomNav() {
                                 className="h-[22px] w-[22px]"
                                 strokeWidth={2}
                             />
-                            <span className={`text-xs leading-4 ${tab.active ? 'font-bold' : 'font-semibold'}`}>
+                            <span className={`text-xs leading-4 ${tab.active ? 'font-semibold' : 'font-medium'}`}>
                                 {tab.name}
                             </span>
                         </Link>
@@ -89,7 +90,7 @@ export default function BottomNav() {
                         ) : (
                             <LogIn aria-hidden="true" className="h-[22px] w-[22px]" strokeWidth={2} />
                         )}
-                        <span className={`text-xs leading-4 ${meActive ? 'font-bold' : 'font-semibold'}`}>
+                        <span className={`text-xs leading-4 ${meActive ? 'font-semibold' : 'font-medium'}`}>
                             {isAuthenticated ? 'Me' : 'Login'}
                         </span>
                     </Link>

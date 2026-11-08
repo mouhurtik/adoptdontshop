@@ -36,6 +36,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
     const initialTag = searchParams.get('tag') || 'all';
 
     const [activeTag, setActiveTag] = useState(initialTag);
+    useEffect(() => setActiveTag(initialTag), [initialTag]);
     const [sort, setSort] = useState<SortOption>('new');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isSortOpen, setIsSortOpen] = useState(false);
@@ -67,25 +68,10 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Header — Compact bar for home, full hero for standalone page */}
                 {isHome ? (
-                    <section className="mb-8 flex flex-col gap-5 rounded-[2rem] border border-playful-text/10 bg-white/80 px-5 py-6 shadow-soft sm:px-8 sm:py-7 lg:mb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-                        <div className="max-w-2xl">
-                            <p className="mb-2 text-sm font-bold text-playful-coral-text">India&apos;s pet adoption community</p>
-                            <h1 className="max-w-2xl font-heading text-3xl font-black leading-tight tracking-tight text-playful-text sm:text-4xl">
-                                Find a friend. Share the care.
-                            </h1>
-                            <p className="mt-3 max-w-xl text-base leading-relaxed text-gray-700 sm:text-lg">
-                                Discover rescue pets, learn from fellow pet lovers, and help more animals find safe, loving homes.
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                            <Link href="/browse" className="inline-flex min-h-11 items-center justify-center rounded-full bg-playful-coral-text px-5 py-2.5 font-heading text-sm font-bold text-white shadow-sm transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-playful-coral-text/90 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none">
-                                Browse pets
-                            </Link>
-                            <Link href="/success-stories" className="inline-flex min-h-11 items-center justify-center rounded-full bg-playful-teal/10 px-5 py-2.5 font-heading text-sm font-bold text-playful-teal-text transition-[background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-playful-teal/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none">
-                                See happy endings
-                            </Link>
-                        </div>
-                    </section>
+                    <header className="mb-5">
+                        <h1 className="font-heading text-lg font-bold text-playful-text">The AdoptDontShop community</h1>
+                        <p className="mt-1 text-sm text-gray-500">Pet adoption, rescue stories and everyday care in India. <Link href="/browse" className="text-playful-teal-text underline underline-offset-2">Browse pets</Link>.</p>
+                    </header>
                 ) : (
                     /* Full Hero for standalone /community page (if accessed via other means) */
                     <div className="text-center mb-10 lg:mb-16 relative">

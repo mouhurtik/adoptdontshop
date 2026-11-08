@@ -6,6 +6,27 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+    --canvas: 255 248 240;
+    --surface: 255 255 255;
+    --ink: 45 52 54;
+    --coral-text: 212 87 42;
+    --coral-fill: 255 127 80;
+    --coral-action: 212 87 42;
+    --teal-text: 14 126 119;
+    --teal-fill: 32 178 170;
+    --teal-action: 14 126 119;
+    --gray-50: 249 250 251;
+    --gray-100: 243 244 246;
+    --gray-200: 229 231 235;
+    --gray-300: 209 213 219;
+    --gray-400: 156 163 175;
+    --gray-500: 107 114 128;
+    --gray-600: 75 85 99;
+    --gray-700: 55 65 81;
+    --gray-800: 31 41 55;
+    --gray-900: 17 24 39;
+    --gray-950: 3 7 18;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -40,7 +61,66 @@
     --radius: 1rem;
     --sidebar-width: 0px;
   }
+
+  .dark {
+    color-scheme: dark;
+    --canvas: 25 20 17;
+    --surface: 36 29 24;
+    --ink: 244 232 221;
+    --coral-text: 255 163 111;
+    --coral-fill: 189 75 36;
+    --coral-action: 189 75 36;
+    --teal-text: 114 207 190;
+    --teal-fill: 20 110 100;
+    --teal-action: 20 110 100;
+    --gray-50: 39 32 27;
+    --gray-100: 48 39 32;
+    --gray-200: 69 55 45;
+    --gray-300: 105 86 70;
+    --gray-400: 170 149 131;
+    --gray-500: 188 167 148;
+    --gray-600: 205 185 167;
+    --gray-700: 223 205 188;
+    --gray-800: 238 221 205;
+    --gray-900: 247 235 223;
+    --gray-950: 255 247 239;
+    --background: 23 19% 8%;
+    --foreground: 29 51% 91%;
+    --card: 25 20% 12%;
+    --card-foreground: 29 51% 91%;
+    --popover: 25 20% 12%;
+    --popover-foreground: 29 51% 91%;
+    --primary: 22 100% 72%;
+    --primary-foreground: 23 19% 8%;
+    --secondary: 169 49% 63%;
+    --secondary-foreground: 23 19% 8%;
+    --muted: 26 20% 17%;
+    --muted-foreground: 29 23% 70%;
+    --accent: 28 29% 23%;
+    --accent-foreground: 29 51% 91%;
+    --border: 27 21% 22%;
+    --input: 27 21% 22%;
+    --ring: 22 100% 72%;
+  }
 }
+
+.dark .prose {
+  --tw-prose-body: rgb(var(--gray-600));
+  --tw-prose-headings: rgb(var(--ink));
+  --tw-prose-links: rgb(var(--teal-text));
+  --tw-prose-bold: rgb(var(--ink));
+  --tw-prose-counters: rgb(var(--gray-500));
+  --tw-prose-bullets: rgb(var(--gray-400));
+  --tw-prose-hr: rgb(var(--gray-200));
+  --tw-prose-quotes: rgb(var(--ink));
+  --tw-prose-quote-borders: rgb(var(--gray-300));
+  --tw-prose-code: rgb(var(--ink));
+  --tw-prose-pre-bg: rgb(var(--canvas));
+}
+
+.comment-submit { background: #bd4b24; color: white; }
+.comment-submit:hover:not(:disabled) { background: #a33d1b; }
+.comment-submit:disabled { background: rgb(var(--gray-100)); color: rgb(var(--gray-500)); }
 
 @layer base {
   * {

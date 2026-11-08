@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Static pages (only include canonical URLs, not redirect sources)
     const staticPages = [
-        '', '/browse', '/about', '/explore',
+        '', '/browse', '/about', '/store', '/explore',
         '/success-stories', '/welcome',
         '/terms', '/privacy-policy', '/help', '/contact',
     ].map(route => ({

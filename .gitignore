@@ -46,8 +46,9 @@ lerna-debug.log*
 .vercel
 NEXT_TODO.md
 
-# Supabase (keep migrations private)
-supabase/migrations/
+# Keep older private migrations local; track the admin email migration.
+supabase/migrations/*
+!supabase/migrations/20261106000000_admin_user_emails.sql
 
 # Capacitor / Android
 mobile/android/.gradle/

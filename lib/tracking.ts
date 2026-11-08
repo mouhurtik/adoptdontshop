@@ -56,7 +56,7 @@ export function saveTrackingChoices(choices: TrackingChoices) {
 }
 
 export function isPublicMeasurementPath(pathname: string): boolean {
-    return pathname === '/' || /^\/(?:about|browse|explore|help|contact|welcome|success-stories|adopt-pets-in|pet)(?:\/|$)/.test(pathname)
+    return pathname === '/' || /^\/(?:about|store|browse|explore|help|contact|welcome|success-stories|adopt-pets-in|pet)(?:\/|$)/.test(pathname)
         || (/^\/community\/[^/]+$/.test(pathname) && !/^\/community\/(?:write|edit|saved)$/.test(pathname));
 }
 

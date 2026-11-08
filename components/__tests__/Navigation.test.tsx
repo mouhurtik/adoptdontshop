@@ -53,7 +53,7 @@ beforeEach(() => {
       ? { select: () => ({ eq: () => ({ limit: mocks.memberships }) }) }
       : { select: () => ({ in: () => ({ order: mocks.communities }) }) }
   );
-  vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
+  vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
 });
 
 afterEach(() => {
@@ -62,7 +62,7 @@ afterEach(() => {
 });
 
 describe('mobile navigation', () => {
-  it('keeps the five destinations named and keyboard reachable', async () => {
+  it('keeps the six destinations named and keyboard reachable', async () => {
     const user = userEvent.setup();
     render(<BottomNav />);
 
@@ -71,11 +71,12 @@ describe('mobile navigation', () => {
       ['Home', '/'],
       ['Explore', '/explore'],
       ['Browse', '/browse'],
+      ['Store', '/store'],
       ['Chat', '/messages'],
       ['Login', '/login'],
     ];
 
-    expect(navigation.getAllByRole('link')).toHaveLength(5);
+    expect(navigation.getAllByRole('link')).toHaveLength(6);
     for (const [name, href] of destinations) {
       const link = navigation.getByRole('link', { name });
       expect(link).toHaveAttribute('href', href);
@@ -147,27 +148,15 @@ describe('desktop navigation', () => {
     expect(screen.getByText('99+')).toBeInTheDocument();
   });
 
-  it.each([false, true])('retains community, profile and logout actions when collapsed=%s', async (collapsed) => {
+  it.each([false, true])('keeps one feed with topics, profile and logout when collapsed=%s', async (collapsed) => {
     const user = userEvent.setup();
     mocks.auth.mockReturnValue(signedInAuth);
-    mocks.pathname.mockReturnValue('/communities/foster-friends');
-    mocks.memberships.mockResolvedValue({ data: [{ group_id: 'group-1' }] });
-    mocks.communities.mockResolvedValue({
-      data: [{ id: 'group-1', name: 'Foster Friends', slug: 'foster-friends', avatar_url: null }],
-    });
-
     render(<AppSidebar collapsed={collapsed} onToggleCollapse={vi.fn()} />);
-
-    const community = await screen.findByRole('link', { name: 'Foster Friends' });
-    expect(community).toHaveAttribute('href', '/communities/foster-friends');
-    expect(community).toHaveAttribute('aria-current', 'page');
+    const topics = within(screen.getByRole('navigation', { name: 'Feed topics' }));
+    expect(topics.getByRole('link', { name: 'Care & advice' })).toHaveAttribute('href', '/?tag=tips');
+    expect(screen.queryByRole('link', { name: 'Create community' })).not.toBeInTheDocument();
+    expect(mocks.from).not.toHaveBeenCalled();
     expect(screen.getByRole('link', { name: "View Alex's profile" })).toHaveAttribute('href', '/user/alex');
-    if (!collapsed) {
-      expect(screen.getByRole('link', { name: 'Create community' })).toHaveAttribute('href', '/communities/create');
-      expect(screen.getByRole('link', { name: 'Explore all communities' })).toHaveAttribute('href', '/communities');
-      expect(screen.getByRole('link', { name: 'Admin' })).toHaveAttribute('href', '/admin');
-    }
-
     await user.click(screen.getByRole('button', { name: 'Logout' }));
     expect(mocks.signOut).toHaveBeenCalledOnce();
   });
@@ -185,6 +174,7 @@ describe('mobile top bar', () => {
     ['/community', 'Community'],
     ['/communities', 'Explore'],
     ['/about', 'About'],
+    ['/store', 'Store'],
     ['/welcome', 'Welcome'],
     ['/list-pet', 'List a Pet'],
     ['/signup', 'Sign Up'],
