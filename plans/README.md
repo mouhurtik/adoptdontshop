@@ -42,7 +42,8 @@ the Amazon catalog hostage: publish independently scoped commits when safe.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| [006](006-affiliate-collections-store.md) | Cat/dog Amazon selections and Store redesign | P1 | M | User's replacement affiliate links; 005 | IMPLEMENTED; publication checks in progress |
+| [007](007-store-cards-and-shell.md) | All/Cats/Dogs card grid, compact sidebar and social logos | P1 | M | User UI corrections; 006 | IMPLEMENTED; publication checks in progress |
+| [006](006-affiliate-collections-store.md) | Cat/dog Amazon selections and Store redesign | P1 | M | User's replacement affiliate links; 005 | DEPLOYED at d2777fd; layout superseded by 007 |
 | [005](005-ui-theme-admin-release.md) | Simpler feed, warm dark mode, Store, comments and admin emails | P1 | M | Correct database verified; 004 | DEPLOYED; CI passed at 739cc97 |
 | [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | DEPLOYED; CI passed at 25e4e02 |
 | [001](001-release-baseline-and-measurement.md) | Consolidate the release baseline and verify measurement | P1 | M | None | UI/admin implemented in 004/005; live analytics reporting still to verify |

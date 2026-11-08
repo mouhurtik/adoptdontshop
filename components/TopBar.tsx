@@ -50,15 +50,15 @@ export default function TopBar() {
                         Adopt<span className="text-playful-coral-text">Dont</span>Shop
                     </span>
                 </Link>
+                <ThemeToggle />
                 {contextBadge && (
-                    <div className="flex items-center min-w-0 pr-2">
+                    <div className="ml-auto flex items-center min-w-0 pr-2">
                         <span aria-hidden="true" className="mx-2 text-gray-300 font-bold shrink-0">|</span>
                         <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full truncate shadow-sm ${contextBadge.className}`}>
                             {contextBadge.label}
                         </span>
                     </div>
                 )}
-                <div className="ml-auto"><ThemeToggle compact /></div>
             </div>
         </header>
     );

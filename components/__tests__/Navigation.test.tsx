@@ -148,12 +148,12 @@ describe('desktop navigation', () => {
     expect(screen.getByText('99+')).toBeInTheDocument();
   });
 
-  it.each([false, true])('keeps one feed with topics, profile and logout when collapsed=%s', async (collapsed) => {
+  it.each([false, true])('keeps navigation, an icon theme switch, profile and logout when collapsed=%s', async (collapsed) => {
     const user = userEvent.setup();
     mocks.auth.mockReturnValue(signedInAuth);
     render(<AppSidebar collapsed={collapsed} onToggleCollapse={vi.fn()} />);
-    const topics = within(screen.getByRole('navigation', { name: 'Feed topics' }));
-    expect(topics.getByRole('link', { name: 'Care & advice' })).toHaveAttribute('href', '/?tag=tips');
+    expect(screen.queryByRole('navigation', { name: 'Feed topics' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' }).textContent).toBe('');
     expect(screen.queryByRole('link', { name: 'Create community' })).not.toBeInTheDocument();
     expect(mocks.from).not.toHaveBeenCalled();
     expect(screen.getByRole('link', { name: "View Alex's profile" })).toHaveAttribute('href', '/user/alex');

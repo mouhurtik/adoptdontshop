@@ -1,84 +1,53 @@
-.browser { --shop-accent: var(--teal-text); --shop-tint: 32 178 170; }
-.browser[data-pet='dog'] { --shop-accent: var(--coral-text); --shop-tint: 255 127 80; }
-.disclosure { display: flex; align-items: flex-start; gap: 10px; padding: 13px 0 20px; color: rgb(var(--gray-500)); font-size: 13px; line-height: 1.65; }
+.browser { color: rgb(var(--ink)); }
+.disclosure { display: flex; align-items: flex-start; gap: 9px; padding: 8px 0 22px; color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.7; }
 .disclosure svg { flex-shrink: 0; margin-top: 1px; }
 .disclosure p { margin: 0; }
-.disclosure span { margin-right: 6px; color: rgb(var(--gray-700)); font-weight: 600; }
-.petTabs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
-.petTab { display: flex; align-items: center; min-width: 0; min-height: 94px; gap: 14px; padding: 18px 22px; border: 1px solid rgb(var(--gray-200)); border-radius: 18px; background: rgb(var(--surface)); text-align: left; color: rgb(var(--gray-600)); transition: border-color .15s, background-color .15s; }
-.petTab:hover { border-color: rgb(var(--gray-400)); }
-.petTab[data-state='active'] { background: rgb(var(--shop-tint) / .07); border-color: rgb(var(--shop-accent)); color: rgb(var(--ink)); }
-.petIcon { display: grid; place-items: center; width: 54px; height: 54px; flex-shrink: 0; border-radius: 14px; background: rgb(var(--gray-100) / .6); color: rgb(var(--gray-500)); }
-.petIcon svg { width: 36px; height: 36px; }
-.petTab[data-state='active'] .petIcon { color: rgb(var(--shop-accent)); background: rgb(var(--shop-tint) / .12); }
-.petTabCopy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.petName { font-family: var(--font-nunito),sans-serif; font-size: 21px; font-weight: 700; line-height: 1.25; }
-.petDescription { font-size: 12px; line-height: 1.5; color: rgb(var(--gray-500)); }
-.tabMarker { width: 15px; height: 15px; margin-left: auto; border-radius: 50%; border: 1px solid rgb(var(--gray-300)); flex-shrink: 0; }
-.petTab[data-state='active'] .tabMarker { border: 4px solid rgb(var(--shop-accent)); }
-.panel { margin-top: 28px; }
-.panelHeading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 5px 20px; margin-bottom: 24px; }
-.panelHeading h2 { margin: 0; font-family: var(--font-nunito),sans-serif; font-size: 24px; font-weight: 700; color: rgb(var(--ink)); }
-.panelHeading p { margin: 0; font-size: 12px; color: rgb(var(--gray-500)); }
-.topGrid { display: grid; grid-template-columns: minmax(0,1.65fr) minmax(0,1fr); gap: 32px; }
-.sectionHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.sectionHeading h3 { margin: 0; font-family: var(--font-nunito),sans-serif; font-size: 16px; font-weight: 700; color: rgb(var(--ink)); }
-.sectionHeading span { font-size: 12px; color: rgb(var(--gray-500)); }
-.foodGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
-.collection { position: relative; display: flex; min-width: 0; border: 1px solid rgb(var(--gray-200)); border-radius: 16px; color: rgb(var(--ink)); background: rgb(var(--surface)); text-decoration: none; transition: border-color .15s, background-color .15s; }
-.collection:hover { border-color: rgb(var(--shop-accent)); background: rgb(var(--shop-tint) / .04); }
-.collection:focus-visible,.petTab:focus-visible { outline: 2px solid rgb(var(--shop-accent)); outline-offset: 4px; }
-.collectionCopy { min-width: 0; }
-.collection h4 { margin: 0; font-family: var(--font-nunito),sans-serif; font-weight: 700; font-size: 18px; line-height: 1.35; }
-.collection p { margin: 6px 0 0; color: rgb(var(--gray-500)); font-size: 13px; line-height: 1.6; }
-.collectionIcon { display: grid; place-items: center; flex-shrink: 0; color: rgb(var(--shop-accent)); background: rgb(var(--shop-tint) / .09); border-radius: 13px; }
-.collectionIcon svg { width: 26px; height: 26px; }
-.outbound { width: 18px; height: 18px; flex-shrink: 0; color: rgb(var(--gray-400)); }
-.food { min-height: 213px; padding: 20px; flex-direction: column; align-items: flex-start; gap: 18px; }
-.food .collectionIcon { width: 48px; height: 48px; }
-.food .outbound { position: absolute; top: 20px; right: 20px; }
-.browseLabel { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; color: rgb(var(--shop-accent)); font-size: 12px; font-weight: 600; }
-.brandList { display: flex; flex-direction: column; gap: 10px; }
-.brand { align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 16px 20px; }
-.brand h4 { font-size: 18px; }
-.careSection { margin-top: 32px; }
-.careGrid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
-.care { min-height: 154px; padding: 18px; flex-direction: column; gap: 14px; }
-.care .collectionIcon { width: 40px; height: 40px; }
-.care .collectionIcon svg { width: 22px; height: 22px; }
-.care .outbound { position: absolute; top: 18px; right: 15px; }
-.care h4 { font-size: 16px; }
-.care p { font-size: 12px; }
-.howItWorks { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; border-top: 1px solid rgb(var(--gray-200)); margin-top: 32px; padding-top: 24px; }
-.howItWorks h2 { font-family: var(--font-nunito),sans-serif; color: rgb(var(--ink)); font-weight: 700; font-size: 14px; margin: 0 0 8px; }
-.howItWorks p { color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.8; margin: 0 0 8px; }
-@media (max-width: 1279px) { .careGrid { grid-template-columns: repeat(2,minmax(0,1fr)); } .topGrid { gap: 22px; } }
+.disclosure span { margin-right: 6px; font-weight: 600; color: rgb(var(--gray-700)); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid rgb(var(--gray-200)); }
+.tabs { display: inline-flex; gap: 6px; }
+.tab { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border: 1px solid transparent; border-radius: 999px; color: rgb(var(--gray-600)); font-size: 14px; font-weight: 600; transition: background-color .15s,color .15s; }
+.tab span { font-size: 11px; font-weight: 400; opacity: .8; }
+.tab:hover { background: rgb(var(--gray-100)); }
+.tab[data-state='active'] { color: white; background: rgb(var(--coral-action)); }
+.tab:focus-visible,.card:focus-visible { outline: 2px solid rgb(var(--teal-text)); outline-offset: 4px; }
+.panel { outline-offset: 4px; }
+.productGrid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 22px 18px; }
+.card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid rgb(var(--gray-200)); border-radius: 17px; background: rgb(var(--surface)); color: rgb(var(--ink)); text-decoration: none; transition: border-color .15s,box-shadow .15s; }
+.card:hover { border-color: rgb(var(--gray-400)); box-shadow: 0 5px 18px rgb(0 0 0 / .06); }
+.media { position: relative; height: 184px; overflow: hidden; border-bottom: 1px solid rgb(var(--gray-100)); background: #f2ece5; }
+.photo { width: 100%; height: 100%; object-fit: cover; }
+.petBadge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 999px; background: rgb(var(--surface) / .95); color: rgb(var(--ink)); font-size: 11px; font-weight: 600; }
+.cardBody { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 16px; }
+.category { margin-bottom: 5px; color: rgb(var(--gray-500)); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.card h3 { margin: 0; font-family: var(--font-nunito),sans-serif; font-size: 17px; font-weight: 700; line-height: 1.35; }
+.card p { flex: 1; margin: 7px 0 18px; color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.65; }
+.cardAction { display: inline-flex; min-height: 38px; width: 100%; align-items: center; justify-content: space-between; gap: 6px; border-top: 1px solid rgb(var(--gray-100)); padding-top: 12px; color: rgb(var(--coral-text)); font-size: 12px; font-weight: 600; }
+.drawnArt { position: relative; display: grid; place-items: center; width: 100%; height: 100%; background: #e6eee9; color: #377562; }
+.drawnArt[data-pet='dog'] { background: #f4e5d9; color: #a35f35; }
+.drawnArt > svg { width: 100%; height: 100%; }
+.drawnArt .bagPet { position: absolute; height: 42px; width: 42px; top: calc(50% - 15px); left: calc(50% - 22px); }
+.brandArt { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 30px 16px 14px; background: #fff0df; color: #914e23; }
+.brandArt span { font-family: var(--font-nunito),sans-serif; font-size: clamp(22px,2vw,30px); font-weight: 800; text-align: center; line-height: 1.1; }
+.brandArt small { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; opacity: .7; }
+.brandArt[data-brand='cat-whiskas'] { background: #eee3f3; color: #69367d; }
+.brandArt[data-brand='cat-sheba'] { background: #302a24; color: #e5ca96; }
+.brandArt[data-brand='dog-pedigree'] { background: #fff0b2; color: #6d4c12; }
+.brandArt[data-brand='dog-royal-canin'] { background: #f8e5e3; color: #a33332; }
+.footnote { margin: 24px 0 0; max-width: 760px; color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.8; }
+@media (max-width: 1279px) { .productGrid { grid-template-columns: repeat(3,minmax(0,1fr)); } .media { height: 170px; } }
 @media (max-width: 639px) {
-  .disclosure { font-size: 12px; padding-top: 4px; }
-  .petTabs { gap: 10px; }
-  .petTab { flex-wrap: wrap; gap: 10px; padding: 14px; min-height: 132px; position: relative; align-content: flex-start; }
-  .petIcon { height: 40px; width: 40px; border-radius: 11px; }
-  .petIcon svg { width: 28px; height: 28px; }
-  .petTabCopy { width: 100%; gap: 4px; }
-  .petName { font-size: 18px; }
-  .petDescription { font-size: 11px; }
-  .tabMarker { position: absolute; right: 14px; top: 25px; }
-  .panel { margin-top: 24px; }
-  .panelHeading { margin-bottom: 20px; }
-  .panelHeading h2 { font-size: 22px; }
-  .panelHeading p { font-size: 11px; }
-  .topGrid { grid-template-columns: minmax(0,1fr); gap: 26px; }
-  .food { min-height: 196px; padding: 16px; gap: 14px; }
-  .food .outbound { top: 16px; right: 14px; }
-  .food .collectionIcon { width: 40px; height: 40px; }
-  .collection h4 { font-size: 17px; }
-  .collection p { font-size: 12px; }
-  .browseLabel { font-size: 11px; margin-top: 14px; gap: 5px; }
-  .foodGrid { gap: 10px; }
-  .brand { min-height: 58px; padding: 14px 18px; }
-  .care { padding: 16px; min-height: 154px; }
-  .care h4 { font-size: 15px; }
-  .careSection { margin-top: 26px; }
-  .howItWorks { grid-template-columns: 1fr; gap: 8px; margin-top: 28px; padding-top: 20px; }
+ .toolbar { margin-bottom: 18px; padding-bottom: 14px; }
+ .tab { padding: 10px 17px; gap: 7px; }
+ .productGrid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 12px; }
+ .media { height: 142px; }
+ .card { border-radius: 14px; }
+ .cardBody { padding: 12px; }
+ .card h3 { font-size: 16px; }
+ .card p { font-size: 11px; margin-bottom: 14px; }
+ .cardAction { font-size: 11px; }
+ .petBadge { top: 9px; left: 9px; font-size: 10px; padding: 3px 7px; }
+ .brandArt span { font-size: 24px; }
+ .brandArt small { font-size: 8px; }
+ .drawnArt .bagPet { height: 32px; width: 32px; top: calc(50% - 11px); left: calc(50% - 17px); }
 }
-@media (prefers-reduced-motion: reduce) { .collection,.petTab { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .card,.tab { transition: none; } }
