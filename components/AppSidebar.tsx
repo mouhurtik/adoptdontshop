@@ -62,7 +62,6 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         </span>
                     )}
                 </Link>
-                <ThemeToggle />
             </div>
 
 
@@ -143,6 +142,8 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                             )}
                         </Link>
 
+                        <div className="flex justify-center py-1"><ThemeToggle /></div>
+
                         {!collapsed && (
                             <div className="flex items-center gap-2">
                                 {isAdmin && (
@@ -178,15 +179,18 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                         )}
                     </div>
                 ) : (
-                    <Link
-                        href="/login"
-                        title={collapsed ? 'Sign In' : undefined}
-                        aria-current={pathname === '/login' ? 'page' : undefined}
-                        className={`flex min-h-11 items-center justify-center gap-2 w-full px-4 py-2.5 bg-playful-coral-text text-white rounded-xl text-sm font-bold hover:bg-playful-coral-text/90 shadow-sm ${colorTransition} ${focusRing} ${collapsed ? '!px-2' : ''}`}
-                    >
-                        <LogIn aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
-                        <span className={collapsed ? 'sr-only' : ''}>Sign In</span>
-                    </Link>
+                    <div>
+                        <div className="mb-2 flex justify-center"><ThemeToggle /></div>
+                        <Link
+                            href="/login"
+                            title={collapsed ? 'Sign In' : undefined}
+                            aria-current={pathname === '/login' ? 'page' : undefined}
+                            className={`flex min-h-11 items-center justify-center gap-2 w-full px-4 py-2.5 bg-playful-coral-text text-white rounded-xl text-sm font-bold hover:bg-playful-coral-text/90 shadow-sm ${colorTransition} ${focusRing} ${collapsed ? '!px-2' : ''}`}
+                        >
+                            <LogIn aria-hidden="true" className="w-4 h-4" strokeWidth={2} />
+                            <span className={collapsed ? 'sr-only' : ''}>Sign In</span>
+                        </Link>
+                    </div>
                 )}
             </div>
         </aside>

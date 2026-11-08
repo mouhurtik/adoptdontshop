@@ -133,7 +133,7 @@ const ExplorePage = () => {
                             </div>
                         )}
 
-                        {/* Trending Posts — Grid Layout */}
+                        {/* One post per row at every screen width. */}
                         <ScrollReveal mode="fade-up" delay={0.1} width="100%">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-heading font-bold text-playful-text flex items-center gap-2">
@@ -143,7 +143,7 @@ const ExplorePage = () => {
                             </div>
 
                             {filteredPosts && filteredPosts.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 gap-4" data-explore-feed>
                                     {filteredPosts.map((post, index) => (
                                         <Link
                                             key={post.id}

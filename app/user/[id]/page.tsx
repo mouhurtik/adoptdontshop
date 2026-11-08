@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
-import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark, Share2, Check } from 'lucide-react';
+import { User, MapPin, Building2, Calendar, PawPrint, FileText, ArrowLeft, Heart, Bookmark, Share2, Check, MessageCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/motion/tabs';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import PawprintLoader from '@/components/ui/PawprintLoader';
@@ -51,6 +53,12 @@ export default function PublicProfilePage() {
     const params = useParams();
     const userId = params.id as string;
 
+    // Each profile gets its own selection and pending requests when navigating.
+    return <PublicProfile key={userId} userId={userId} />;
+}
+
+function PublicProfile({ userId }: { userId: string }) {
+    const { user } = useAuth();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [pets, setPets] = useState<PetListing[]>([]);
     const [posts, setPosts] = useState<CommunityPost[]>([]);
@@ -59,12 +67,13 @@ export default function PublicProfilePage() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'pets' | 'posts' | 'favorites' | 'liked_posts'>('pets');
     const [copied, setCopied] = useState(false);
+    const [loadError, setLoadError] = useState(false);
 
     // Privacy: which tabs to show for this user
     const _privacy = profile?.privacy_settings ?? { show_favorites: false, show_posts: true, show_likes: true };
 
     const handleShare = async () => {
-        const shareUrl = `https://adoptdontshop.xyz/${profile?.username || userId}`;
+        const shareUrl = `https://adoptdontshop.xyz/user/${profile?.username || userId}`;
         if (navigator.share) {
             try {
                 await navigator.share({ title: profile?.display_name || 'User Profile', url: shareUrl });
@@ -78,6 +87,7 @@ export default function PublicProfilePage() {
 
     useEffect(() => {
         if (!userId) return;
+        let cancelled = false;
 
         const fetchProfile = async () => {
             setLoading(true);
@@ -104,6 +114,7 @@ export default function PublicProfilePage() {
                 profileData = data;
             }
 
+            if (cancelled) return;
             if (profileData) {
                 setProfile(profileData);
                 const uid = profileData.id;
@@ -115,6 +126,7 @@ export default function PublicProfilePage() {
                     .eq('user_id', uid)
                     .order('created_at', { ascending: false });
 
+                if (cancelled) return;
                 if (petsData) setPets(petsData);
 
                 // Fetch community posts
@@ -125,7 +137,11 @@ export default function PublicProfilePage() {
                     .eq('status', 'published')
                     .order('created_at', { ascending: false }) as { data: CommunityPost[] | null };
 
+                if (cancelled) return;
                 if (postsData) setPosts(postsData);
+
+                // Choose once after both counts load; manual switches stay selected.
+                setActiveTab(!petsData?.length && postsData?.length ? 'posts' : 'pets');
 
                 // Fetch favorite pets
                 const { data: favoriteData } = await supabase
@@ -133,6 +149,7 @@ export default function PublicProfilePage() {
                     .select('pet_listings:pet_id(id, pet_name, animal_type, breed, image_url, status, created_at)')
                     .eq('user_id', uid) as { data: { pet_listings: PetListing }[] | null };
 
+                if (cancelled) return;
                 if (favoriteData) {
                     const favorites = favoriteData.map(f => f.pet_listings).filter(Boolean);
                     setFavoritePets(favorites);
@@ -144,6 +161,7 @@ export default function PublicProfilePage() {
                     .select('community_posts:post_id(id, title, slug, tags, like_count, comment_count, created_at, featured_image_url)')
                     .eq('user_id', uid) as { data: { community_posts: CommunityPost }[] | null };
 
+                if (cancelled) return;
                 if (likedData) {
                     const liked = likedData.map(l => l.community_posts).filter(Boolean);
                     setLikedPosts(liked);
@@ -153,22 +171,28 @@ export default function PublicProfilePage() {
             setLoading(false);
         };
 
-        fetchProfile();
+        fetchProfile().catch(() => {
+            if (!cancelled) {
+                setLoadError(true);
+                setLoading(false);
+            }
+        });
+        return () => { cancelled = true; };
     }, [userId]);
 
     if (loading) {
         return <PawprintLoader fullScreen size="lg" message="Loading profile..." />;
     }
 
-    if (!profile) {
+    if (!profile || loadError) {
         return (
             <div className="pt-4 lg:pt-8 pb-16 min-h-screen bg-playful-cream">
                 <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12 text-center">
                     <ScrollReveal mode="fade-up" width="100%">
                         <div className="max-w-md mx-auto bg-white rounded-[2rem] p-12 shadow-soft">
                             <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                            <h1 className="text-2xl font-heading font-black text-playful-text mb-2">User Not Found</h1>
-                            <p className="text-gray-500 mb-6">This profile doesn&apos;t exist or has been removed.</p>
+                            <h1 className="text-2xl font-heading font-black text-playful-text mb-2">{loadError ? 'Could not load profile' : 'User Not Found'}</h1>
+                            <p className="text-gray-500 mb-6">{loadError ? 'Please try again in a moment.' : 'This profile doesn’t exist or has been removed.'}</p>
                             <Link href="/browse">
                                 <PrimaryButton>
                                     <ArrowLeft className="h-4 w-4 mr-2" />
@@ -185,21 +209,31 @@ export default function PublicProfilePage() {
     const displayName = profile.display_name || 'User';
     const initials = displayName.charAt(0).toUpperCase();
     const joinDate = profile.created_at ? format(new Date(profile.created_at), 'MMMM yyyy') : null;
+    const contentTabs = [
+        { value: 'pets', label: 'Pets', count: pets.length, icon: PawPrint },
+        { value: 'posts', label: 'Posts', count: posts.length, icon: FileText },
+        { value: 'favorites', label: 'Favorites', count: favoritePets.length, icon: Bookmark },
+        { value: 'liked_posts', label: 'Likes', count: likedPosts.length, icon: Heart },
+    ] as const;
+    const orderedTabs = pets.length === 0 && posts.length > 0
+        ? [contentTabs[1], contentTabs[0], ...contentTabs.slice(2)]
+        : contentTabs;
 
     return (
         <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
             <div className="max-w-[1600px] mx-auto px-4 lg:px-8 xl:px-12">
                 {/* Profile Header */}
                 <ScrollReveal mode="fade-up" width="100%">
-                    <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-soft border-2 border-gray-100 mb-8 relative overflow-hidden">
+                    <div className="bg-white rounded-[2.5rem] p-6 sm:p-8 md:p-10 shadow-soft border-2 border-gray-100 mb-8 relative overflow-hidden" data-profile-header>
                         {/* Decorative background */}
-                        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-playful-teal/20 via-playful-coral/10 to-playful-yellow/15 rounded-t-[2.5rem]" />
+                        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-playful-teal/20 via-playful-coral/10 to-playful-yellow/15" />
 
                         {/* Share button */}
                         <button
                             onClick={handleShare}
-                            className="absolute top-5 right-5 z-10 flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-500 hover:text-playful-coral hover:border-playful-coral/30 transition-all duration-200 shadow-sm hover:shadow-md text-sm font-bold"
+                            className="absolute top-5 right-5 z-10 flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-500 hover:text-playful-coral-text hover:border-playful-coral/30 transition-colors duration-200 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-playful-coral-text focus-visible:ring-offset-2"
                             title="Share profile"
+                            aria-label={copied ? 'Profile link copied' : 'Share profile'}
                         >
                             {copied ? (
                                 <>
@@ -214,9 +248,9 @@ export default function PublicProfilePage() {
                             )}
                         </button>
 
-                        <div className="relative flex flex-col sm:flex-row items-center gap-6">
+                        <div className="relative flex flex-col sm:flex-row items-center gap-6 pt-10 sm:pt-0 sm:pr-20">
                             {/* Avatar */}
-                            <div className="w-28 h-28 rounded-full bg-playful-teal text-white flex items-center justify-center text-5xl font-bold shadow-lg border-4 border-white">
+                            <div className="w-28 h-28 shrink-0 rounded-full bg-playful-teal text-white flex items-center justify-center text-5xl font-bold shadow-lg border-4 border-white">
                                 {profile.avatar_url ? (
                                     <img
                                         src={profile.avatar_url}
@@ -229,13 +263,13 @@ export default function PublicProfilePage() {
                             </div>
 
                             {/* Info */}
-                            <div className="flex-1 text-center sm:text-left">
-                                <h1 className="text-3xl font-heading font-black text-playful-text mb-0.5 flex items-center gap-2">
+                            <div className="min-w-0 flex-1 text-center sm:text-left">
+                                <h1 className="text-3xl font-heading font-black text-playful-text mb-0.5 flex flex-wrap items-center justify-center sm:justify-start gap-2 break-words">
                                     {displayName}
                                     {profile.badge && <UserBadge badge={profile.badge} />}
                                 </h1>
                                 {profile.username && (
-                                    <p className="text-gray-400 font-bold text-sm mb-1">@{profile.username}</p>
+                                    <p className="text-gray-600 text-sm mb-2 break-all">@{profile.username}</p>
                                 )}
                                 {profile.account_type === 'organization' && profile.organization_name && (
                                     <p className="text-playful-teal font-bold flex items-center justify-center sm:justify-start gap-1 mb-1">
@@ -261,68 +295,44 @@ export default function PublicProfilePage() {
                                         {pets.length} pet{pets.length !== 1 ? 's' : ''} listed
                                     </span>
                                 </div>
+                                {user?.id !== profile.id && (
+                                    <Link
+                                        href={`/messages/new?to=${profile.id}`}
+                                        className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#c34b24] dark:bg-playful-coral-text px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#ad401c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-playful-coral-text focus-visible:ring-offset-2"
+                                    >
+                                        <MessageCircle aria-hidden="true" className="h-4 w-4" />
+                                        Message
+                                    </Link>
+                                )}
                             </div>
                         </div>
 
                         {profile.bio && (
-                            <p className="mt-6 pt-6 border-t border-gray-100 text-gray-600 font-medium leading-relaxed">
+                            <p className="relative mt-6 pt-6 border-t border-gray-200/60 text-gray-600 font-medium leading-relaxed">
                                 {profile.bio}
                             </p>
                         )}
                     </div>
                 </ScrollReveal>
 
-                {/* Tab Switcher */}
-                <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="flex justify-center mb-8">
-                    <div className="grid grid-cols-2 md:flex justify-center gap-2 bg-white rounded-[2rem] md:rounded-full p-2 shadow-soft border border-gray-100 max-w-full w-full">
-                        <button
-                            onClick={() => setActiveTab('pets')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'pets'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <PawPrint className="w-4 h-4" />
-                            Pets ({pets.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('posts')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'posts'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <FileText className="w-4 h-4" />
-                            Posts ({posts.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('favorites')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'favorites'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Bookmark className="w-4 h-4" />
-                            Favorites ({favoritePets.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('liked_posts')}
-                            className={`flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-6 py-3 md:py-2.5 rounded-full font-bold text-[13px] md:text-sm transition-all duration-300 ${activeTab === 'liked_posts'
-                                ? 'bg-playful-coral text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                                }`}
-                        >
-                            <Heart className="w-4 h-4" />
-                            Likes ({likedPosts.length})
-                        </button>
-                    </div>
-                </ScrollReveal>
-
-                {/* Tab Content */}
-                {activeTab === 'pets' && <PetsGrid pets={pets} />}
-                {activeTab === 'posts' && <PostsList posts={posts} />}
-                {activeTab === 'favorites' && <FavoritePetsGrid pets={favoritePets} />}
-                {activeTab === 'liked_posts' && <LikedPostsList posts={likedPosts} />}
+                <Tabs variant="pill" icons="always" value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
+                    <ScrollReveal mode="fade-up" delay={0.1} width="100%" className="mb-6">
+                        <TabsList aria-label="Profile content" className="mx-auto border border-gray-100 p-1.5 shadow-soft" wrapperClassName="mx-auto w-fit">
+                            {orderedTabs.map(({ value, label, count, icon: Icon }) => (
+                                <TabsTrigger key={value} value={value} icon={<Icon aria-hidden="true" className="h-4 w-4" />}
+                                    className="min-h-11 gap-2 px-4 text-sm [&_[data-tabs-label]]:text-white focus-visible:ring-2 focus-visible:ring-playful-coral-text focus-visible:ring-inset"
+                                    indicatorClassName="bg-[#c34b24] dark:bg-playful-coral-text"
+                                >
+                                    {label} <span className="tabular-nums">({count})</span>
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                    </ScrollReveal>
+                    <TabsContent value="pets">{activeTab === 'pets' && <PetsGrid pets={pets} />}</TabsContent>
+                    <TabsContent value="posts">{activeTab === 'posts' && <PostsList posts={posts} />}</TabsContent>
+                    <TabsContent value="favorites">{activeTab === 'favorites' && <FavoritePetsGrid pets={favoritePets} />}</TabsContent>
+                    <TabsContent value="liked_posts">{activeTab === 'liked_posts' && <LikedPostsList posts={likedPosts} />}</TabsContent>
+                </Tabs>
             </div>
         </div>
     );
