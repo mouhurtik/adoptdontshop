@@ -94,6 +94,18 @@ erase data already received by a provider or unload all previously executed SDK 
 - Admin-email drafts and SQL are preserved separately; no database changes were
   applied and no PawCoins balance or earning feature was activated.
 
+## Publication record
+
+Pushed `07bbcef` and the three existing UI commits to `origin/main` on November 8.
+The pending admin drafts were restored with byte-for-byte hash verification and
+remain outside that commit. Cloudflare started its automatic Workers build.
+
+The first GitHub run passed TypeScript and reproduced an existing Security Audit
+cleanup failure: setup-node tried to cache a pnpm store that this lockfile-only
+audit job never creates. Removed caching from that job only. This fixes the job
+infrastructure; the existing non-blocking audit policy is unchanged. The final
+CI and live-site result should be checked against the follow-up commit.
+
 ## Official references
 
 - https://developers.google.com/search/docs/appearance/ai-features

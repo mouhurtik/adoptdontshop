@@ -42,7 +42,7 @@ the Amazon catalog hostage: publish independently scoped commits when safe.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | IN PROGRESS |
+| [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | PUSHED as 07bbcef; CI and live deployment being verified |
 | [001](001-release-baseline-and-measurement.md) | Consolidate the release baseline and verify measurement | P1 | M | None | TODO |
 | [002](002-amazon-affiliate-pilot.md) | Launch the Amazon affiliate pilot | P1 | M | 001 web/analytics pieces; not the admin database migration | TODO |
 | [003](003-community-pawcoins-v1.md) | Launch community PawCoins with server-owned rules | P2 | L | Correct Supabase connection; stable baseline and retention flow; ship Amazon first | TODO |

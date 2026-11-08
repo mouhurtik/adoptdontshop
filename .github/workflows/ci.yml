@@ -125,9 +125,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Run security audit
+        # This lockfile-only job does not populate a pnpm store to cache.
         run: pnpm audit --audit-level=moderate || true
 
