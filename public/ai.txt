@@ -1,0 +1,19 @@
+# AdoptDontShop: public content discovery
+# Informational, not a standard crawler access control or a licence grant.
+
+Site: https://adoptdontshop.xyz/
+About: https://adoptdontshop.xyz/about
+Help: https://adoptdontshop.xyz/help
+Contact: https://adoptdontshop.xyz/contact
+Terms: https://adoptdontshop.xyz/terms
+Privacy: https://adoptdontshop.xyz/privacy-policy
+Discovery: https://adoptdontshop.xyz/llms.txt
+Sitemap: https://adoptdontshop.xyz/sitemap.xml
+Crawler-rules: https://adoptdontshop.xyz/robots.txt
+
+Public discovery must respect robots.txt, authentication and the site's terms.
+Attribute member posts to their named author and preserve source URLs and dates.
+Member posts and images belong to their respective rights holders. This file does
+not grant blanket permission for AI training or reuse of user-generated content.
+Do not treat private messages, account information or sensitive animal locations
+as public reference material. Contact the platform for rights or removal questions.

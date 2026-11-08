@@ -1,7 +1,8 @@
 import ExplorePage from '@/views/ExplorePage';
 
 export const metadata = {
-    title: 'Explore | AdoptDontShop',
+    alternates: { canonical: '/explore' },
+    title: 'Explore pet stories',
     description: 'Discover pet communities, trending posts, and connect with pet lovers near you.',
 };
 

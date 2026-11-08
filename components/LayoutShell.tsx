@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import TopBar from '@/components/TopBar';
 import { AuthModalProvider } from '@/contexts/AuthModalContext';
 import { NativeProvider } from '@/components/NativeProvider';
+import SiteFooter from '@/components/SiteFooter';
+import { isPublicMeasurementPath } from '@/lib/tracking';
 
 // Lazy-load heavy components that aren't needed on initial paint
 const FloatingMessages = dynamic(() => import('@/components/FloatingMessages'), { ssr: false });
@@ -69,6 +71,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
             >
                 {/* Scoped CSS keeps this offset, including fixed descendants, in sync at every breakpoint. */}
                 {children}
+                {(isPublicMeasurementPath(pathname) || ['/privacy-policy', '/terms'].includes(pathname)) && <SiteFooter />}
             </main>
 
             {/* Mobile bottom nav — lazy-loaded, not needed for LCP */}

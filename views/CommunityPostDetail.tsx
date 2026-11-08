@@ -2,22 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { ArrowLeft, Heart, Share2, MessageCircle, Send, Loader2, Mail, Bookmark } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-const TiptapRenderer = dynamic(() => import('@/components/community/TiptapRenderer'), { ssr: false });
+import TiptapRenderer from '@/components/community/TiptapRenderer';
+import type { fetchCommunityPostBySlugServer } from '@/lib/supabase/server-queries';
+import { serializeJsonLd } from '@/lib/site';
 import { TAG_LABELS, TAG_COLORS } from '@/components/community/PostCard';
 import { useCommunityPost, usePostComments, useLikePost, useUserLiked, useAddComment, useSavePost, useUserSavedPost, useRelatedPosts } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CommunityPostDetailProps {
     slug: string;
+    initialPost?: Awaited<ReturnType<typeof fetchCommunityPostBySlugServer>>;
 }
 
-const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
+const CommunityPostDetail = ({ slug, initialPost }: CommunityPostDetailProps) => {
     const { isAuthenticated, user } = useAuth();
-    const { data: post, isLoading, error } = useCommunityPost(slug);
+    const { data: fetchedPost, isLoading } = useCommunityPost(slug);
+    const post = fetchedPost || initialPost;
     const { data: comments = [] } = usePostComments(post?.id);
     const { data: userHasLiked = false } = useUserLiked(post?.id);
     const { data: userHasSaved = false } = useUserSavedPost(post?.id);
@@ -76,7 +79,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
         }
     };
 
-    if (isLoading) {
+    if (isLoading && !post) {
         return (
             <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
                 <div className="max-w-7xl mx-auto px-4 lg:px-6 max-w-4xl">
@@ -90,7 +93,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
         );
     }
 
-    if (error || !post) {
+    if (!post) {
         return (
             <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
                 <div className="max-w-7xl mx-auto px-4 lg:px-6 text-center">
@@ -119,7 +122,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
+                    __html: serializeJsonLd({
                         '@context': 'https://schema.org',
                         '@type': 'BlogPosting',
                         headline: post.title,
@@ -148,7 +151,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
+                    __html: serializeJsonLd({
                         '@context': 'https://schema.org',
                         '@type': 'BreadcrumbList',
                         itemListElement: [
@@ -211,6 +214,7 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                             <div className="flex items-center gap-3 mb-8 pb-8 border-b border-gray-100">
                                 <Link
                                     href={`/user/${post.profiles?.username || post.author_id}`}
+                                    rel="author"
                                     className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                                 >
                                     {post.profiles?.avatar_url ? (
@@ -226,7 +230,10 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
                                     )}
                                     <div>
                                         <p className="font-bold text-playful-text hover:text-playful-coral transition-colors">{authorName}</p>
-                                        <p className="text-sm text-gray-400">{postDate}</p>
+                                        <p className="text-sm text-gray-500"><time dateTime={post.created_at}>{postDate}</time></p>
+                                        {post.updated_at && new Date(post.updated_at).getTime() > new Date(post.created_at).getTime() && (
+                                            <p className="text-xs text-gray-500">Updated <time dateTime={post.updated_at}>{new Date(post.updated_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</time></p>
+                                        )}
                                     </div>
                                 </Link>
                                 {isAuthenticated && post.author_id !== user?.id && (
@@ -248,7 +255,9 @@ const CommunityPostDetail = ({ slug }: CommunityPostDetailProps) => {
 
                             {/* Content */}
                             <div className="mb-8">
-                                <TiptapRenderer content={post.content as Record<string, unknown>} />
+                                {post.content && typeof post.content === 'object'
+                                    ? <TiptapRenderer content={post.content as Record<string, unknown>} />
+                                    : <p className="whitespace-pre-wrap leading-relaxed">{post.content_text}</p>}
                             </div>
 
                             {/* Actions */}

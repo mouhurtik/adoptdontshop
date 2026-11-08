@@ -13,65 +13,56 @@ export interface Product {
 export const PRODUCTS: Product[] = [
     {
         id: 1,
-        name: "Premium Dog Food",
+        name: "Dog Food",
         category: "Food",
         petType: "dog",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/dog-food.webp",
-        description: "High-protein, grain-free formula for active dogs.",
-        badge: "Best Seller",
-        affiliateLink: "https://amzn.to/44VAWBs"
+        description: "Food options for dogs at different life stages. Check individual dietary needs with your veterinarian.",
     },
     {
         id: 2,
-        name: "Indestructible Chew Toys",
+        name: "Dog Toys",
         category: "Toys",
         petType: "dog",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/dog-toys.webp",
-        description: "Durable rubber toys for aggressive chewers.",
-        badge: "New",
-        affiliateLink: "https://amzn.to/4rGdwtx"
+        description: "Explore toys suited to your dog’s size and supervised play.",
     },
     {
         id: 3,
-        name: "Essential Dog Accessories",
+        name: "Dog Accessories",
         category: "Accessories",
         petType: "dog",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/dog-accessories.webp",
-        description: "Beds, leashes, and accessories for joint support and comfort.",
-        affiliateLink: "https://amzn.to/4pV8QP4"
+        description: "Beds, leads and everyday essentials to help prepare your home.",
     },
     {
         id: 4,
-        name: "Gourmet Cat Food",
+        name: "Cat Food",
         category: "Food",
         petType: "cat",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/cat-food.webp",
-        description: "Nutritious and delicious food that cats love.",
-        badge: "Staff Pick",
-        affiliateLink: "https://amzn.to/4pXFpvN"
+        description: "Compare food options suited to your cat’s age and individual needs.",
     },
     {
         id: 5,
-        name: "Interactive Cat Toys",
+        name: "Cat Toys",
         category: "Toys",
         petType: "cat",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/cat-toys.webp",
-        description: "Automatic toys to keep your cat entertained.",
-        affiliateLink: "https://amzn.to/48JvNxz"
+        description: "Ideas for supervised play and enrichment for cats.",
     },
     {
         id: 6,
-        name: "Modern Cat Accessories",
+        name: "Cat Accessories",
         category: "Accessories",
         petType: "cat",
-        price: "View on Amazon",
+        price: "Links being updated",
         image: "/images/store/cat-accessories.webp",
-        description: "Stylish condensed wood cat trees and accessories.",
-        affiliateLink: "https://amzn.to/4iIxfER"
-    }
+        description: "Everyday essentials such as scratchers, resting spaces and litter supplies.",
+}
 ];

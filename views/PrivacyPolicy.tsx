@@ -1,148 +1,48 @@
-'use client';
-
-import { useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ShieldCheck } from 'lucide-react';
-import PrimaryButton from '@/components/ui/PrimaryButton';
-import ScrollReveal from '@/components/ui/ScrollReveal';
+import { breadcrumbSchema, CONTACT_EMAIL, PUBLIC_CONTENT_REVIEWED, PUBLIC_CONTENT_REVIEWED_LABEL, serializeJsonLd, SITE_URL } from '@/lib/site';
 
-const PrivacyPolicy = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  return (
-    <div className="pt-4 lg:pt-8 pb-16 bg-playful-cream min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 max-w-4xl">
-        <ScrollReveal
-          mode="fade-up"
-          duration={0.5}
-          width="100%"
-          className="text-center mb-12"
-        >
-          <div className="bg-playful-teal p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full text-white shadow-lg transform rotate-3">
-            <ShieldCheck className="h-10 w-10" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-heading font-black text-playful-text mb-4">
-            Privacy Policy
-          </h1>
-          <p className="text-xl text-gray-600 font-medium">
-            We care about your privacy as much as we care about pets 🔒
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal
-          mode="fade-up"
-          delay={0.1}
-          duration={0.5}
-          width="100%"
-          className="bg-white rounded-[2.5rem] shadow-soft p-8 md:p-12 border-2 border-playful-teal/30"
-        >
-          <div className="prose prose-lg max-w-none text-gray-600">
-            <p className="mb-6 text-lg">At Adopt Don't Shop, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
-              Information We Collect
-            </h2>
-            <p className="mb-4">We collect information that you provide directly to us, including:</p>
-            <ul className="list-none space-y-2 pl-4 mb-6">
-              {['Personal information (name, contact details)', 'Pet information (images, descriptions, medical history)', 'Adoption application details', 'Messages and communications between users', 'Feedback and survey responses'].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="text-playful-teal mt-1">●</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
-              How We Use Your Information
-            </h2>
-            <p className="mb-4">We use the information we collect to:</p>
-            <ul className="list-none space-y-2 pl-4 mb-6">
-              {['Facilitate pet adoptions and caregiver-adopter connections', 'Improve our platform and services', 'Communicate with you about your account or the platform', 'Ensure compliance with our terms and policies', 'Respond to your inquiries and provide support'].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="text-playful-teal mt-1">●</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
-              Sharing Your Information
-            </h2>
-            <p className="mb-4">We may share your information with:</p>
-            <ul className="list-none space-y-2 pl-4 mb-6">
-              {['Other users as necessary for the adoption process', 'Service providers who help us operate our platform', 'Legal authorities when required by law'].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="text-playful-teal mt-1">●</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mb-6 font-medium">We do not sell your personal information to third parties.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
-              Data Security
-            </h2>
-            <p className="mb-6">We implement reasonable security measures to protect your information, but no method of transmission over the Internet or electronic storage is 100% secure. We cannot guarantee absolute security of your personal information.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
-              Your Privacy Rights
-            </h2>
-            <p className="mb-4">Depending on your location, you may have certain rights regarding your personal information, including:</p>
-            <ul className="list-none space-y-2 pl-4 mb-6">
-              {['Access to your personal information', 'Correction of inaccurate information', 'Deletion of your information', 'Restriction of processing of your information', 'Data portability'].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="text-playful-teal mt-1">●</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mb-6">To exercise these rights, please contact us using the information provided below.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>
-              Children's Privacy
-            </h2>
-            <p className="mb-6">Our platform is not intended for children under 13 years of age, and we do not knowingly collect personal information from children under 13.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">7</span>
-              Changes to This Privacy Policy
-            </h2>
-            <p className="mb-6">We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
-
-            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
-              <span className="bg-playful-teal/20 text-playful-teal w-8 h-8 rounded-full flex items-center justify-center text-sm">8</span>
-              Contact Information
-            </h2>
-            <p className="mb-6">If you have any questions about this Privacy Policy, please contact us at <a href="mailto:mouhurtikr@gmail.com" className="text-playful-teal font-bold hover:underline">mouhurtikr@gmail.com</a>.</p>
-
-            <p className="text-gray-500 font-medium text-sm mt-8 border-t pt-4">
-              Last Updated: May 28, 2023
-            </p>
-          </div>
-
-          <div className="flex justify-center mt-12">
-            <Link href="/">
-              <PrimaryButton size="lg">
-                <ArrowLeft className="mr-2 h-5 w-5" />
-                Return to Home
-              </PrimaryButton>
-            </Link>
-          </div>
-        </ScrollReveal>
-      </div>
-    </div>
-  );
-};
-
-export default PrivacyPolicy;
-
-
-
+export default function PrivacyPolicy() {
+    return (
+        <article className="mx-auto max-w-4xl px-4 py-8 text-gray-600 lg:px-8 lg:py-12">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'AdoptDontShop Privacy Policy', url: `${SITE_URL}/privacy-policy`, dateModified: PUBLIC_CONTENT_REVIEWED }) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy policy', path: '/privacy-policy' }])) }} />
+            <h1 className="font-heading text-3xl font-bold text-playful-text lg:text-4xl">Privacy policy</h1>
+            <p className="mt-3 text-sm">Updated <time dateTime={PUBLIC_CONTENT_REVIEWED}>{PUBLIC_CONTENT_REVIEWED_LABEL}</time>.</p>
+            <p className="mt-5 leading-relaxed">AdoptDontShop connects caregivers, prospective adopters and a pet-care community. This page explains the information used by those features and the choices available to you. The founder currently handles platform support and privacy requests.</p>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">Information you provide</h2>
+                <ul className="list-disc space-y-2 pl-5 leading-relaxed">
+                    <li>Account information such as your email, sign-in details and public profile fields.</li>
+                    <li>Posts, comments, pet listings, photographs and information you choose to publish.</li>
+                    <li>Messages, adoption enquiries and application details submitted through member features.</li>
+                    <li>Support requests, reports and feedback you send to the team.</li>
+                </ul>
+                <p className="leading-relaxed">Public profiles, posts and listings can be read, shared and indexed by others. Share only what you intend to make public. Avoid identity documents, private contact details and precise locations of vulnerable animals in public content.</p>
+            </section>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">How the platform uses information</h2>
+                <p className="leading-relaxed">Information supports sign-in, profiles, adoption enquiries, member conversations, saved pets, community participation, moderation and account security. Supabase provides account and database services; Cloudflare hosts and delivers the website. These providers may process technical request and security information to operate their services.</p>
+                <p className="leading-relaxed">A caregiver receives the information you submit in an adoption enquiry. Authorised platform administrators may access information needed to operate the service, investigate reports or address misuse. Member messages are not advertised as end-to-end encrypted. We do not sell personal information.</p>
+            </section>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">Optional analytics and Meta Pixel</h2>
+                <p className="leading-relaxed">Optional Google Analytics helps us understand public-page use and interactions, such as a product-link click. Optional Meta Pixel, ID 1462969085759164, measures advertising activity and page visits. Meta Pixel is an advertising measurement tool; it does not improve search rankings.</p>
+                <p className="leading-relaxed">These optional scripts wait for your separate choices in Tracking preferences. Neither option is selected by default. The integration does not supply account emails, phone numbers, message text or precise animal coordinates to these tools, and does not enable Meta advanced matching. The providers may receive technical browser/device data, page information and identifiers through their scripts and cookies after you opt in.</p>
+                <p className="leading-relaxed">You can reject either category, change your choice using Tracking preferences in the footer, or use your browser controls to manage stored cookies. Withdrawing consent stops future measurement through this integration; it does not erase information already received by a provider. Read <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Google's privacy policy</a> and <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Meta's privacy policy</a> for their processing and available controls.</p>
+            </section>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">Browser storage and essential features</h2>
+                <p className="leading-relaxed">The site uses browser storage or cookies for account sessions, security, interface settings and your tracking preferences. Optional tracking preferences are stored for this browser. Rejecting optional tracking does not prevent you from browsing or using account features. Provider-side infrastructure or security records are separate from optional browser analytics.</p>
+            </section>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">Product links and external websites</h2>
+                <p className="leading-relaxed">Product links are currently being updated. When an affiliate link is available, it will be identified. Following a link opens a separate merchant service with its own policies; a qualifying transaction may earn commission for AdoptDontShop. The platform does not receive your merchant password or infer which member purchased from a click. Amazon/store visits do not earn PawCoins.</p>
+            </section>
+            <section className="mt-8 space-y-3">
+                <h2 className="font-heading text-xl font-bold text-playful-text">Your content and privacy requests</h2>
+                <p className="leading-relaxed">Use the available profile and content controls to manage your information. For account deletion, access, correction or a content-removal request, email <a href={`mailto:${CONTACT_EMAIL}`} className="break-all text-playful-teal-text underline">{CONTACT_EMAIL}</a>. The team may need to verify account ownership before acting. Information needed for security, abuse investigation or applicable obligations may need to be retained; public copies held by other services are outside this site's direct control.</p>
+                <p className="leading-relaxed">For reporting guidance, see <Link href="/contact" className="text-playful-teal-text underline">Contact</Link>. Community participation is governed by the <Link href="/terms" className="text-playful-teal-text underline">Terms</Link>; general adoption questions belong in <Link href="/help" className="text-playful-teal-text underline">Help &amp; FAQs</Link>.</p>
+            </section>
+        </article>
+    );
+}

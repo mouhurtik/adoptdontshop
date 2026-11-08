@@ -81,6 +81,7 @@
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
     "autoprefixer": "^10.4.20",
+    "esbuild": "0.27.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react-hooks": "^5.2.0",

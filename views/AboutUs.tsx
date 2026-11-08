@@ -141,7 +141,7 @@ function OurStoryTab() {
                     <div className="bg-playful-yellow/20 p-4 rounded-full text-yellow-600">
                         <Award className="h-8 w-8" />
                     </div>
-                    <h2 className="text-4xl font-heading font-black text-playful-text">Our Founder</h2>
+                    <h2 id="founder" className="scroll-mt-20 text-4xl font-heading font-black text-playful-text">Our Founder</h2>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -188,7 +188,7 @@ function OurStoryTab() {
                     <div className="bg-playful-coral/20 p-4 rounded-full text-playful-coral">
                         <Users className="h-8 w-8" />
                     </div>
-                    <h2 className="text-4xl font-heading font-black text-playful-text">Contact Us</h2>
+                    <h2 className="text-4xl font-heading font-black text-playful-text">Founder contact &amp; profiles</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-8">
                     {/* Email Card */}
@@ -237,7 +237,7 @@ function OurStoryTab() {
                     </a>
 
                     {/* Facebook Card */}
-                    <a href="https://www.facebook.com/profile.php?id=61583730512051" target="_blank" rel="noopener noreferrer"
+                    <a href="https://www.facebook.com/adoptdontshopxyz" target="_blank" rel="noopener noreferrer"
                        className="relative overflow-hidden group bg-gradient-to-br from-indigo-50 to-blue-200/40 rounded-3xl p-6 shadow-sm border border-blue-300/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                         <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-150 transition-transform duration-500">
                             <Facebook className="w-24 h-24 text-blue-700" />

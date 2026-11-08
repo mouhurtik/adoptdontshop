@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, FileText } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import { PUBLIC_CONTENT_REVIEWED, PUBLIC_CONTENT_REVIEWED_LABEL } from '@/lib/site';
 
 const TermsAndConditions = () => {
   useEffect(() => {
@@ -40,6 +41,7 @@ const TermsAndConditions = () => {
         >
           <div className="prose prose-lg max-w-none text-gray-600">
             <p className="mb-6 text-lg">Welcome to Adopt Don't Shop. By using our platform, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.</p>
+            <p className="mb-6 text-sm">Updated <time dateTime={PUBLIC_CONTENT_REVIEWED}>{PUBLIC_CONTENT_REVIEWED_LABEL}</time>.</p>
 
             <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
               <span className="bg-playful-mint/20 text-green-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
@@ -96,7 +98,11 @@ const TermsAndConditions = () => {
               <span className="bg-playful-mint/20 text-green-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
               Privacy Policy
             </h2>
-            <p className="mb-6">Your use of Adopt Don't Shop is also governed by our Privacy Policy, which outlines how we collect, use, and protect your personal information.</p>
+            <p className="mb-6">Your use of Adopt Don&apos;t Shop is also governed by our <Link href="/privacy-policy" className="text-playful-teal underline">Privacy Policy</Link>, including your optional tracking choices.</p>
+            <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4">Community content and moderation</h2>
+            <p className="mb-4">Members are responsible for their own posts, images and comments, including having permission to share them. Ownership remains with the respective rights holders. Publication does not imply platform endorsement, identity verification or veterinary expertise.</p>
+            <p className="mb-4">Community posts may appear before review. The founder currently handles moderation and may remove content, restrict accounts or investigate reports that violate these terms. Pet listing submission has a separate review status. Content must not expose private information or the precise locations of vulnerable animals without an appropriate reason and safeguards.</p>
+            <p className="mb-6">To report a concern, use <Link href="/contact" className="text-playful-teal underline">Contact</Link>. For general adoption and posting questions, read <Link href="/help" className="text-playful-teal underline">Help &amp; FAQs</Link>. Store or Amazon visits do not earn PawCoins; no purchase cashback is currently promised.</p>
 
             <h2 className="text-2xl font-heading font-bold text-playful-text mt-8 mb-4 flex items-center gap-3">
               <span className="bg-playful-mint/20 text-green-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">6</span>

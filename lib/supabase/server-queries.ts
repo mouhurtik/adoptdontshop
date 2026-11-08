@@ -13,6 +13,7 @@ export interface ServerPost {
     comment_count: number;
     view_count: number;
     created_at: string;
+    updated_at?: string | null;
     author_id: string;
     author_name: string | null;
     author_avatar: string | null;
@@ -72,7 +73,7 @@ export async function fetchCommunityPostsServer({
     let query = supabase
         .from('community_posts')
         .select(
-            `id, title, slug, content_text, featured_image_url, tags, like_count, comment_count, view_count, created_at, author_id`
+            `id, title, slug, content_text, featured_image_url, tags, like_count, comment_count, view_count, created_at, updated_at, author_id`
         )
         .eq('status', 'published')
         .range(offset, offset + limit - 1);
@@ -119,6 +120,7 @@ export async function fetchCommunityPostsServer({
             comment_count: post.comment_count || 0,
             view_count: post.view_count || 0,
             created_at: post.created_at,
+            updated_at: post.updated_at,
             author_id: post.author_id,
             author_name: profile?.display_name || null,
             author_avatar: profile?.avatar_url || null,

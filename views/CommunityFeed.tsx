@@ -11,6 +11,7 @@ import PostCard from '@/components/community/PostCard';
 import TagFilter from '@/components/community/TagFilter';
 import { useCommunityPosts, SortOption } from '@/hooks/useCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+import CommunityGuide from '@/components/home/CommunityGuide';
 import SmoothScroll from '@/components/ui/SmoothScroll';
 
 // Lazy-load components not needed for mobile LCP
@@ -185,6 +186,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                 <div className="flex gap-8">
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
+                        <h2 className="sr-only">Recent community posts</h2>
                         {isLoading ? (
                             <div className="flex flex-col gap-5">
                                 {[...Array(4)].map((_, i) => (
@@ -241,6 +243,7 @@ const CommunityFeedInner = ({ variant = 'page', initialPosts: initialPostsProp }
                                 )}
                             </div>
                         )}
+                        {isHome && <CommunityGuide />}
                     </div>
 
                     {/* Sidebar — HomeSidebar on homepage, TrendingSidebar on standalone */}

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { BROWSE_PAGE_SIZE, getBrowsePageHref } from '@/lib/browse-pagination';
+import { PUBLIC_CONTENT_REVIEWED } from '@/lib/site';
 
 // Top Indian cities for SEO landing pages
 const CITY_SLUGS = [
@@ -16,10 +17,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticPages = [
         '', '/browse', '/about', '/explore',
         '/success-stories', '/welcome',
-        '/terms', '/privacy-policy',
+        '/terms', '/privacy-policy', '/help', '/contact',
     ].map(route => ({
         url: `${baseUrl}${route}`,
-        lastModified: new Date(),
+        ...(['/terms', '/privacy-policy', '/help', '/contact'].includes(route)
+            ? { lastModified: new Date(PUBLIC_CONTENT_REVIEWED) } : {}),
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : route === '/browse' ? 0.95 : route === '/explore' ? 0.9 : 0.8,
     }));
@@ -36,7 +38,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             const page = index + 2;
             return {
                 url: `${baseUrl}${getBrowsePageHref(page)}`,
-                lastModified: new Date(),
                 changeFrequency: 'daily' as const,
                 priority: 0.9,
             };
@@ -46,7 +47,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // City landing pages for local SEO
     const cityPages = CITY_SLUGS.map(city => ({
         url: `${baseUrl}/adopt-pets-in/${city}`,
-        lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.9,
     }));

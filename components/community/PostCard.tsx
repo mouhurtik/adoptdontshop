@@ -148,6 +148,7 @@ const PostCard = ({ post, priority = false }: { post: PostCardData; priority?: b
                     {post.author_id ? (
                         <Link
                             href={`/user/${post.author?.username || post.author_id}`}
+                            rel="author"
                             className="flex min-h-11 min-w-0 max-w-full items-center gap-2 rounded-lg transition-colors duration-150 hover:bg-playful-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-playful-teal-text motion-reduce:transition-none"
                         >
                             {authorDetails}

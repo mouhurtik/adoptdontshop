@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
-    title: 'Adoption Success Stories | AdoptDontShop',
+    alternates: { canonical: '/success-stories' },
+    title: 'Adoption Success Stories',
     description: 'Read heartwarming stories of pets who found their forever homes through AdoptDontShop.',
 };
 

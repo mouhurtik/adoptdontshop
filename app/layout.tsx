@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
+import { Suspense } from 'react';
 import { Quicksand, Nunito } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import LayoutShell from '@/components/LayoutShell';
+import OptionalTracking from '@/components/analytics/OptionalTracking';
+import { OFFICIAL_SOCIALS, serializeJsonLd, SITE_DESCRIPTION, SITE_URL } from '@/lib/site';
 
 const quicksand = Quicksand({
     subsets: ['latin'],
@@ -26,8 +28,7 @@ export const metadata: Metadata = {
         default: 'AdoptDontShop: Rescue Pet Adoption & Care Community',
         template: '%s | AdoptDontShop',
     },
-    description:
-        'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
+    description: SITE_DESCRIPTION,
     keywords: [
         'pet adoption India', 'adopt a dog India', 'adopt a cat India',
         'adopt pet near me', 'rescue dogs for adoption', 'rescue cats for adoption',
@@ -39,17 +40,13 @@ export const metadata: Metadata = {
         'pet adoption Kolkata', 'pet adoption Mumbai',
     ],
     metadataBase: new URL('https://adoptdontshop.xyz'),
-    alternates: {
-        canonical: '/',
-    },
     openGraph: {
         type: 'website',
         locale: 'en_IN',
         url: 'https://adoptdontshop.xyz',
         siteName: 'AdoptDontShop',
         title: 'AdoptDontShop: Adopt Dogs & Cats in India — Free Pet Adoption',
-        description:
-            'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
+        description: SITE_DESCRIPTION,
         images: [
             {
                 url: 'https://adoptdontshop.xyz/og-image.webp',
@@ -62,7 +59,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'AdoptDontShop: Adopt Dogs & Cats in India — Free Pet Adoption',
-        description: 'Adopt a dog or cat in India for free. Browse rescue pets available for adoption in Mumbai, Delhi, Kolkata, Bangalore & more. Join India\'s pet adoption community!',
+        description: SITE_DESCRIPTION,
         images: ['https://adoptdontshop.xyz/og-image.webp'],
     },
     robots: {
@@ -88,30 +85,29 @@ export const metadata: Metadata = {
 const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
     name: 'AdoptDontShop',
     url: 'https://adoptdontshop.xyz',
     logo: 'https://adoptdontshop.xyz/logo.png',
-    description: 'India\'s largest pet adoption community connecting rescue animals with loving families.',
-    sameAs: [
-        'https://www.facebook.com/profile.php?id=61583730512051',
-        'https://x.com/mouhurtik',
-        'https://instagram.com/adoptdontshop.xyz',
-        'https://www.youtube.com/@mouhurtik',
-        'https://www.linkedin.com/company/adoptdontshop-xyz/',
-        'https://github.com/mouhurtik/adoptdontshop',
-    ],
+    description: SITE_DESCRIPTION,
+    sameAs: OFFICIAL_SOCIALS.map(social => social.url),
+    founder: {
+        '@type': 'Person', name: 'Mouhurtik Ray', url: `${SITE_URL}/about#founder`,
+        sameAs: ['https://www.linkedin.com/in/mouhurtik/', 'https://x.com/mouhurtik', 'https://www.youtube.com/@mouhurtik'],
+    },
     contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'customer support',
-        url: 'https://adoptdontshop.xyz/about',
+        url: 'https://adoptdontshop.xyz/contact',
         availableLanguage: ['English', 'Hindi', 'Bengali'],
     },
 };
 
-// WebSite schema with SearchAction for Google Sitelinks Searchbox
+// The community is a website, not a physical shelter or local business.
 const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
     name: 'AdoptDontShop',
     url: 'https://adoptdontshop.xyz',
     potentialAction: {
@@ -122,21 +118,6 @@ const websiteSchema = {
         },
         'query-input': 'required name=search_term_string',
     },
-};
-
-// LocalBusiness schema for better local SEO
-const localBusinessSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: 'AdoptDontShop',
-    image: 'https://adoptdontshop.xyz/og-image.webp',
-    url: 'https://adoptdontshop.xyz',
-    description: 'Pet adoption platform connecting rescue animals with loving families across India.',
-    areaServed: {
-        '@type': 'Country',
-        name: 'India',
-    },
-    priceRange: 'Free',
 };
 
 export default function RootLayout({
@@ -150,44 +131,18 @@ export default function RootLayout({
                 <link rel="alternate" type="application/rss+xml" title="AdoptDontShop Community" href="/feed.xml" />
                 <link rel="preconnect" href="https://aauevdimrbiowvxpllal.supabase.co" crossOrigin="anonymous" />
                 <link rel="preconnect" href="https://uibsmaizlrekfooryrwq.supabase.co" crossOrigin="anonymous" />
-                <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-                <Script id="google-analytics" strategy="lazyOnload">
-                    {`
-                        (function() {
-                            function initGtag() {
-                                var s = document.createElement('script');
-                                s.src = 'https://www.googletagmanager.com/gtag/js?id=G-FJ0SET7VX9';
-                                s.async = true;
-                                document.head.appendChild(s);
-                                window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
-                                window.gtag = gtag;
-                                gtag('js', new Date());
-                                gtag('config', 'G-FJ0SET7VX9', { send_page_view: true });
-                            }
-                            if ('requestIdleCallback' in window) {
-                                requestIdleCallback(initGtag, { timeout: 5000 });
-                            } else {
-                                setTimeout(initGtag, 4000);
-                            }
-                        })();
-                    `}
-                </Script>
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+                    dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationSchema) }}
                 />
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-                />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+                    dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
                 />
             </head>
             <body suppressHydrationWarning>
                 <Providers>
+                    <Suspense fallback={null}><OptionalTracking /></Suspense>
                     <LayoutShell>{children}</LayoutShell>
                 </Providers>
             </body>

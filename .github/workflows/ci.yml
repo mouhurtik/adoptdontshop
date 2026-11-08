@@ -61,6 +61,27 @@ jobs:
           path: .next/
           retention-days: 7
 
+  cloudflare-build:
+    name: Cloudflare Bundle
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-ci-build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build Cloudflare deployment bundle
+        run: pnpm run cf:build
+
   type-check:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
