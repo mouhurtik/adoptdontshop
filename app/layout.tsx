@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Quicksand, Nunito } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import Providers from './providers';
 import LayoutShell from '@/components/LayoutShell';
@@ -8,18 +8,18 @@ import OptionalTracking from '@/components/analytics/OptionalTracking';
 import { OFFICIAL_SOCIALS, serializeJsonLd, SITE_DESCRIPTION, SITE_URL } from '@/lib/site';
 import { THEME_BOOTSTRAP } from '@/lib/theme';
 
-const quicksand = Quicksand({
-    subsets: ['latin'],
+const quicksand = localFont({
+    src: './fonts/quicksand-latin.woff2',
     variable: '--font-quicksand',
     display: 'swap',
-    weight: ['400', '500', '600', '700'],
+    weight: '400 700',
 });
 
-const nunito = Nunito({
-    subsets: ['latin'],
+const nunito = localFont({
+    src: './fonts/nunito-latin.woff2',
     variable: '--font-nunito',
     display: 'swap',
-    weight: ['400', '600', '700', '800', '900'],
+    weight: '400 900',
 });
 
 

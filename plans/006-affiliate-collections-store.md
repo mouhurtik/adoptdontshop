@@ -69,6 +69,18 @@ disabled. Link navigation never waits on an analytics response.
 - Final publication must include GitHub's Linux Cloudflare bundle check and the
   automatic Workers deployment, followed by inspection of the live Store.
 
+## Deployment repair
+
+The initial `173896a` push passed the web build, tests and TypeScript but failed
+the Cloudflare build: Next.js 16.1.6 received an extensionless Google Fonts URL
+and reported `next/font/google queries have exactly one entry`. The same error
+is described in https://github.com/vercel/next.js/issues/99114.
+
+Bundle the exact Latin font files from the successful local build with their OFL
+licenses and load through `next/font/local`. Retain Quicksand/Nunito, CSS variable
+names and weight ranges; remove the live Google download from builds. Validate
+the follow-up commit's CI/Cloudflare result and browser font rendering.
+
 ## Primary reference
 
 [Amazon India operating agreement, section 10](https://affiliate-program.amazon.in/help/operating/agreement)
