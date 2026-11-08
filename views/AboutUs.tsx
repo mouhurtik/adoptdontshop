@@ -9,9 +9,7 @@ import {
 } from 'lucide-react';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-import ProductsSection from './essentials/ProductsSection';
-import InsuranceSection from './essentials/InsuranceSection';
-import { PRODUCTS } from './essentials/productsData';
+import Store from './Store';
 
 type TabKey = 'story' | 'patrons' | 'store';
 
@@ -19,7 +17,6 @@ const AboutUsInner = () => {
     const searchParams = useSearchParams();
     const initialTab = (searchParams.get('tab') as TabKey) || 'story';
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
-    const [activeProductTab, setActiveProductTab] = useState('dog');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -60,7 +57,9 @@ const AboutUsInner = () => {
                 {/* Tab Switcher */}
                 <ScrollReveal mode="fade-up" delay={0.05} width="100%" className={`flex justify-center mb-12 ${activeTab === 'store' ? 'hidden lg:flex' : ''}`}>
                     <div className="inline-flex bg-white rounded-full p-1.5 shadow-soft border border-gray-100">
-                        {tabs.map((tab) => (
+                        {tabs.map((tab) => tab.key === 'store' ? (
+                            <Link key={tab.key} href="/store" className="flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-700">{tab.icon}{tab.label}</Link>
+                        ) : (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
@@ -81,12 +80,7 @@ const AboutUsInner = () => {
                 <div className="max-w-6xl mx-auto">
                     {activeTab === 'story' && <OurStoryTab />}
                     {activeTab === 'patrons' && <PatronsTab />}
-                    {activeTab === 'store' && (
-                        <StoreTab
-                            activeProductTab={activeProductTab}
-                            onProductTabChange={setActiveProductTab}
-                        />
-                    )}
+                    {activeTab === 'store' && <Store />}
                 </div>
 
                 {/* CTA */}
@@ -348,30 +342,6 @@ function PatronsTab() {
                         </a>
                     </div>
                 </div>
-            </ScrollReveal>
-        </div>
-    );
-}
-
-// ─── Store Tab ────────────────────────────────────────────
-function StoreTab({
-    activeProductTab,
-    onProductTabChange,
-}: {
-    activeProductTab: string;
-    onProductTabChange: (tab: string) => void;
-}) {
-    return (
-        <div className="space-y-16">
-            <ScrollReveal mode="fade-up" width="100%">
-                <ProductsSection
-                    products={PRODUCTS}
-                    activeTab={activeProductTab}
-                    onTabChange={onProductTabChange}
-                />
-            </ScrollReveal>
-            <ScrollReveal mode="fade-up" delay={0.1} width="100%">
-                <InsuranceSection />
             </ScrollReveal>
         </div>
     );

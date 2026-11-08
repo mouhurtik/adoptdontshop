@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
             </section>
             <section className="mt-8 space-y-3">
                 <h2 className="font-heading text-xl font-bold text-playful-text">Product links and external websites</h2>
-                <p className="leading-relaxed">Product links are currently being updated. When an affiliate link is available, it will be identified. Following a link opens a separate merchant service with its own policies; a qualifying transaction may earn commission for AdoptDontShop. The platform does not receive your merchant password or infer which member purchased from a click. Amazon/store visits do not earn PawCoins.</p>
+                <p className="leading-relaxed">The Store contains identified Amazon affiliate links to category and brand search selections. Following a link opens a separate merchant service with its own policies; a qualifying transaction may earn commission for AdoptDontShop. The platform does not receive your merchant password or infer which member purchased from a click. Amazon/store visits do not earn PawCoins.</p>
             </section>
             <section className="mt-8 space-y-3">
                 <h2 className="font-heading text-xl font-bold text-playful-text">Your content and privacy requests</h2>

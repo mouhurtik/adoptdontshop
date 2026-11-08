@@ -7,9 +7,10 @@ const nextConfig = {
     compress: true,
     async redirects() {
         return [
+            { source: '/about', has: [{ type: 'query', key: 'tab', value: 'store' }], destination: '/store', permanent: true },
             { source: '/sponsors', destination: '/about?tab=patrons', permanent: true },
-            { source: '/resources', destination: '/about?tab=store', permanent: true },
-            { source: '/pet-essentials', destination: '/about?tab=store', permanent: true },
+            { source: '/resources', destination: '/store', permanent: true },
+            { source: '/pet-essentials', destination: '/store', permanent: true },
             { source: '/community', destination: '/', permanent: true },
         ];
     },

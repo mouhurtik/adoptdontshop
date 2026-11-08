@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 let tracking: typeof import('../tracking');
+const collection = { id: 'cat-food-dry', name: 'Dry food', petType: 'cat', group: 'food', description: 'Dry food selection', affiliateLink: 'https://link.amazon/B0brLSDMX' } as const;
 
 beforeEach(async () => {
     vi.resetModules();
@@ -18,6 +19,30 @@ beforeEach(async () => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe('Optional public-page tracking', () => {
+    it('records collection clicks only after analytics consent, without URLs or member details', () => {
+        window.history.replaceState({}, '', '/store');
+        window.gtag = vi.fn();
+        tracking.trackAffiliateClick(collection);
+        expect(window.gtag).not.toHaveBeenCalled();
+        tracking.saveTrackingChoices({ version: 1, analytics: true, marketing: false });
+        tracking.trackAffiliateClick(collection);
+        expect(window.gtag).toHaveBeenCalledExactlyOnceWith('event', 'affiliate_click', {
+            collection_id: 'cat-food-dry', merchant: 'amazon', category: 'food',
+            pet_type: 'cat', link_type: 'collection', placement: 'store', platform: 'web',
+        });
+        tracking.saveTrackingChoices({ version: 1, analytics: false, marketing: false });
+        tracking.trackAffiliateClick(collection);
+        expect(window.gtag).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not emit web affiliate events in the native shell', () => {
+        window.history.replaceState({}, '', '/store');
+        window.gtag = vi.fn();
+        tracking.saveTrackingChoices({ version: 1, analytics: true, marketing: false });
+        (window as unknown as Record<string, unknown>).Capacitor = { isNativePlatform: () => true };
+        tracking.trackAffiliateClick(collection);
+        expect(window.gtag).not.toHaveBeenCalled();
+    });
     it('loads no optional vendor script without an explicit choice', () => {
         tracking.synchronizeTracking('/');
         expect(document.querySelectorAll('script')).toHaveLength(0);

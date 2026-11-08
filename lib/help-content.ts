@@ -29,7 +29,7 @@ export const HELP_QUESTIONS = [
     },
     {
         question: 'Does visiting the Store earn PawCoins?',
-        answer: 'No. Visiting the Store or an Amazon product link does not earn PawCoins. Product links are currently being updated. Any future affiliate link will be identified; a qualifying purchase may earn commission for AdoptDontShop under the merchant programme, without a promised reward to the visitor.',
+        answer: 'No. The Store links to cat and dog category and brand selections on Amazon. These are affiliate links, so qualifying purchases may earn commission for AdoptDontShop. Visiting the Store, following a link or making an Amazon purchase does not earn PawCoins.',
     },
     {
         question: 'Where are the official social accounts and privacy choices?',

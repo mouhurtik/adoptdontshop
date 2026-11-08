@@ -4,9 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Heart, Package, Mail, PawPrint, Building, UserCheck, Star, Eye, Users, Award } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-import ProductsSection from './essentials/ProductsSection';
+import CollectionBrowser from './essentials/CollectionBrowser';
 import InsuranceSection from './essentials/InsuranceSection';
-import { PRODUCTS } from './essentials/productsData';
 
 type TabKey = 'essentials' | 'patrons';
 
@@ -14,7 +13,6 @@ const ResourcesInner = () => {
     const searchParams = useSearchParams();
     const initialTab = (searchParams.get('tab') as TabKey) || 'essentials';
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
-    const [activeProductTab, setActiveProductTab] = useState('dog');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -73,10 +71,7 @@ const ResourcesInner = () => {
 
                 {/* Tab Content */}
                 {activeTab === 'essentials' ? (
-                    <EssentialsContent
-                        activeProductTab={activeProductTab}
-                        onProductTabChange={setActiveProductTab}
-                    />
+                    <EssentialsContent />
                 ) : (
                     <PatronsContent />
                 )}
@@ -86,21 +81,11 @@ const ResourcesInner = () => {
 };
 
 // ─── Essentials Tab ────────────────────────────────────────
-function EssentialsContent({
-    activeProductTab,
-    onProductTabChange,
-}: {
-    activeProductTab: string;
-    onProductTabChange: (tab: string) => void;
-}) {
+function EssentialsContent() {
     return (
         <div className="space-y-16">
             <ScrollReveal mode="fade-up" width="100%">
-                <ProductsSection
-                    products={PRODUCTS}
-                    activeTab={activeProductTab}
-                    onTabChange={onProductTabChange}
-                />
+                <CollectionBrowser defaultPet="dog" />
             </ScrollReveal>
             <ScrollReveal mode="fade-up" delay={0.1} width="100%">
                 <InsuranceSection />

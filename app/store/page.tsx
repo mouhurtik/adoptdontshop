@@ -3,7 +3,7 @@ import Store from '@/views/Store';
 
 export const metadata: Metadata = {
     title: 'Pet essentials store',
-    description: 'Plan everyday essentials for dogs and cats. Product links are being updated; store visits and purchases do not earn PawCoins.',
+    description: 'Browse cat and dog food, familiar brands, toys and care essentials through AdoptDontShop’s Amazon affiliate collections.',
     alternates: { canonical: '/store' },
 };
 

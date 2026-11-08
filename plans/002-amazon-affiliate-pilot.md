@@ -1,5 +1,14 @@
 # Plan 002: Publish a measured Amazon affiliate store pilot
 
+## Execution update: Bundle 006
+
+The user supplied 13 replacement category/brand links on November 8. All resolved
+to tagged Amazon.in search results. [Bundle 006](006-affiliate-collections-store.md)
+replaces the item catalogue with cat/dog browsing selections, prominent disclosure
+and optional collection-click measurement. These links are now configured for
+publication; account reports, orders and earned commission require separate
+provider verification. The earlier snapshot below is historical.
+
 ## Execution update: Bundle 004
 
 The user confirmed the original Amazon account was deleted and will supply new

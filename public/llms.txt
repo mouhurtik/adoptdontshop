@@ -10,7 +10,7 @@
 - [About](https://adoptdontshop.xyz/about): Platform purpose and founder Mouhurtik Ray.
 - [Help and FAQs](https://adoptdontshop.xyz/help): Adoption, posting, moderation and privacy guidance.
 - [Contact](https://adoptdontshop.xyz/contact): Support and official social profiles.
-- [Store](https://adoptdontshop.xyz/about?tab=store): Pet essentials categories. Product links are being updated; visiting the store does not earn rewards.
+- [Store](https://adoptdontshop.xyz/store): Publisher-provided Amazon affiliate category and brand selections for cats and dogs. These open Amazon search results, not individual product recommendations. Visits and purchases do not earn PawCoins.
 - [Terms](https://adoptdontshop.xyz/terms)
 - [Privacy policy](https://adoptdontshop.xyz/privacy-policy)
 - [Sitemap](https://adoptdontshop.xyz/sitemap.xml)

@@ -4,7 +4,7 @@ Prepared November 8, 2026, using the Improve planning workflow. Updated for Bund
 `main` at `1390541`, plus the existing uncommitted admin-email change. Publication status is recorded in Bundle 004; remaining phases are implementation proposals.
 
 This index supersedes the proposed order in `docs/INCREMENTAL_RELEASE_PLAN.md`.
-The current decision is Amazon affiliate income after replacement links arrive, community PawCoins later,
+Replacement affiliate links arrived in Bundle 006. The current decision is an Amazon collection pilot, community PawCoins later,
 and purchase cashback only when a merchant allows it and attribution works.
 
 ## Product decisions
@@ -27,7 +27,7 @@ Existing deployment failures, provider approvals, and device testing can add tim
 | Phase | Deliverable | Suggested effort | Release condition / evidence |
 | --- | --- | --- | --- |
 | 0 | Integrate the three completed UI commits into the original folder; release admin emails when the correct database is available | 1-2 days if existing checks pass | UI history preserved, desktop/mobile review, build checks; database authorization and signed-in admin review for emails |
-| 1 | Verified Amazon catalog, disclosures, ordinary links and affiliate-click measurement | 1-3 days | Await replacement links: user confirmed the old account was deleted. Bundle 004 removes its links and prepares the catalog. |
+| 1 | Verified Amazon selections, disclosures, ordinary links and affiliate-click measurement | 1-3 days | Bundle 006 configures 13 supplied tagged search links; verify provider reporting and actual earnings separately. |
 | 2 | Give existing members a reason to return: reliable replies/in-app notifications and one opt-in relevant update workflow | 2-4 days | Events delivered once to the correct member; preferences and unsubscribe/disable work; return-rate baseline recorded |
 | 3 | Community PawCoins pilot with post-moderation earning events, caps, history and cosmetic milestones | 3-5 days after schema verification | Database authorization, duplicate/concurrency/reversal checks, private balance/history, clear earning rules |
 | 4 | Test one web ad placement and/or a clearly labelled local sponsorship | 1-2 days plus approval | Suitable content and measured traffic; no rewarded ad clicks; revenue, performance and engagement compared |
@@ -42,10 +42,11 @@ the Amazon catalog hostage: publish independently scoped commits when safe.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| [005](005-ui-theme-admin-release.md) | Simpler feed, warm dark mode, Store, comments and admin emails | P1 | M | Correct database verified; 004 | PUSHED as d296e0c; final topic correction and deployment checks in progress |
+| [006](006-affiliate-collections-store.md) | Cat/dog Amazon selections and Store redesign | P1 | M | User's replacement affiliate links; 005 | IMPLEMENTED; publication checks in progress |
+| [005](005-ui-theme-admin-release.md) | Simpler feed, warm dark mode, Store, comments and admin emails | P1 | M | Correct database verified; 004 | DEPLOYED; CI passed at 739cc97 |
 | [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | DEPLOYED; CI passed at 25e4e02 |
 | [001](001-release-baseline-and-measurement.md) | Consolidate the release baseline and verify measurement | P1 | M | None | UI/admin implemented in 004/005; live analytics reporting still to verify |
-| [002](002-amazon-affiliate-pilot.md) | Launch the Amazon affiliate pilot | P1 | M | 001 web/analytics pieces; not the admin database migration | TODO |
+| [002](002-amazon-affiliate-pilot.md) | Launch the Amazon affiliate pilot | P1 | M | 001 web/analytics pieces; not the admin database migration | IMPLEMENTED in 006; provider reporting and earnings unverified |
 | [003](003-community-pawcoins-v1.md) | Launch community PawCoins with server-owned rules | P2 | L | Correct Supabase connection; stable baseline and retention flow; ship Amazon first | TODO |
 
 Detailed implementation of Phases 2, 4, and 5 should be scoped from the observed

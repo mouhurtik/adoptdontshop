@@ -1,4 +1,5 @@
 import { SITE_URL } from '@/lib/site';
+import type { AmazonCollection } from '@/views/essentials/collectionsData';
 
 export const TRACKING_STORAGE_KEY = 'adoptdontshop-tracking-v1';
 export const TRACKING_CHANGED_EVENT = 'adoptdontshop:tracking-changed';
@@ -135,11 +136,12 @@ export function synchronizeTracking(pathname: string) {
     }
 }
 
-export function trackAffiliateClick(productId: number, category: string) {
+export function trackAffiliateClick(collection: AmazonCollection) {
     if (process.env.NODE_ENV !== 'production' || !readTrackingChoices()?.analytics
         || !isPublicMeasurementPath(window.location.pathname) || !hasSafeMeasurementQuery(window.location.search)) return;
+    if ((window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.()) return;
     window.gtag?.('event', 'affiliate_click', {
-        product_id: String(productId), merchant: 'amazon', category,
-        placement: 'store', platform: 'web',
+        collection_id: collection.id, merchant: 'amazon', category: collection.group,
+        pet_type: collection.petType, link_type: 'collection', placement: 'store', platform: 'web',
     });
 }
