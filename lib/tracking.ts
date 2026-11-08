@@ -3,7 +3,6 @@ import type { AmazonCollection } from '@/views/essentials/collectionsData';
 
 export const TRACKING_STORAGE_KEY = 'adoptdontshop-tracking-v1';
 export const TRACKING_CHANGED_EVENT = 'adoptdontshop:tracking-changed';
-export const OPEN_TRACKING_EVENT = 'adoptdontshop:open-tracking';
 export const GA_ID = 'G-FJ0SET7VX9';
 export const META_PIXEL_ID = '1462969085759164';
 export interface TrackingChoices { version: 1; analytics: boolean; marketing: boolean }

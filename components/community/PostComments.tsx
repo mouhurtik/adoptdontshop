@@ -38,7 +38,7 @@ export default function PostComments({ postId }: { postId: string }) {
                 <span className="break-words">{name}</span>
             </Link>
             <time dateTime={comment.created_at} className="text-xs text-gray-500">{new Date(comment.created_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}</time>
-            {comment.author_id !== user?.id && <Link href={`/messages/new?to=${encodeURIComponent(comment.author_id)}`} aria-label={`Message ${name}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-playful-teal-text" title={`Message ${name}`}><MessageCircle aria-hidden="true" className="h-4 w-4" /></Link>}
+            {comment.author_id !== user?.id && <Link href={`/messages?to=${encodeURIComponent(comment.author_id)}`} aria-label={`Message ${name}`} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-playful-teal-text" title={`Message ${name}`}><MessageCircle aria-hidden="true" className="h-4 w-4" /></Link>}
         </div>;
     }
 

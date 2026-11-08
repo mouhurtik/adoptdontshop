@@ -1,6 +1,6 @@
-import NewConversation from '@/components/messaging/NewConversation';
+import { redirect } from 'next/navigation';
 
 export default async function NewConversationPage({ searchParams }: { searchParams: Promise<{ to?: string }> }) {
     const { to = '' } = await searchParams;
-    return <NewConversation recipientId={to} />;
+    redirect(to ? `/messages?to=${encodeURIComponent(to)}` : '/messages');
 }

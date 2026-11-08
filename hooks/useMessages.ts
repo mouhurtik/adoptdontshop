@@ -11,7 +11,9 @@ type MessageRow = Tables<'messages'>;
 type ConversationRow = Tables<'conversations'>;
 
 export interface Conversation extends ConversationRow {
+    other_participant_id?: string;
     other_participant_name?: string;
+    other_participant_username?: string;
     other_participant_avatar?: string;
     unread_count: number;
 }
@@ -28,6 +30,7 @@ async function fetchConversations(userId: string): Promise<Conversation[]> {
     const { data: convos, error } = await supabase
         .from('conversations')
         .select('*')
+        .contains('participant_ids', [userId])
         .order('last_message_at', { ascending: false });
 
     if (error) throw error;
@@ -40,15 +43,15 @@ async function fetchConversations(userId: string): Promise<Conversation[]> {
 
 
     // Batch fetch profile names
-    let profileMap: Record<string, { name: string; avatar: string | null }> = {};
+    let profileMap: Record<string, { name: string; avatar: string | null; username: string | null }> = {};
     if (otherUserIds.length > 0) {
         const { data: profiles } = await supabase
             .from('profiles')
-            .select('id, display_name, avatar_url')
+            .select('id, display_name, avatar_url, username')
             .in('id', [...new Set(otherUserIds)]);
         if (profiles) {
             profileMap = Object.fromEntries(
-                profiles.map(p => [p.id, { name: p.display_name || 'User', avatar: p.avatar_url }])
+                profiles.map(p => [p.id, { name: p.display_name || 'User', avatar: p.avatar_url, username: p.username }])
             );
         }
     }
@@ -61,7 +64,9 @@ async function fetchConversations(userId: string): Promise<Conversation[]> {
         return {
             ...c,
             participant_ids: c.participant_ids as string[],
+            other_participant_id: otherId,
             other_participant_name: otherProfile?.name || 'User',
+            other_participant_username: otherProfile?.username ?? undefined,
             other_participant_avatar: otherProfile?.avatar ?? undefined,
             unread_count: readBy && !readBy.includes(userId) ? 1 : 0,
         };

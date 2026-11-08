@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Send, ArrowLeft, Loader2, Check, CheckCheck } from 'lucide-react';
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import type { Message, Conversation } from '@/hooks/useMessages';
+import type { MessageMember } from '@/hooks/useMessageMembers';
 
 interface MessageThreadProps {
     conversation: Conversation | null;
+    recipient?: MessageMember | null;
     messages: Message[];
     isLoading: boolean;
-    onSend: (content: string) => void;
+    onSend: (content: string) => void | Promise<void>;
     isSending: boolean;
     onBack?: () => void;
 }
@@ -39,6 +42,7 @@ function groupByDate(messages: Message[]): { label: string; messages: Message[] 
 
 const MessageThread = ({
     conversation,
+    recipient,
     messages,
     isLoading,
     onSend,
@@ -46,6 +50,8 @@ const MessageThread = ({
     onBack,
 }: MessageThreadProps) => {
     const [input, setInput] = useState('');
+    const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
     const prevLengthRef = useRef(0);
 
@@ -57,16 +63,24 @@ const MessageThread = ({
         prevLengthRef.current = messages.length;
     }, [messages.length]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const content = input.trim();
-        if (!content || isSending) return;
-        onSend(content);
-        setInput('');
+        if (!content || isSending || submitting) return;
+        setError('');
+        setSubmitting(true);
+        try {
+            await onSend(content);
+            setInput('');
+        } catch {
+            setError('Your message could not be sent. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     // Empty state
-    if (!conversation) {
+    if (!conversation && !recipient) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-playful-cream/30">
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-soft mb-4">
@@ -83,57 +97,63 @@ const MessageThread = ({
     }
 
     const dateGroups = groupByDate(messages);
+    const name = recipient?.display_name || conversation?.other_participant_name || 'Member';
+    const avatar = recipient?.avatar_url || conversation?.other_participant_avatar;
+    const username = recipient?.username || conversation?.other_participant_username;
+    const memberId = recipient?.id || conversation?.other_participant_id;
+    const pending = isSending || submitting;
 
     return (
-        <div className="flex-1 flex flex-col h-full">
+        <div className="flex-1 flex min-h-0 min-w-0 flex-col h-full">
             {/* Header */}
             <div className="border-b border-gray-100 px-4 py-3 flex items-center gap-3 bg-white/80 backdrop-blur-sm">
                 {onBack && (
                     <button
+                        type="button"
+                        aria-label="Back to conversations"
                         onClick={onBack}
-                        className="p-2 rounded-full hover:bg-playful-cream transition-colors lg:hidden"
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-playful-cream transition-colors lg:hidden"
                     >
                         <ArrowLeft className="w-5 h-5 text-gray-600" />
                     </button>
                 )}
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-playful-cream shrink-0 border-2 border-white shadow-sm">
-                    {conversation.other_participant_avatar ? (
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-playful-teal/10 text-playful-teal-text shrink-0 border border-gray-200">
+                    {avatar ? (
                         <img
-                            src={conversation.other_participant_avatar}
-                            alt={conversation.other_participant_name || 'User'}
+                            src={avatar}
+                            alt=""
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xl">👤</div>
+                        <div aria-hidden="true" className="w-full h-full flex items-center justify-center font-semibold">{name.slice(0, 1).toUpperCase()}</div>
                     )}
                 </div>
                 <div className="min-w-0">
-                    <p className="font-bold text-gray-800 text-sm truncate">
-                        {conversation.other_participant_name || 'User'}
-                    </p>
+                    {memberId ? <Link href={`/user/${username || memberId}`} className="block truncate text-sm font-semibold text-playful-text hover:underline">{name}</Link> : <p className="truncate text-sm font-semibold text-playful-text">{name}</p>}
+                    {username && <p className="truncate text-xs text-gray-500">@{username}</p>}
                 </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-gradient-to-b from-playful-cream/20 to-white">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-6 bg-playful-cream/40">
                 {isLoading ? (
                     <div className="flex items-center justify-center py-12">
                         <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
                     </div>
                 ) : messages.length === 0 ? (
                     <div className="text-center py-12">
-                        <p className="text-gray-400 text-sm mb-4">
+                        <p className="text-gray-600 text-sm mb-4">
                             No messages yet. Say hello! 👋
                         </p>
-                        <p className="text-[11px] font-semibold text-gray-500 bg-white/60 py-2 px-4 rounded-full mx-auto w-fit shadow-sm border border-gray-100">
-                            🛡️ All messages are monitored by the admin for safety and monitoring purposes.
+                        <p className="mx-auto max-w-sm text-xs leading-relaxed text-gray-500">
+                            Messages may be reviewed by administrators for safety.
                         </p>
                     </div>
                 ) : (
                     <>
-                        <div className="text-center py-4 px-6 bg-white/60 mb-6 rounded-2xl mx-auto w-fit shadow-sm border border-gray-100">
-                            <p className="text-xs font-semibold text-gray-500">
-                                🛡️ All messages are monitored by the admin for safety and monitoring purposes.
+                        <div className="text-center py-2 px-4 mb-4 mx-auto max-w-sm">
+                            <p className="text-xs leading-relaxed text-gray-500">
+                                Messages may be reviewed by administrators for safety.
                             </p>
                         </div>
                         {dateGroups.map((group) => (
@@ -197,24 +217,29 @@ const MessageThread = ({
             </div>
 
             {/* Input */}
+            {error && <p role="alert" className="border-t border-gray-100 bg-white px-4 pt-3 text-sm text-red-600">{error}</p>}
             <form
                 onSubmit={handleSubmit}
-                className="border-t border-gray-100 p-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] bg-white flex items-center gap-2"
+                className="shrink-0 border-t border-gray-100 p-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] bg-white flex items-center gap-2"
             >
+                <label htmlFor="chat-message" className="sr-only">Your message</label>
                 <input
+                    id="chat-message"
                     type="text"
                     placeholder="Type a message..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="flex-1 px-4 py-2.5 rounded-full bg-playful-cream/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-playful-coral/30 focus:border-playful-coral text-sm"
-                    disabled={isSending}
+                    className="min-h-11 min-w-0 flex-1 px-4 py-2.5 rounded-full bg-playful-cream/50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-playful-coral/30 focus:border-playful-coral text-sm"
+                    disabled={pending}
+                    maxLength={5000}
                 />
                 <button
                     type="submit"
-                    disabled={!input.trim() || isSending}
-                    className="p-2.5 rounded-full bg-playful-coral text-white hover:bg-playful-coral/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+                    aria-label="Send message"
+                    disabled={!input.trim() || pending}
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#c34b24] text-white hover:bg-[#ad401c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                    {isSending ? (
+                    {pending ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
                         <Send className="w-5 h-5" />

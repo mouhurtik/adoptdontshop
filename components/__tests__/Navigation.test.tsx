@@ -153,7 +153,7 @@ describe('desktop navigation', () => {
     mocks.auth.mockReturnValue(signedInAuth);
     render(<AppSidebar collapsed={collapsed} onToggleCollapse={vi.fn()} />);
     expect(screen.queryByRole('navigation', { name: 'Feed topics' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Switch to dark mode' }).textContent).toBe('');
+    expect(screen.getByRole('button', { name: 'Switch to dark mode' }).textContent).toBe(collapsed ? '' : 'Dark mode');
     expect(screen.queryByRole('link', { name: 'Create community' })).not.toBeInTheDocument();
     expect(mocks.from).not.toHaveBeenCalled();
     expect(screen.getByRole('link', { name: "View Alex's profile" })).toHaveAttribute('href', '/user/alex');

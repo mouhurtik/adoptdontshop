@@ -199,7 +199,7 @@ const CommunityPostDetail = ({ slug, initialPost }: CommunityPostDetailProps) =>
                                     </div>
                                 </Link>
                                 {isAuthenticated && post.author_id !== user?.id && (
-                                    <Link href={`/messages/new?to=${encodeURIComponent(post.author_id)}`} className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-full bg-playful-coral/10 px-4 py-2 text-sm font-semibold text-playful-coral-text hover:bg-playful-coral/20">
+                                    <Link href={`/messages?to=${encodeURIComponent(post.author_id)}`} className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-full bg-playful-coral/10 px-4 py-2 text-sm font-semibold text-playful-coral-text hover:bg-playful-coral/20">
                                         <Mail aria-hidden="true" className="h-4 w-4" />Message
                                     </Link>
                                 )}

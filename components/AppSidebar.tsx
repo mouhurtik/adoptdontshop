@@ -142,7 +142,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                             )}
                         </Link>
 
-                        <div className="flex justify-center py-1"><ThemeToggle /></div>
+                        <div className="flex justify-center py-1"><ThemeToggle expanded={!collapsed} /></div>
 
                         {!collapsed && (
                             <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function AppSidebar({ collapsed, onToggleCollapse }: AppSidebarPr
                     </div>
                 ) : (
                     <div>
-                        <div className="mb-2 flex justify-center"><ThemeToggle /></div>
+                        <div className="mb-2 flex justify-center"><ThemeToggle expanded={!collapsed} /></div>
                         <Link
                             href="/login"
                             title={collapsed ? 'Sign In' : undefined}

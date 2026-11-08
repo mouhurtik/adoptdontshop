@@ -21,7 +21,7 @@ describe('Post comments', () => {
         render(<PostComments postId="post-1" />);
         expect(screen.getByRole('link', { name: 'Sam' })).toHaveAttribute('href', '/user/sam');
         expect(screen.getByRole('link', { name: 'Taylor' })).toHaveAttribute('href', '/user/member-2');
-        expect(screen.getByRole('link', { name: 'Message Taylor' })).toHaveAttribute('href', '/messages/new?to=member-2');
+        expect(screen.getByRole('link', { name: 'Message Taylor' })).toHaveAttribute('href', '/messages?to=member-2');
         expect(mocks.add).not.toHaveBeenCalled();
     });
     it('disables an empty comment and submits the typed text once', async () => {

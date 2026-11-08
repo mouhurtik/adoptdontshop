@@ -36,14 +36,14 @@ const ConversationList = ({ conversations, selectedId, onSelect, isLoading }: Co
                 </div>
                 <h3 className="font-heading font-bold text-gray-800 mb-1">No conversations yet</h3>
                 <p className="text-sm text-gray-500">
-                    Message a caregiver from any pet&apos;s detail page to get started!
+                    Find a member by name or username, or message them from their profile.
                 </p>
             </div>
         );
     }
 
     return (
-        <div className="overflow-y-auto h-full">
+        <div>
             {conversations.map((convo) => {
                 const isSelected = selectedId === convo.id;
                 const timeAgo = convo.last_message_at
@@ -53,6 +53,8 @@ const ConversationList = ({ conversations, selectedId, onSelect, isLoading }: Co
                 return (
                     <button
                         key={convo.id}
+                        type="button"
+                        aria-pressed={isSelected}
                         onClick={() => onSelect(convo.id)}
                         className={`w-full flex items-start gap-3 p-4 text-left transition-colors border-b border-gray-50 hover:bg-playful-cream/50 ${isSelected ? 'bg-playful-cream/70 border-l-4 border-l-playful-coral' : ''
                             }`}
@@ -81,6 +83,7 @@ const ConversationList = ({ conversations, selectedId, onSelect, isLoading }: Co
                                 </p>
                                 <span className="text-xs text-gray-400 shrink-0">{timeAgo}</span>
                             </div>
+                            {convo.other_participant_username && <p className="truncate text-xs text-gray-500">@{convo.other_participant_username}</p>}
                             <p className="text-sm text-gray-500 truncate mt-0.5">
                                 {convo.last_message || 'No messages yet'}
                             </p>

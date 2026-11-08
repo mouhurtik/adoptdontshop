@@ -48,7 +48,7 @@ describe('public profile content and messaging', () => {
         await user.click(screen.getByRole('tab', { name: 'Pets (0)' }));
         expect(screen.getByRole('tab', { name: 'Pets (0)' })).toHaveAttribute('aria-selected', 'true');
         expect(within(screen.getByRole('tabpanel')).getByText('No pets listed yet')).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: 'Message' })).toHaveAttribute('href', `/messages/new?to=${recipientId}`);
+        expect(screen.getByRole('link', { name: 'Message' })).toHaveAttribute('href', `/messages?to=${recipientId}`);
     });
 
     it('keeps Pets first when listings exist and supports keyboard tab selection', async () => {

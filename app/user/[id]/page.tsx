@@ -297,7 +297,7 @@ function PublicProfile({ userId }: { userId: string }) {
                                 </div>
                                 {user?.id !== profile.id && (
                                     <Link
-                                        href={`/messages/new?to=${profile.id}`}
+                                        href={`/messages?to=${profile.id}`}
                                         className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#c34b24] dark:bg-playful-coral-text px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#ad401c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-playful-coral-text focus-visible:ring-offset-2"
                                     >
                                         <MessageCircle aria-hidden="true" className="h-4 w-4" />

@@ -1,172 +1,98 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { MessageCircle, PawPrint, ChevronLeft } from 'lucide-react';
-import {
-    useConversations,
-    useConversationMessages,
-    useSendMessage,
-    useMessageRealtime,
-    useMarkAsRead,
-} from '@/hooks/useMessages';
+import { ArrowLeft, Loader2, MessageCircle } from 'lucide-react';
+import { useConversations, useConversationMessages, useSendMessage, useStartConversation, useMessageRealtime, useMarkAsRead } from '@/hooks/useMessages';
+import { isMemberId, useMessageMember } from '@/hooks/useMessageMembers';
 import { useAuth } from '@/contexts/AuthContext';
-import ConversationList from '@/components/messaging/ConversationList';
+import MessageSidebar from '@/components/messaging/MessageSidebar';
 import MessageThread from '@/components/messaging/MessageThread';
 import PawprintLoader from '@/components/ui/PawprintLoader';
 
-const Messages = () => {
-    const requestedConversation = useSearchParams().get('conversation');
+export default function Messages() {
+    const searchParams = useSearchParams();
+    const requestedConversation = searchParams.get('conversation');
+    const recipientId = searchParams.get('to') || '';
     const router = useRouter();
-    const { isAuthenticated, isLoading: authLoading } = useAuth();
-    const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
-    const [showThread, setShowThread] = useState(false); // For mobile toggle
-
-    const { data: conversations = [], isLoading: convosLoading } = useConversations();
-    useEffect(() => {
-        if (requestedConversation && conversations.some(conversation => conversation.id === requestedConversation)) {
-            setSelectedConversationId(requestedConversation);
-            setShowThread(true);
-        }
-    }, [requestedConversation, conversations]);
-    const { data: messages = [], isLoading: messagesLoading } = useConversationMessages(selectedConversationId);
+    const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+    const conversationsQuery = useConversations();
+    const conversations = conversationsQuery.data ?? [];
+    const selectedConversation = requestedConversation
+        ? conversations.find(conversation => conversation.id === requestedConversation) ?? null
+        : conversations.find(conversation => recipientId && conversation.participant_ids.includes(recipientId)) ?? null;
+    const selectedId = selectedConversation?.id ?? null;
+    const recipientQuery = useMessageMember(recipientId, !conversationsQuery.isLoading && !conversationsQuery.isError && !selectedConversation);
+    const recipient = !selectedConversation ? recipientQuery.data ?? null : null;
+    const { data: messages = [], isLoading: messagesLoading } = useConversationMessages(selectedId);
     const sendMessage = useSendMessage();
-
-    // Realtime updates
-    useMessageRealtime(selectedConversationId);
-
-    const selectedConversation = conversations.find(c => c.id === selectedConversationId) ?? null;
-
+    const startConversation = useStartConversation();
+    useMessageRealtime(selectedId);
     const markAsRead = useMarkAsRead();
+    useEffect(() => {
+        if (selectedId) markAsRead(selectedId);
+    }, [selectedId, markAsRead]);
 
-    const handleSelectConversation = useCallback((id: string) => {
-        setSelectedConversationId(id);
-        router.replace(`/messages?conversation=${encodeURIComponent(id)}`);
-        setShowThread(true); // Show thread on mobile
-        markAsRead(id); // Mark messages as read
-    }, [markAsRead, router]);
+    const selectConversation = (id: string) => router.replace(`/messages?conversation=${encodeURIComponent(id)}`);
+    const selectMember = (id: string) => router.replace(`/messages?to=${encodeURIComponent(id)}`);
+    const back = () => router.replace('/messages');
+    const showThread = !!(requestedConversation || recipientId);
 
-    const handleBack = useCallback(() => {
-        setShowThread(false);
-    }, []);
-
-    const handleSend = useCallback(
-        (content: string) => {
-            if (!selectedConversationId) return;
-            sendMessage.mutate({ conversationId: selectedConversationId, content });
-        },
-        [selectedConversationId, sendMessage]
-    );
-
-    // Auth guard
-    if (authLoading) {
-        return <PawprintLoader fullScreen size="lg" message="Loading messages..." />;
+    async function send(content: string) {
+        if (selectedId) {
+            await sendMessage.mutateAsync({ conversationId: selectedId, content });
+        } else if (recipient) {
+            const id = await startConversation.mutateAsync({ recipientId: recipient.id, initialMessage: content });
+            // Refresh the list before selecting the new conversation. Opening a draft
+            // never creates a conversation or sends a greeting.
+            await conversationsQuery.refetch();
+            selectConversation(id);
+        } else {
+            throw new Error('No recipient selected');
+        }
     }
 
+    if (authLoading) return <PawprintLoader fullScreen size="lg" message="Loading messages..." />;
     if (!isAuthenticated) {
-        return (
-            <div className="pt-32 pb-16 min-h-screen bg-playful-cream">
-                <div className="max-w-7xl mx-auto px-4 lg:px-6">
-                    <div className="max-w-md mx-auto text-center bg-white rounded-[2rem] p-12 shadow-soft">
-                        <div className="bg-playful-cream p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                            <MessageCircle className="w-8 h-8 text-playful-coral" />
-                        </div>
-                        <h1 className="text-2xl font-heading font-bold text-playful-text mb-3">
-                            Sign in to view messages
-                        </h1>
-                        <p className="text-gray-500 mb-6">
-                            You need to be logged in to send and receive messages.
-                        </p>
-                        <a
-                            href="/login"
-                            className="inline-block bg-playful-coral text-white px-6 py-3 rounded-full font-bold hover:bg-playful-coral/90 transition-colors shadow-md"
-                        >
-                            Sign In
-                        </a>
-                    </div>
-                </div>
-            </div>
-        );
+        const destination = requestedConversation ? `/messages?conversation=${encodeURIComponent(requestedConversation)}`
+            : recipientId ? `/messages?to=${encodeURIComponent(recipientId)}` : '/messages';
+        return <div className="mx-auto flex min-h-[70vh] max-w-lg items-center px-4 py-12">
+            <section className="w-full rounded-2xl border border-gray-100 bg-white p-8 text-center">
+                <MessageCircle aria-hidden="true" className="mx-auto mb-4 h-9 w-9 text-playful-coral-text" />
+                <h1 className="font-heading text-2xl font-bold text-playful-text">Sign in to view messages</h1>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">Connect with members and keep your conversations in one place.</p>
+                <Link href={`/login?redirect=${encodeURIComponent(destination)}`} className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#c34b24] px-6 text-sm font-semibold text-white">Sign In</Link>
+            </section>
+        </div>;
     }
 
-    return (
-        <div 
-            className="fixed bg-white flex flex-col pt-14 pb-20 lg:pt-0 lg:pb-0 z-10"
-            style={{
-                top: 0,
-                bottom: 0,
-                right: 0,
-                left: 'var(--sidebar-width, 0px)'
-            }}
-        >
-            <div className="h-full flex-1 flex flex-col min-h-0 lg:px-0">
-                <div className="bg-white h-full flex flex-col overflow-hidden min-h-0 lg:border-t lg:border-gray-100">
-                    <div className="flex h-full flex-1 min-h-0">
-                        {/* Conversation List — hidden on mobile when thread is shown */}
-                        <div
-                            className={`w-full lg:w-[340px] lg:border-r border-gray-100 flex flex-col shrink-0 min-h-0 ${showThread ? 'hidden lg:flex' : 'flex'
-                                }`}
-                        >
-                            {/* Branding header */}
-                            <div className="border-b border-gray-100">
-                                <div className="flex items-center gap-2 px-5 pt-4 pb-2">
-                                    <Link href="/" className="flex items-center gap-2 group">
-                                        <div className="bg-playful-coral text-white p-1.5 rounded-lg rotate-3 group-hover:rotate-6 transition-transform duration-300 shadow-sm flex-shrink-0">
-                                            <PawPrint className="h-4 w-4 fill-current" />
-                                        </div>
-                                        <span className="text-lg font-heading font-black tracking-tight text-playful-text">
-                                            Adopt<span className="text-playful-coral">Dont</span>Shop
-                                        </span>
-                                    </Link>
-                                </div>
-                                <div className="flex items-center justify-between px-5 py-3">
-                                    <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                                        Messages
-                                    </h2>
-                                </div>
-                            </div>
+    let status = '';
+    let retry: (() => void) | undefined;
+    const waiting = conversationsQuery.isLoading || (!!recipientId && isMemberId(recipientId) && recipientId !== user?.id && !selectedConversation && !conversationsQuery.isError && recipientQuery.isPending);
+    if (conversationsQuery.isError) { status = 'Could not load your conversations.'; retry = () => { conversationsQuery.refetch(); }; }
+    else if (!waiting && requestedConversation && !selectedConversation) status = 'This conversation is unavailable.';
+    else if (recipientId && !isMemberId(recipientId)) status = 'This member link is invalid.';
+    else if (recipientId && recipientId === user?.id) status = 'Choose another member to start a conversation.';
+    else if (recipientQuery.isError) { status = 'Could not load this member.'; retry = () => { recipientQuery.refetch(); }; }
+    else if (!waiting && recipientId && !selectedConversation && !recipient) status = 'This member is unavailable.';
 
-                            <div className="flex-1 overflow-y-auto">
-                                <ConversationList
-                                    conversations={conversations}
-                                    selectedId={selectedConversationId}
-                                    onSelect={handleSelectConversation}
-                                    isLoading={convosLoading}
-                                />
-                            </div>
-
-                            {/* Back to site */}
-                            <div className="mt-auto px-4 py-2 border-t border-gray-100">
-                                <Link
-                                    href="/"
-                                    className="flex items-center gap-2 py-3 text-sm text-gray-500 hover:text-playful-text transition-colors"
-                                >
-                                    <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-                                    Back to site
-                                </Link>
-                            </div>
-                        </div>
-
-                        {/* Message Thread — hidden on mobile when list is shown */}
-                        <div
-                            className={`flex-1 flex flex-col min-h-0 ${showThread ? 'flex' : 'hidden lg:flex'
-                                }`}
-                        >
-                            <MessageThread
-                                conversation={selectedConversation}
-                                messages={messages}
-                                isLoading={messagesLoading}
-                                onSend={handleSend}
-                                isSending={sendMessage.isPending}
-                                onBack={handleBack}
-                            />
-                        </div>
+    return <div className="fixed bottom-0 right-0 top-0 z-10 flex min-w-0 flex-col bg-white pb-20 pt-14 lg:pb-0 lg:pt-0" style={{ left: 'var(--sidebar-width, 0px)' }}>
+        <div className="flex min-h-0 flex-1 overflow-hidden">
+            <div className={`h-full min-h-0 w-full shrink-0 border-gray-100 lg:w-[320px] xl:w-[340px] lg:border-r ${showThread ? 'hidden lg:block' : 'block'}`}>
+                <MessageSidebar conversations={conversations} selectedId={selectedId} draftRecipient={recipient} isLoading={conversationsQuery.isLoading} isError={conversationsQuery.isError}
+                    onRetry={() => { conversationsQuery.refetch(); }} onSelect={selectConversation} onSelectMember={selectMember} />
+            </div>
+            <div className={`min-h-0 min-w-0 flex-1 flex-col ${showThread ? 'flex' : 'hidden lg:flex'}`}>
+                {waiting || status ? <div className="flex min-h-0 flex-1 flex-col bg-playful-cream/30">
+                    <div className="shrink-0 border-b border-gray-100 bg-white p-3 lg:hidden"><button type="button" onClick={back} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm text-gray-600"><ArrowLeft aria-hidden="true" className="h-4 w-4" />Back to conversations</button></div>
+                    <div className="flex flex-1 flex-col items-center justify-center p-8 text-center text-sm text-gray-600">
+                        {waiting ? <p role="status" className="flex items-center gap-2"><Loader2 aria-hidden="true" className="h-5 w-5 animate-spin" />Loading conversation…</p>
+                            : <><p role="alert">{status}</p>{retry && <button type="button" onClick={retry} className="mt-3 min-h-11 text-playful-teal-text underline">Try again</button>}</>}
                     </div>
-                </div>
+                </div> : <MessageThread key={selectedId || recipientId || 'empty'} conversation={selectedConversation} recipient={recipient} messages={messages} isLoading={messagesLoading}
+                    onSend={send} isSending={sendMessage.isPending || startConversation.isPending} onBack={back} />}
             </div>
         </div>
-    );
-};
-
-export default Messages;
+    </div>;
+}

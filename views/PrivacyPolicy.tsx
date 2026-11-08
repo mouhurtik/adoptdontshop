@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import TrackingPreferences from '@/components/analytics/TrackingPreferences';
 import { breadcrumbSchema, CONTACT_EMAIL, PUBLIC_CONTENT_REVIEWED, PUBLIC_CONTENT_REVIEWED_LABEL, serializeJsonLd, SITE_URL } from '@/lib/site';
 
 export default function PrivacyPolicy() {
@@ -28,7 +29,8 @@ export default function PrivacyPolicy() {
                 <h2 className="font-heading text-xl font-bold text-playful-text">Optional analytics and Meta Pixel</h2>
                 <p className="leading-relaxed">Optional Google Analytics helps us understand public-page use and interactions, such as a product-link click. Optional Meta Pixel, ID 1462969085759164, measures advertising activity and page visits. Meta Pixel is an advertising measurement tool; it does not improve search rankings.</p>
                 <p className="leading-relaxed">These optional scripts wait for your separate choices in Tracking preferences. Neither option is selected by default. The integration does not supply account emails, phone numbers, message text or precise animal coordinates to these tools, and does not enable Meta advanced matching. The providers may receive technical browser/device data, page information and identifiers through their scripts and cookies after you opt in.</p>
-                <p className="leading-relaxed">You can reject either category, change your choice using Tracking preferences in the footer, or use your browser controls to manage stored cookies. Withdrawing consent stops future measurement through this integration; it does not erase information already received by a provider. Read <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Google's privacy policy</a> and <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Meta's privacy policy</a> for their processing and available controls.</p>
+                <p className="leading-relaxed">You can change either choice below or use your browser controls to manage stored cookies. Signing up does not enable these optional tools. Withdrawing consent stops future measurement through this integration; it does not erase information already received by a provider. Read <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Google's privacy policy</a> and <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer" className="text-playful-teal-text underline">Meta's privacy policy</a> for their processing and available controls.</p>
+                <TrackingPreferences />
             </section>
             <section className="mt-8 space-y-3">
                 <h2 className="font-heading text-xl font-bold text-playful-text">Browser storage and essential features</h2>
