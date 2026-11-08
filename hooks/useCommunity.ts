@@ -20,7 +20,8 @@ interface FetchPostsParams {
 export function useCommunityPosts({ tag = 'all', sort = 'new', limit = 20, offset = 0, initialData }: FetchPostsParams = {}) {
     return useQuery({
         queryKey: ['community-posts', tag, sort, limit, offset],
-        initialData,
+        // The server seed is the unfiltered newest feed, not a filtered/sorted result.
+        initialData: tag === 'all' && sort === 'new' && offset === 0 ? initialData : undefined,
         queryFn: async (): Promise<PostCardData[]> => {
             // Use plain select without typed FK join — FK exists in DB but not in generated types
             let query = supabase

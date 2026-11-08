@@ -78,7 +78,9 @@ third-party map integration in this bundle.
 ## Verification and publication
 
 - Local lint, TypeScript and production build passed. All 138 tests in 16 files
-  passed, including admin emails and comment/message behavior.
+  passed, including admin emails and comment/message behavior. A further focused
+  regression test passed for topic filtering: the unfiltered server seed must not
+  populate filtered/sorted query keys as already-fresh results.
 - Browser checked desktop and 390px/320px layouts, actual computed font weights,
   light/dark surfaces, persisted theme, Store selection, topic navigation and
   signed-out forms. Synthetic signed-in checks covered comment parent/reply

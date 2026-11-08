@@ -42,8 +42,8 @@ the Amazon catalog hostage: publish independently scoped commits when safe.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| [005](005-ui-theme-admin-release.md) | Simpler feed, warm dark mode, Store, comments and admin emails | P1 | M | Correct database verified; 004 | IMPLEMENTED; publication checks in progress |
-| [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | PUSHED as 07bbcef; CI and live deployment being verified |
+| [005](005-ui-theme-admin-release.md) | Simpler feed, warm dark mode, Store, comments and admin emails | P1 | M | Correct database verified; 004 | PUSHED as d296e0c; final topic correction and deployment checks in progress |
+| [004](004-bundled-aeo-release.md) | UI, AEO/trust pages and optional measurement | P1 | M | Existing UI commits; user scope decisions | DEPLOYED; CI passed at 25e4e02 |
 | [001](001-release-baseline-and-measurement.md) | Consolidate the release baseline and verify measurement | P1 | M | None | UI/admin implemented in 004/005; live analytics reporting still to verify |
 | [002](002-amazon-affiliate-pilot.md) | Launch the Amazon affiliate pilot | P1 | M | 001 web/analytics pieces; not the admin database migration | TODO |
 | [003](003-community-pawcoins-v1.md) | Launch community PawCoins with server-owned rules | P2 | L | Correct Supabase connection; stable baseline and retention flow; ship Amazon first | TODO |
