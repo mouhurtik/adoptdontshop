@@ -12,29 +12,35 @@
 .tab:focus-visible,.card:focus-visible { outline: 2px solid rgb(var(--teal-text)); outline-offset: 4px; }
 .panel { outline-offset: 4px; }
 .productGrid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 22px 18px; }
-.card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid rgb(var(--gray-200)); border-radius: 17px; background: rgb(var(--surface)); color: rgb(var(--ink)); text-decoration: none; transition: border-color .15s,box-shadow .15s; }
-.card:hover { border-color: rgb(var(--gray-400)); box-shadow: 0 5px 18px rgb(0 0 0 / .06); }
-.media { position: relative; height: 184px; overflow: hidden; border-bottom: 1px solid rgb(var(--gray-100)); background: #f2ece5; }
-.photo { width: 100%; height: 100%; object-fit: cover; }
-.petBadge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 999px; background: rgb(var(--surface) / .95); color: rgb(var(--ink)); font-size: 11px; font-weight: 600; }
+.card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid rgb(var(--gray-200)); border-radius: 17px; background: rgb(var(--surface)); color: rgb(var(--ink)); text-decoration: none; transition: border-color .15s,box-shadow .15s,transform .15s; }
+.card:hover { border-color: rgb(var(--gray-400)); box-shadow: 0 8px 24px rgb(0 0 0 / .08); transform: translateY(-2px); }
+.media { position: relative; height: 196px; overflow: hidden; border-bottom: 1px solid rgb(var(--gray-100)); background: #f2ece5; }
+.photo { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+.card:hover .photo { transform: scale(1.03); }
+.petBadge { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 999px; background: rgb(var(--surface) / .95); color: rgb(var(--ink)); font-size: 11px; font-weight: 600; box-shadow: 0 2px 6px rgb(0 0 0 / .08); }
 .cardBody { display: flex; flex: 1; flex-direction: column; align-items: flex-start; padding: 16px; }
-.category { margin-bottom: 5px; color: rgb(var(--gray-500)); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
-.card h3 { margin: 0; font-family: var(--font-nunito),sans-serif; font-size: 17px; font-weight: 700; line-height: 1.35; }
+.category { margin-bottom: 5px; color: rgb(var(--gray-500)); font-size: 10px; letter-spacing: .04em; text-transform: uppercase; font-weight: 700; }
+.card h3 { margin: 0; font-family: var(--font-nunito),sans-serif; font-size: 17px; font-weight: 700; line-height: 1.35; color: rgb(var(--ink)); }
 .card p { flex: 1; margin: 7px 0 18px; color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.65; }
-.cardAction { display: inline-flex; min-height: 38px; width: 100%; align-items: center; justify-content: space-between; gap: 6px; border-top: 1px solid rgb(var(--gray-100)); padding-top: 12px; color: rgb(var(--coral-text)); font-size: 12px; font-weight: 600; }
-.drawnArt { position: relative; display: grid; place-items: center; width: 100%; height: 100%; background: #e6eee9; color: #377562; }
-.drawnArt[data-pet='dog'] { background: #f4e5d9; color: #a35f35; }
-.drawnArt > svg { width: 100%; height: 100%; }
-.drawnArt .bagPet { position: absolute; height: 42px; width: 42px; top: calc(50% - 15px); left: calc(50% - 22px); }
-.brandArt { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 30px 16px 14px; background: #fff0df; color: #914e23; }
-.brandArt span { font-family: var(--font-nunito),sans-serif; font-size: clamp(22px,2vw,30px); font-weight: 800; text-align: center; line-height: 1.1; }
-.brandArt small { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; opacity: .7; }
-.brandArt[data-brand='cat-whiskas'] { background: #eee3f3; color: #69367d; }
-.brandArt[data-brand='cat-sheba'] { background: #302a24; color: #e5ca96; }
-.brandArt[data-brand='dog-pedigree'] { background: #fff0b2; color: #6d4c12; }
-.brandArt[data-brand='dog-royal-canin'] { background: #f8e5e3; color: #a33332; }
-.footnote { margin: 24px 0 0; max-width: 760px; color: rgb(var(--gray-500)); font-size: 12px; line-height: 1.8; }
-@media (max-width: 1279px) { .productGrid { grid-template-columns: repeat(3,minmax(0,1fr)); } .media { height: 170px; } }
+.cardAction { display: inline-flex; min-height: 38px; width: 100%; align-items: center; justify-content: space-between; gap: 6px; border-top: 1px solid rgb(var(--gray-100)); padding-top: 12px; color: rgb(var(--coral-text)); font-size: 12px; font-weight: 700; }
+.affiliateNoticeCard { display: flex; align-items: flex-start; gap: 16px; margin-top: 36px; padding: 22px 24px; border: 1px solid rgb(var(--gray-200)); border-radius: 18px; background: rgb(var(--surface)); color: rgb(var(--ink)); box-shadow: 0 2px 8px rgb(0 0 0 / .03); }
+.noticeIcon { flex-shrink: 0; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #eef7f4; color: #1e8267; margin-top: 2px; }
+.noticeBody { flex: 1; font-size: 12px; line-height: 1.75; color: rgb(var(--gray-600)); }
+.noticeTitle { margin: 0 0 8px; font-family: var(--font-nunito),sans-serif; font-size: 14px; font-weight: 800; color: rgb(var(--ink)); letter-spacing: -.01em; }
+.noticeBody p { margin: 0 0 8px; }
+.noticeBody p:last-child { margin-bottom: 0; }
+.noticeBody strong { color: rgb(var(--ink)); font-weight: 700; }
+@media (min-width: 1536px) {
+ .productGrid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px 20px; }
+ .media { height: 210px; }
+}
+@media (max-width: 1279px) {
+ .productGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+ .media { height: 180px; }
+}
+@media (max-width: 899px) {
+ .productGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
 @media (max-width: 639px) {
  .toolbar { margin-bottom: 18px; padding-bottom: 14px; }
  .tab { padding: 10px 17px; gap: 7px; }
@@ -42,12 +48,15 @@
  .media { height: 142px; }
  .card { border-radius: 14px; }
  .cardBody { padding: 12px; }
- .card h3 { font-size: 16px; }
+ .card h3 { font-size: 15px; }
  .card p { font-size: 11px; margin-bottom: 14px; }
  .cardAction { font-size: 11px; }
  .petBadge { top: 9px; left: 9px; font-size: 10px; padding: 3px 7px; }
- .brandArt span { font-size: 24px; }
- .brandArt small { font-size: 8px; }
- .drawnArt .bagPet { height: 32px; width: 32px; top: calc(50% - 11px); left: calc(50% - 17px); }
+ .affiliateNoticeCard { flex-direction: column; gap: 12px; padding: 16px; border-radius: 14px; }
+ .noticeIcon { width: 36px; height: 36px; }
 }
-@media (prefers-reduced-motion: reduce) { .card,.tab { transition: none; } }
+@media (max-width: 440px) {
+ .productGrid { grid-template-columns: 1fr; }
+ .media { height: 180px; }
+}
+@media (prefers-reduced-motion: reduce) { .card,.tab,.photo { transition: none; } }

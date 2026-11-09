@@ -59,3 +59,6 @@ mobile/android/app/release/
 *.jks
 # google-services.json contains Firebase keys — add manually per machine
 mobile/android/app/google-services.json
+
+# AI tools
+.opencode/
