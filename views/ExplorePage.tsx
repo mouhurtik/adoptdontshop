@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Compass, ArrowRight, Heart, MessageCircle, PawPrint, TrendingUp, X } from 'lucide-react';
+import { Search, Compass, ArrowRight, PawPrint, TrendingUp, X } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { useCommunityPosts } from '@/hooks/useCommunity';
 import ExploreSidebar from '@/components/home/HomeSidebar';
 import SmoothScroll from '@/components/ui/SmoothScroll';
+import PostCardList from '@/components/community/PostCardList';
 
 const SEARCH_SUGGESTIONS = [
     { emoji: '🐕', label: 'Dogs', query: 'dogs' },
@@ -20,7 +21,7 @@ const SEARCH_SUGGESTIONS = [
 const ExplorePage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchFocused, setSearchFocused] = useState(false);
-    const { data: trendingPosts } = useCommunityPosts({ sort: 'hot', limit: 8 });
+    const { data: trendingPosts, isLoading } = useCommunityPosts({ sort: 'hot', limit: 12 });
     const searchRef = useRef<HTMLDivElement>(null);
 
     // Close search dropdown on outside click
@@ -133,7 +134,7 @@ const ExplorePage = () => {
                             </div>
                         )}
 
-                        {/* One post per row at every screen width. */}
+                        {/* Trending Posts List View */}
                         <ScrollReveal mode="fade-up" delay={0.1} width="100%">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-heading font-bold text-playful-text flex items-center gap-2">
@@ -142,57 +143,18 @@ const ExplorePage = () => {
                                 </h2>
                             </div>
 
-                            {filteredPosts && filteredPosts.length > 0 ? (
-                                <div className="grid grid-cols-1 gap-4" data-explore-feed>
+                            {isLoading ? (
+                                <div className="flex flex-col gap-4">
+                                    {[...Array(4)].map((_, i) => (
+                                        <div key={i} className="bg-white rounded-[1.5rem] h-32 sm:h-40 animate-pulse border border-gray-100 shadow-soft" />
+                                    ))}
+                                </div>
+                            ) : filteredPosts && filteredPosts.length > 0 ? (
+                                <div className="flex flex-col gap-4" data-explore-feed>
                                     {filteredPosts.map((post, index) => (
-                                        <Link
-                                            key={post.id}
-                                            href={`/community/${post.slug}`}
-                                            className="flex flex-col p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-playful-coral/20 transition-all group"
-                                        >
-                                            {/* Post thumbnail if available */}
-                                            {post.featured_image_url && (
-                                                <div className="w-full h-36 rounded-xl overflow-hidden mb-3 bg-gray-100">
-                                                    <img
-                                                        src={post.featured_image_url}
-                                                        alt=""
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    />
-                                                </div>
-                                            )}
-
-                                            {/* Rank badge */}
-                                            <div className="flex items-start gap-2.5 mb-1.5">
-                                                <span className="bg-orange-100 text-orange-600 text-[10px] font-black rounded-lg px-1.5 py-0.5 flex-shrink-0">
-                                                    #{index + 1}
-                                                </span>
-                                                {post.tags && post.tags.length > 0 && (
-                                                    <span className="text-[10px] text-gray-400 font-medium truncate">
-                                                        {post.tags[0].replace(/_/g, ' ')}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <p className="text-sm font-bold text-playful-text line-clamp-2 group-hover:text-playful-coral transition-colors leading-snug mb-2">
-                                                {post.title}
-                                            </p>
-
-                                            {/* Excerpt */}
-                                            {post.content_text && (
-                                                <p className="text-xs text-gray-400 line-clamp-2 mb-3 leading-relaxed">
-                                                    {post.content_text.slice(0, 100)}
-                                                </p>
-                                            )}
-
-                                            <div className="flex items-center gap-3 mt-auto text-xs text-gray-400">
-                                                <span className="flex items-center gap-1">
-                                                    <Heart className="w-3 h-3" /> {post.like_count}
-                                                </span>
-                                                <span className="flex items-center gap-1">
-                                                    <MessageCircle className="w-3 h-3" /> {post.comment_count}
-                                                </span>
-                                            </div>
-                                        </Link>
+                                        <div key={post.id} className="w-full">
+                                            <PostCardList post={post} rank={index + 1} />
+                                        </div>
                                     ))}
                                 </div>
                             ) : (
