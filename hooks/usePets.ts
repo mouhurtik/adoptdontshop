@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase/client';
 import { Pet } from '@/types/pet.types';
 import type { Tables } from '@/lib/supabase/types';
+import { fetchPetBySlug } from '@/lib/supabase/pet-queries';
 
 type PetListingRow = Tables<'pet_listings'>;
 
@@ -37,17 +38,8 @@ const fetchPets = async (): Promise<Pet[]> => {
 
 /** Fetch a single pet by matching an ID prefix (slug-based lookup) */
 const fetchPetByIdPrefix = async (idPrefix: string): Promise<Pet | null> => {
-  if (!idPrefix) return null;
-
-  const { data, error } = await supabase
-    .from('pet_listings')
-    .select('*')
-    .ilike('id', `${idPrefix}%`)
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) return null;
-  return transformPet(data);
+  const pet = await fetchPetBySlug(supabase, idPrefix);
+  return pet ? transformPet(pet) : null;
 };
 
 /** Fetch total pet count (head-only query) */

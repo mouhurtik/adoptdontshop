@@ -2,10 +2,9 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { parseSlugId } from '@/utils/slugUtils';
 import { usePetBySlug } from '@/hooks/usePets';
 
@@ -28,18 +27,11 @@ const PetDetails = ({ initialPet }: PetDetailsProps) => {
   const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const router = useRouter();
 
   // Extract the short ID from the slug for database lookup
   const petIdPrefix = slug ? parseSlugId(slug) : '';
 
-  const { data: pet, isLoading, error } = usePetBySlug(petIdPrefix || undefined, initialPet);
-
-  useEffect(() => {
-    if (error) {
-      router.push('/browse');
-    }
-  }, [error, router]);
+  const { data: pet, isLoading, error, refetch, isFetching } = usePetBySlug(petIdPrefix || undefined, initialPet);
 
   const openAdoptModal = () => {
     setIsAdoptModalOpen(true);
@@ -60,13 +52,20 @@ const PetDetails = ({ initialPet }: PetDetailsProps) => {
       <div className="pt-4 lg:pt-8 pb-16 max-w-7xl mx-auto px-4 lg:px-6 min-h-screen bg-playful-cream">
         <div className="text-center py-16 bg-white rounded-[2rem] shadow-soft max-w-2xl mx-auto">
           <AlertCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Pet Not Found</h1>
-          <p className="text-gray-600 mb-8">Sorry, we couldn&apos;t find the pet you&apos;re looking for.</p>
-          <Link href="/browse">
-            <PrimaryButton>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Browse
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            {error ? 'Unable to Load Pet' : 'Pet Not Found'}
+          </h1>
+          <p className="text-gray-600 mb-8">
+            {error ? 'We could not load this pet right now. Please try again.' : "Sorry, we couldn't find the pet you're looking for."}
+          </p>
+          {error && (
+            <PrimaryButton onClick={() => void refetch()} disabled={isFetching} className="mb-4">
+              Try Again
             </PrimaryButton>
+          )}
+          <Link href="/browse" className="flex items-center justify-center gap-2 font-bold text-playful-coral">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Browse
           </Link>
         </div>
       </div>

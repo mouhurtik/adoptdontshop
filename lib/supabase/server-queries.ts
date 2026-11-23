@@ -1,4 +1,7 @@
 import { createServerSupabaseClient } from './server';
+import { cache } from 'react';
+import { fetchPetBySlug } from './pet-queries';
+import { generatePetSlug } from '@/utils/slugUtils';
 import type { Pet } from '@/types/pet.types';
 import type { Tables } from './types';
 
@@ -29,6 +32,7 @@ export interface ServerPet {
     age: string | null;
     location: string | null;
     description: string | null;
+    medical_info: string | null;
     image_url: string | null;
     status: string;
     created_at: string;
@@ -37,12 +41,13 @@ export interface ServerPet {
 const mapPetListing = (pet: Tables<'pet_listings'>): ServerPet => ({
     id: pet.id,
     pet_name: pet.pet_name,
-    slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
+    slug: generatePetSlug(pet.pet_name, pet.id),
     animal_type: pet.animal_type,
     breed: pet.breed,
     age: pet.age,
     location: pet.location,
     description: pet.description,
+    medical_info: pet.medical_info,
     image_url: pet.image_url,
     status: pet.status,
     created_at: pet.created_at,
@@ -164,36 +169,11 @@ export async function fetchPetListingsPageServer(
     };
 }
 
-export async function fetchPetBySlugServer(slug: string): Promise<ServerPet | null> {
+export const fetchPetBySlugServer = cache(async (slug: string): Promise<ServerPet | null> => {
     const supabase = await createServerSupabaseClient();
-    const idPrefix = slug.split('-').pop() || '';
-
-    if (!idPrefix) return null;
-
-    // Use server-side ilike filter instead of fetching all pets
-    const { data: pet, error } = await supabase
-        .from('pet_listings')
-        .select('*')
-        .ilike('id', `${idPrefix}%`)
-        .limit(1)
-        .maybeSingle();
-
-    if (error || !pet) return null;
-
-    return {
-        id: pet.id,
-        pet_name: pet.pet_name,
-        slug: `${pet.pet_name?.toLowerCase().replace(/\s+/g, '-')}-${pet.id.slice(0, 8)}`,
-        animal_type: pet.animal_type,
-        breed: pet.breed,
-        age: pet.age,
-        location: pet.location,
-        description: pet.description,
-        image_url: pet.image_url,
-        status: pet.status,
-        created_at: pet.created_at,
-    };
-}
+    const pet = await fetchPetBySlug(supabase, slug);
+    return pet ? mapPetListing(pet) : null;
+});
 
 
 import type { PostCardData } from '@/components/community/PostCard';
